@@ -1,0 +1,63 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.verifyPermission = exports.verifyToken = exports.validRequest = void 0;
+const express_validator_1 = require("express-validator");
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const validRequest = (req, res, next) => {
+    const myValidationResult = express_validator_1.validationResult.withDefaults({
+        formatter: (error) => {
+            return {
+                location: error.location,
+                msg: error.msg,
+                param: error.param,
+                nestedErrors: error.nestedErrors,
+            };
+        },
+    });
+    const errors = myValidationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+    else {
+        next();
+    }
+};
+exports.validRequest = validRequest;
+const verifyToken = (req, res, next) => {
+    var _a;
+    try {
+        const token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.replace("Bearer ", "");
+        if (!token) {
+            res.status(401).json({ message: "Token não fornecido" });
+            return;
+        }
+        const decodedToken = jsonwebtoken_1.default.verify(token, String(process.env.SECRET_KEY));
+        if (decodedToken) {
+            req.token = token;
+            req.user = decodedToken;
+            next();
+        }
+    }
+    catch (error) {
+        res.status(401).json({ message: "Token inválido" });
+    }
+};
+exports.verifyToken = verifyToken;
+const verifyPermission = (permission) => {
+    return (req, res, next) => {
+        const user = req.user;
+        if (permission.includes(user.permission[0])) {
+            next();
+        }
+        else {
+            return res.status(401).send({
+                message: "Você não possui permissão para cadastrar esse tipo de usuário",
+            });
+        }
+    };
+};
+exports.verifyPermission = verifyPermission;
+//# sourceMappingURL=index.js.map

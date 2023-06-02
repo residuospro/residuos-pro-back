@@ -1,0 +1,1 @@
+{"version":3,"file":"support_route.js","sourceRoot":"","sources":["../../src/routers/support_route.ts"],"names":[],"mappings":";;;;;AAAA,sDAA8B;AAC9B,wCAAuC;AACvC,uFAA6D;AAE7D,MAAM,aAAa,GAAG,iBAAO,CAAC,MAAM,EAAE,CAAC;AACvC,MAAM,kBAAkB,GAAG,IAAI,0BAAc,EAAE,CAAC;AAEhD,aAAa,CAAC,IAAI,CAAC,aAAM,CAAC,YAAY,EAAE,kBAAkB,CAAC,UAAU,CAAC,CAAC;AAEvE,kBAAe,aAAa,CAAC"}
