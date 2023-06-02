@@ -10,6 +10,10 @@ import collaborator_route from "./collaborator_route";
 import department_route from "./department_route";
 
 const router = (app: Express) => {
+  app.route("/").get((req: Request, res: Response) => {
+    res.status(200).send("Pro Resíduos Ativo");
+  });
+
   app.use(
     express.json(),
     support_route,
@@ -22,10 +26,6 @@ const router = (app: Express) => {
     department_route,
     payload_route
   );
-
-  app.route("/").get((req: Request, res: Response) => {
-    res.status(200).send("Pro Resíduos Ativo");
-  });
 };
 
 export default router;
