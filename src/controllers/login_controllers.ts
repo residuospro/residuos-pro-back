@@ -2,19 +2,27 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import User from "../models/users";
 import { Request, Response } from "express";
-import auth from "basic-auth";
 
 class LoginController {
   async login(req: Request, res: Response) {
     try {
-      const credentials = auth(req);
+      const authHeader = req.headers.authorization;
+
+      if (!authHeader || !authHeader.startsWith("Basic ")) {
+        return null;
+      }
+
+      const base64Credentials = authHeader.slice(6);
+
+      const credentials = Buffer.from(base64Credentials, "base64").toString(
+        "utf-8"
+      );
 
       if (!credentials) {
         return res.status(401).send({ message: "Credenciais inválidas" });
       }
 
-      const username = credentials.name;
-      const password = credentials.pass;
+      const [username, password] = credentials.split(":");
 
       // Verificar se o usuário existe no banco de dados
       const user = await User.findOne({ username });
@@ -24,6 +32,7 @@ class LoginController {
 
       // Verificar se a senha está correta
       const passwordMatch = await bcrypt.compare(password, user.password);
+
       if (!passwordMatch) {
         return res.status(401).json({ error: "Senha incorreta" });
       }

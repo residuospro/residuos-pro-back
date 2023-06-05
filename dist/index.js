@@ -4,15 +4,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const cors_1 = __importDefault(require("cors"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const routers_1 = __importDefault(require("./routers"));
 const dbConfig_1 = __importDefault(require("./config/dbConfig"));
 dotenv_1.default.config();
 const server = (0, express_1.default)();
 (0, routers_1.default)(server);
-server.disable("x-powered-by");
-server.use((0, cors_1.default)());
 dbConfig_1.default.on("error", console.log.bind("Error ao conectar com o banco"));
 dbConfig_1.default.once("open", () => console.log("A conexão com o banco foi realizada com sucesso"));
 server.listen(process.env.PORT || 5000, () => console.log("Server running at " + process.env.PORT || 5000));

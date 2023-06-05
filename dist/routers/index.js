@@ -13,11 +13,12 @@ const support_route_1 = __importDefault(require("./support_route"));
 const manager_route_1 = __importDefault(require("./manager_route"));
 const collaborator_route_1 = __importDefault(require("./collaborator_route"));
 const department_route_1 = __importDefault(require("./department_route"));
+const cors_1 = __importDefault(require("cors"));
 const router = (app) => {
     app.route("/").get((req, res) => {
         res.status(200).send("Pro Resíduos Ativo");
     });
-    app.use(express_1.default.json(), support_route_1.default, login_route_1.default, middleware_1.verifyToken, admin_route_1.default, companies_route_1.default, manager_route_1.default, collaborator_route_1.default, department_route_1.default, payload_route_1.default);
+    app.use(express_1.default.json(), (0, cors_1.default)(), login_route_1.default, support_route_1.default, middleware_1.verifyToken, admin_route_1.default, companies_route_1.default, manager_route_1.default, collaborator_route_1.default, department_route_1.default, payload_route_1.default);
 };
 exports.default = router;
 //# sourceMappingURL=index.js.map

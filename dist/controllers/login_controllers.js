@@ -15,17 +15,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const users_1 = __importDefault(require("../models/users"));
-const basic_auth_1 = __importDefault(require("basic-auth"));
 class LoginController {
     login(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const credentials = (0, basic_auth_1.default)(req);
+                const authHeader = req.headers.authorization;
+                if (!authHeader || !authHeader.startsWith("Basic ")) {
+                    return null;
+                }
+                const base64Credentials = authHeader.slice(6);
+                const credentials = Buffer.from(base64Credentials, "base64").toString("utf-8");
                 if (!credentials) {
                     return res.status(401).send({ message: "Credenciais inválidas" });
                 }
-                const username = credentials.name;
-                const password = credentials.pass;
+                const [username, password] = credentials.split(":");
                 // Verificar se o usuário existe no banco de dados
                 const user = yield users_1.default.findOne({ username });
                 if (!user) {

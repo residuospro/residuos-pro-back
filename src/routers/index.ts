@@ -8,6 +8,7 @@ import support_route from "./support_route";
 import manager_route from "./manager_route";
 import collaborator_route from "./collaborator_route";
 import department_route from "./department_route";
+import cors from "cors";
 
 const router = (app: Express) => {
   app.route("/").get((req: Request, res: Response) => {
@@ -16,8 +17,9 @@ const router = (app: Express) => {
 
   app.use(
     express.json(),
-    support_route,
+    cors(),
     login_route,
+    support_route,
     verifyToken,
     admin_route,
     companies_route,
