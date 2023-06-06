@@ -20,6 +20,7 @@ class PayloadController {
                 username: user === null || user === void 0 ? void 0 : user.username,
                 permission: user === null || user === void 0 ? void 0 : user.permission,
                 exp: user === null || user === void 0 ? void 0 : user.exp,
+                company: user.company,
             };
             if (!user) {
                 res.status(401).send({ message: "Token inválido" });

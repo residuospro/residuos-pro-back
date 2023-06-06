@@ -12,6 +12,7 @@ class PayloadController {
       username: user?.username,
       permission: user?.permission,
       exp: user?.exp,
+      company: user.company,
     };
 
     if (!user) {

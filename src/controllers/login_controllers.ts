@@ -43,6 +43,7 @@ class LoginController {
           permission: user.role,
           name: user.name,
           username: user.username,
+          company: user.idCompany,
         },
         String(process.env.SECRET_KEY),
         { expiresIn: "5h" }
