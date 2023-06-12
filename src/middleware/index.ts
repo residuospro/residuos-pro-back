@@ -1,7 +1,7 @@
 import { validationResult } from "express-validator";
 import { NextFunction, Request, Response, RequestHandler } from "express";
-import jwt from "jsonwebtoken";
 import { UserPayload } from "../utils/jwtUtils";
+import TokenService from "../services/token_service";
 
 export const validRequest = (
   req: Request,
@@ -47,11 +47,11 @@ export const verifyToken = (
       return;
     }
 
-    const decodedToken = jwt.verify(token, String(process.env.SECRET_KEY));
+    const validToken = TokenService.verifyToken(token);
 
-    if (decodedToken) {
+    if (validToken) {
       req.token = token as string;
-      req.user = decodedToken as UserPayload;
+      req.user = validToken as UserPayload;
 
       next();
     }

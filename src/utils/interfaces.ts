@@ -66,6 +66,12 @@ export interface IUserSchema extends Document {
   deleted: boolean;
 }
 
+export interface IRefreshToken extends Document {
+  userId: string;
+  refreshToken: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
 export interface IDepartmentService {
   name: string;
   responsible: string;

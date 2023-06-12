@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.verifyPermission = exports.verifyToken = exports.validRequest = void 0;
 const express_validator_1 = require("express-validator");
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const token_service_1 = __importDefault(require("../services/token_service"));
 const validRequest = (req, res, next) => {
     const myValidationResult = express_validator_1.validationResult.withDefaults({
         formatter: (error) => {
@@ -34,10 +34,10 @@ const verifyToken = (req, res, next) => {
             res.status(401).json({ message: "Token não fornecido" });
             return;
         }
-        const decodedToken = jsonwebtoken_1.default.verify(token, String(process.env.SECRET_KEY));
-        if (decodedToken) {
+        const validToken = token_service_1.default.verifyToken(token);
+        if (validToken) {
             req.token = token;
-            req.user = decodedToken;
+            req.user = validToken;
             next();
         }
     }

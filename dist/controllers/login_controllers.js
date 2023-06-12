@@ -12,9 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const users_1 = __importDefault(require("../models/users"));
+const token_service_1 = __importDefault(require("../services/token_service"));
 class LoginController {
     login(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -40,14 +40,10 @@ class LoginController {
                     return res.status(401).json({ error: "Senha incorreta" });
                 }
                 // Gerar o token JWT com a permissão do usuário
-                const token = jsonwebtoken_1.default.sign({
-                    permission: user.role,
-                    name: user.name,
-                    username: user.username,
-                    company: user.idCompany,
-                }, String(process.env.SECRET_KEY), { expiresIn: "5h" });
+                const token = token_service_1.default.generateAcessToken(user.role, user.name, user.username, user.idCompany);
+                const refreshToken = yield token_service_1.default.generateRefreshToken(user.id);
                 // Retornar o token JWT para o cliente
-                res.json({ token });
+                res.json({ token, refreshToken });
             }
             catch (error) {
                 console.error("Erro ao fazer login:", error);

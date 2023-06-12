@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import User from "../models/users";
 import { Request, Response } from "express";
+import TokenService from "../services/token_service";
 
 class LoginController {
   async login(req: Request, res: Response) {
@@ -38,19 +39,17 @@ class LoginController {
       }
 
       // Gerar o token JWT com a permissão do usuário
-      const token = jwt.sign(
-        {
-          permission: user.role,
-          name: user.name,
-          username: user.username,
-          company: user.idCompany,
-        },
-        String(process.env.SECRET_KEY),
-        { expiresIn: "5h" }
+      const token = TokenService.generateAcessToken(
+        user.role,
+        user.name,
+        user.username,
+        user.idCompany
       );
 
+      const refreshToken = await TokenService.generateRefreshToken(user.id);
+
       // Retornar o token JWT para o cliente
-      res.json({ token });
+      res.json({ token, refreshToken });
     } catch (error) {
       console.error("Erro ao fazer login:", error);
       res.status(500).json({ error: "Erro ao fazer login" });
