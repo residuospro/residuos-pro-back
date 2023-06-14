@@ -21,19 +21,17 @@ class DepartmentController {
   }
   async getAllDepartmentsByCompany(req: Request, res: Response) {
     try {
-      const { id } = req.params;
-
-      const { page, itemsPerPage } = req.body;
+      const { page, itemsPerPage, idCompany } = req.body;
       const skip = (parseInt(page) - 1) * parseInt(itemsPerPage);
 
       const departments =
         await DepartmentService.getAllDepartmentByCompanyService(
-          id,
+          idCompany,
           skip,
           itemsPerPage
         );
 
-      return res.status(201).json(departments);
+      return res.status(200).json(departments);
     } catch (error: any) {
       return res.status(500).send({ message: error.message });
     }

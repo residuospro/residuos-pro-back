@@ -13,7 +13,7 @@ department_route
     verifyPermission([Permissions.SUPPORT, Permissions.ADMIN]),
     department_controller.getDepartmentByName
   )
-  .get(
+  .post(
     Routes.GET_ALL_DEPARTMENT,
     verifyPermission([Permissions.SUPPORT, Permissions.ADMIN]),
     department_controller.getAllDepartmentsByCompany

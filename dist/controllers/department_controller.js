@@ -35,11 +35,10 @@ class DepartmentController {
     getAllDepartmentsByCompany(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { id } = req.params;
-                const { page, itemsPerPage } = req.body;
+                const { page, itemsPerPage, idCompany } = req.body;
                 const skip = (parseInt(page) - 1) * parseInt(itemsPerPage);
-                const departments = yield department_service_1.default.getAllDepartmentByCompanyService(id, skip, itemsPerPage);
-                return res.status(201).json(departments);
+                const departments = yield department_service_1.default.getAllDepartmentByCompanyService(idCompany, skip, itemsPerPage);
+                return res.status(200).json(departments);
             }
             catch (error) {
                 return res.status(500).send({ message: error.message });

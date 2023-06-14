@@ -26,7 +26,7 @@ export enum Routes {
   UPDATE_COMPANIES = "/companies/:id",
   DELETE_COMPANIES = "/companies/:id",
 
-  GET_ALL_DEPARTMENT = "/department/company/:id",
+  GET_ALL_DEPARTMENT = "/department",
   GET_DEPARTMENT_BY_ID = "/department/:id",
   GET_DEPARTMENT_BY_NAME = "/department/by-name",
   SAVE_DEPARTMENT = "/department/save",
