@@ -19,20 +19,31 @@ class DepartmentController {
       return res.status(500).send({ message: error.message });
     }
   }
-  async getAllDepartmentsByCompany(req: Request, res: Response) {
+  async getDepartmentsByPage(req: Request, res: Response) {
     try {
       const { page, itemsPerPage, idCompany } = req.body;
       const skip = (parseInt(page) - 1) * parseInt(itemsPerPage);
 
-      const departments =
-        await DepartmentService.getAllDepartmentByCompanyService(
-          idCompany,
-          skip,
-          itemsPerPage
-        );
+      const departments = await DepartmentService.getDepartmentsByPageService(
+        idCompany,
+        skip,
+        itemsPerPage
+      );
 
       return res.status(200).json(departments);
     } catch (error: any) {
+      return res.status(500).send({ message: error.message });
+    }
+  }
+  async getAllDepartment(req: Request, res: Response) {
+    try {
+      const { idCompany } = req.body;
+
+      const departments = await DepartmentService.getAllDepartmentsService(
+        idCompany
+      );
+      return res.status(200).json(departments);
+    } catch (error) {
       return res.status(500).send({ message: error.message });
     }
   }
@@ -43,7 +54,7 @@ class DepartmentController {
 
       const department = await DepartmentService.getDepartmentByIdService(id);
 
-      return res.status(201).json(department);
+      return res.status(200).json(department);
     } catch (error: any) {
       return res.status(500).send({ message: error.message });
     }
@@ -51,14 +62,14 @@ class DepartmentController {
 
   async getDepartmentByName(req: Request, res: Response) {
     try {
-      const { idCompany, name } = req.query;
+      const { idCompany, name } = req.body;
 
       const department = await DepartmentService.getDepartmentByNameService({
         name,
         idCompany,
       });
 
-      return res.status(201).json(department);
+      return res.status(200).json(department);
     } catch (error: any) {
       return res.status(500).send({ message: error.message });
     }

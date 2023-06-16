@@ -28,7 +28,7 @@ class DepartmentService {
     }
   }
 
-  static async getAllDepartmentByCompanyService(
+  static async getDepartmentsByPageService(
     idCompany: string,
     skip: number,
     itemsPerPage: number
@@ -57,6 +57,23 @@ class DepartmentService {
     }
   }
 
+  static async getAllDepartmentsService(idCompany: string) {
+    try {
+      const departments = await Department.find({
+        idCompany,
+        deleted: false,
+      });
+
+      if (departments.length == 0) {
+        throw new Error("Não há departamentos pra essa busca");
+      }
+
+      return departments;
+    } catch (error: any) {
+      throw new Error(error.message);
+    }
+  }
+
   static async getDepartmentByIdService(id: string) {
     try {
       const department = await Department.findById(id);
@@ -71,7 +88,11 @@ class DepartmentService {
     try {
       const { name, idCompany } = info;
 
-      const department = await Department.findOne({ name, idCompany });
+      const department = await Department.findOne({
+        name,
+        idCompany,
+        deleted: false,
+      });
 
       return department;
     } catch (error: any) {

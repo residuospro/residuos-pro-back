@@ -8,15 +8,20 @@ const department_route = express.Router();
 const department_controller = new DepartmentController();
 
 department_route
-  .get(
+  .post(
     Routes.GET_DEPARTMENT_BY_NAME,
     verifyPermission([Permissions.SUPPORT, Permissions.ADMIN]),
     department_controller.getDepartmentByName
   )
   .post(
+    Routes.GET_DEPARTMENT_BY_PAGE,
+    verifyPermission([Permissions.SUPPORT, Permissions.ADMIN]),
+    department_controller.getDepartmentsByPage
+  )
+  .post(
     Routes.GET_ALL_DEPARTMENT,
     verifyPermission([Permissions.SUPPORT, Permissions.ADMIN]),
-    department_controller.getAllDepartmentsByCompany
+    department_controller.getAllDepartment
   )
   .get(
     Routes.GET_DEPARTMENT_BY_ID,

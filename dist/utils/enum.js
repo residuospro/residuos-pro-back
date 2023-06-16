@@ -27,6 +27,7 @@ var Routes;
     Routes["UPDATE_COMPANIES"] = "/companies/:id";
     Routes["DELETE_COMPANIES"] = "/companies/:id";
     Routes["GET_ALL_DEPARTMENT"] = "/department";
+    Routes["GET_DEPARTMENT_BY_PAGE"] = "/department/pagineted";
     Routes["GET_DEPARTMENT_BY_ID"] = "/department/:id";
     Routes["GET_DEPARTMENT_BY_NAME"] = "/department/by-name";
     Routes["SAVE_DEPARTMENT"] = "/department/save";

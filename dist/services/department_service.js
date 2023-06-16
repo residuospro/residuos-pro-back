@@ -31,7 +31,7 @@ class DepartmentService {
             }
         });
     }
-    static getAllDepartmentByCompanyService(idCompany, skip, itemsPerPage) {
+    static getDepartmentsByPageService(idCompany, skip, itemsPerPage) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const departments = yield department_1.default.find({
@@ -54,6 +54,23 @@ class DepartmentService {
             }
         });
     }
+    static getAllDepartmentsService(idCompany) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const departments = yield department_1.default.find({
+                    idCompany,
+                    deleted: false,
+                });
+                if (departments.length == 0) {
+                    throw new Error("Não há departamentos pra essa busca");
+                }
+                return departments;
+            }
+            catch (error) {
+                throw new Error(error.message);
+            }
+        });
+    }
     static getDepartmentByIdService(id) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -69,7 +86,11 @@ class DepartmentService {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { name, idCompany } = info;
-                const department = yield department_1.default.findOne({ name, idCompany });
+                const department = yield department_1.default.findOne({
+                    name,
+                    idCompany,
+                    deleted: false,
+                });
                 return department;
             }
             catch (error) {

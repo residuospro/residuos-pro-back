@@ -32,12 +32,24 @@ class DepartmentController {
             }
         });
     }
-    getAllDepartmentsByCompany(req, res) {
+    getDepartmentsByPage(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { page, itemsPerPage, idCompany } = req.body;
                 const skip = (parseInt(page) - 1) * parseInt(itemsPerPage);
-                const departments = yield department_service_1.default.getAllDepartmentByCompanyService(idCompany, skip, itemsPerPage);
+                const departments = yield department_service_1.default.getDepartmentsByPageService(idCompany, skip, itemsPerPage);
+                return res.status(200).json(departments);
+            }
+            catch (error) {
+                return res.status(500).send({ message: error.message });
+            }
+        });
+    }
+    getAllDepartment(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { idCompany } = req.body;
+                const departments = yield department_service_1.default.getAllDepartmentsService(idCompany);
                 return res.status(200).json(departments);
             }
             catch (error) {
@@ -50,7 +62,7 @@ class DepartmentController {
             try {
                 const { id } = req.params;
                 const department = yield department_service_1.default.getDepartmentByIdService(id);
-                return res.status(201).json(department);
+                return res.status(200).json(department);
             }
             catch (error) {
                 return res.status(500).send({ message: error.message });
@@ -60,12 +72,12 @@ class DepartmentController {
     getDepartmentByName(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { idCompany, name } = req.query;
+                const { idCompany, name } = req.body;
                 const department = yield department_service_1.default.getDepartmentByNameService({
                     name,
                     idCompany,
                 });
-                return res.status(201).json(department);
+                return res.status(200).json(department);
             }
             catch (error) {
                 return res.status(500).send({ message: error.message });
