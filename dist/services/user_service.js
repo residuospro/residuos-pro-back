@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const users_1 = __importDefault(require("../models/users"));
+const enum_1 = require("../utils/enum");
 class UserService {
     static createUser(userData) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -27,6 +28,15 @@ class UserService {
                 const saltRounds = 8;
                 const hashedPassword = yield bcrypt_1.default.hash(userData.password, saltRounds);
                 userData.password = hashedPassword;
+                if (userData.role[0] == enum_1.Permissions.ADMIN) {
+                    userData.role = [enum_1.Permissions.MANAGER];
+                }
+                else if (userData.role[0] == enum_1.Permissions.MANAGER) {
+                    userData.role = [enum_1.Permissions.COLLABORATOR];
+                }
+                else {
+                    throw new Error("Você não possui permissão para criar usuários");
+                }
                 const newUser = new users_1.default(Object.assign({}, userData));
                 const savedUser = yield newUser.save();
                 return savedUser;
@@ -47,11 +57,8 @@ class UserService {
                     query["idDepartment"] = idDepartment;
                 }
                 const users = yield users_1.default.find(query).skip(skip).limit(itemsPerPage);
-                const totalUsers = yield users_1.default.find({ Roles: { $in: [role] } }).count();
+                const totalUsers = yield users_1.default.find({ role: { $in: [role] } }).count();
                 const totalPages = Math.ceil(totalUsers / itemsPerPage);
-                if (users.length == 0) {
-                    throw new Error("Não há usuários pra essa busca");
-                }
                 return { users, totalPages };
             }
             catch (error) {
@@ -62,8 +69,13 @@ class UserService {
     static getUsername(users) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { username, idCompany, idDepartment } = users;
-                const query = { username, idCompany, deleted: false };
+                const { username, idCompany, idDepartment, role } = users;
+                const query = {
+                    username,
+                    idCompany,
+                    role: { $in: [role] },
+                    deleted: false,
+                };
                 if (idDepartment) {
                     query["idDepartment"] = idDepartment;
                 }

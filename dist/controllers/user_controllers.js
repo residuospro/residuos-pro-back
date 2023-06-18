@@ -17,11 +17,13 @@ class UserController {
     createUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { name, idDepartment, idCompany, role, ramal, username, password, email, } = req.body;
+                const { name, idDepartment, department, idCompany, role, ramal, username, email, } = req.body;
                 // Chame o método do service para criar o usuário
+                const password = process.env.DEFAULT_PASSWORD;
                 const createUser = yield user_service_1.default.createUser({
                     name,
                     idDepartment,
+                    department,
                     idCompany,
                     role,
                     ramal,
@@ -52,11 +54,12 @@ class UserController {
     getUserByUsername(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { username, idCompany, idDepartment } = req.query;
+                const { username, idCompany, idDepartment, role } = req.query;
                 const user = yield user_service_1.default.getUsername({
                     username,
                     idCompany,
                     idDepartment,
+                    role,
                 });
                 if (user) {
                     return res.status(200).json(user);

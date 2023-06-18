@@ -19,7 +19,7 @@ class PayloadController {
       res.status(401).send({ message: "Token inválido" });
     }
 
-    return res.status(201).json(data);
+    return res.status(200).json(data);
   }
 }
 

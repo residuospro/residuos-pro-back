@@ -83,6 +83,7 @@ export interface IDepartmentService {
 export interface UserDataService {
   name: string;
   idDepartment: string;
+  department: string;
   idCompany: string;
   role: string[];
   ramal: number;

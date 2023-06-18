@@ -31,7 +31,7 @@ const departmentSchema = new mongoose_1.default.Schema({
         },
     },
     ramal: {
-        type: Number,
+        type: String,
         required: true,
     },
     createdAt: {

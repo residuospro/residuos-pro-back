@@ -1,9 +1,11 @@
+import User from "../models/users";
 import Department from "../models/department";
 import {
   IDepartment,
   IDepartmentService,
   IUpdateDepartment,
 } from "../utils/interfaces";
+import { log } from "console";
 
 class DepartmentService {
   static async createDepartmentService(department: IDepartmentService) {
@@ -47,10 +49,6 @@ class DepartmentService {
 
       const totalPages = Math.ceil(totalDepartments / itemsPerPage);
 
-      if (departments.length == 0) {
-        throw new Error("Não há departamentos pra essa busca");
-      }
-
       return { departments, totalPages };
     } catch (error: any) {
       throw new Error(error.message);
@@ -63,10 +61,6 @@ class DepartmentService {
         idCompany,
         deleted: false,
       });
-
-      if (departments.length == 0) {
-        throw new Error("Não há departamentos pra essa busca");
-      }
 
       return departments;
     } catch (error: any) {
@@ -117,6 +111,17 @@ class DepartmentService {
 
       const updateCompany = await department!.save();
 
+      if (updatedData[0].name) {
+        const user = await User.updateMany(
+          { idDepartment: id },
+          {
+            department: updatedData[0].name,
+          }
+        );
+
+        console.log(user);
+      }
+
       return updateCompany;
     } catch (error: any) {
       throw new Error("Departamento não encontrado");
@@ -127,7 +132,7 @@ class DepartmentService {
     try {
       const currentDate = new Date();
 
-      const company = await Department.findByIdAndUpdate(
+      const department = await Department.findByIdAndUpdate(
         id,
         {
           deleted: true,
@@ -136,7 +141,15 @@ class DepartmentService {
         { new: true }
       );
 
-      return company;
+      await User.updateMany(
+        { idDepartment: id },
+        {
+          deleted: true,
+          deletedAt: currentDate,
+        }
+      );
+
+      return department;
     } catch (error: any) {
       throw new Error("Departamento não encontrado");
     }

@@ -1,9 +1,10 @@
 export enum Routes {
-  GET_ADMIN = "/admin",
-  GET_ADMIN_BY_USERNAME = "/admin/by-username",
-  SAVE_ADMIN = "/admin/save",
-  UPDATE_ADMIN = "/admin/:id",
-  DELETE_ADMIN = "/admin/:id",
+  GET_USERS = "/users",
+  GET_USER_BY_USERNAME = "/user/by-username",
+  SAVE_USER = "/user/save",
+  UPDATE_USER = "/user/:id",
+  DELETE_USER = "/user/:id",
+
   SAVE_SUPPORT = "/support",
 
   GET_MANAGER = "/manager",
@@ -31,7 +32,7 @@ export enum Routes {
   GET_DEPARTMENT_BY_ID = "/department/:id",
   GET_DEPARTMENT_BY_NAME = "/department/by-name",
   SAVE_DEPARTMENT = "/department/save",
-  UPDATE_DEPARTMENT = "/department/:id",
+  UPDATE_DEPARTMENT = "/department/update/:id",
   DELETE_DEPARTMENT = "/department/:id",
 
   LOGIN = "/login",

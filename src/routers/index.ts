@@ -1,5 +1,5 @@
 import express, { Request, Response, Express } from "express";
-import admin_route from "./admin_route";
+import users_route from "./users_route";
 import companies_route from "./companies_route";
 import login_route from "./login_route";
 import payload_route from "./payload_route";
@@ -21,7 +21,7 @@ const router = (app: Express) => {
     login_route,
     support_route,
     verifyToken,
-    admin_route,
+    users_route,
     companies_route,
     manager_route,
     collaborator_route,

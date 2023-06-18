@@ -19,12 +19,6 @@ export const userCreateSchema = checkSchema({
     notEmpty: true,
     errorMessage: "Username não fornecido",
   },
-  password: {
-    in: ["body"],
-    isString: true,
-    notEmpty: true,
-    errorMessage: "Senha não fornecida",
-  },
   idCompany: {
     in: ["body"],
     isString: true,
@@ -54,7 +48,7 @@ export const getUserByRoleSchema = checkSchema({
   },
   role: {
     in: ["body"],
-    isString: true,
+    isArray: true,
     notEmpty: true,
     errorMessage: "Permissão não fornecida",
   },

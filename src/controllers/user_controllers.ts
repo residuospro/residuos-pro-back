@@ -8,18 +8,22 @@ class UserController {
       const {
         name,
         idDepartment,
+        department,
         idCompany,
         role,
         ramal,
         username,
-        password,
         email,
       } = req.body;
 
       // Chame o método do service para criar o usuário
+
+      const password = process.env.DEFAULT_PASSWORD;
+
       const createUser = await UserService.createUser({
         name,
         idDepartment,
+        department,
         idCompany,
         role,
         ramal,
@@ -54,12 +58,13 @@ class UserController {
 
   async getUserByUsername(req: Request, res: Response) {
     try {
-      const { username, idCompany, idDepartment } = req.query;
+      const { username, idCompany, idDepartment, role } = req.query;
 
       const user = await UserService.getUsername({
         username,
         idCompany,
         idDepartment,
+        role,
       });
 
       if (user) {

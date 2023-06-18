@@ -4,7 +4,9 @@ import DepartmentService from "../services/department_service";
 class DepartmentController {
   async createDepartment(req: Request, res: Response) {
     try {
-      const { name, responsible, email, ramal, idCompany } = req.body;
+      let { name, responsible, email, ramal, idCompany } = req.body;
+
+      name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
 
       const department = await DepartmentService.createDepartmentService({
         name,
@@ -77,7 +79,9 @@ class DepartmentController {
 
   async updateDepartment(req: Request, res: Response) {
     try {
-      const { name, responsible, email, ramal } = req.body;
+      let { name, responsible, email, ramal } = req.body;
+
+      name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
 
       const { id } = req.params;
 

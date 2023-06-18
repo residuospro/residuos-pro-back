@@ -21,12 +21,6 @@ exports.userCreateSchema = (0, express_validator_1.checkSchema)({
         notEmpty: true,
         errorMessage: "Username não fornecido",
     },
-    password: {
-        in: ["body"],
-        isString: true,
-        notEmpty: true,
-        errorMessage: "Senha não fornecida",
-    },
     idCompany: {
         in: ["body"],
         isString: true,
@@ -55,7 +49,7 @@ exports.getUserByRoleSchema = (0, express_validator_1.checkSchema)({
     },
     role: {
         in: ["body"],
-        isString: true,
+        isArray: true,
         notEmpty: true,
         errorMessage: "Permissão não fornecida",
     },

@@ -17,7 +17,8 @@ class DepartmentController {
     createDepartment(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { name, responsible, email, ramal, idCompany } = req.body;
+                let { name, responsible, email, ramal, idCompany } = req.body;
+                name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
                 const department = yield department_service_1.default.createDepartmentService({
                     name,
                     responsible,
@@ -87,7 +88,8 @@ class DepartmentController {
     updateDepartment(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { name, responsible, email, ramal } = req.body;
+                let { name, responsible, email, ramal } = req.body;
+                name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
                 const { id } = req.params;
                 const department = yield department_service_1.default.updateDepartmentService([{ name, responsible, email, ramal }], id);
                 return res.status(201).json(department);

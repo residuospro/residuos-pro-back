@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import User from "../models/users";
 import { IUser, UserDataService } from "../utils/interfaces";
+import { Permissions } from "../utils/enum";
 
 class UserService {
   static async createUser(userData: UserDataService) {
@@ -18,6 +19,14 @@ class UserService {
       const hashedPassword = await bcrypt.hash(userData.password, saltRounds);
 
       userData.password = hashedPassword;
+
+      if (userData.role[0] == Permissions.ADMIN) {
+        userData.role = [Permissions.MANAGER];
+      } else if (userData.role[0] == Permissions.MANAGER) {
+        userData.role = [Permissions.COLLABORATOR];
+      } else {
+        throw new Error("Você não possui permissão para criar usuários");
+      }
 
       const newUser = new User({
         ...userData,
@@ -51,13 +60,9 @@ class UserService {
 
       const users = await User.find(query).skip(skip).limit(itemsPerPage);
 
-      const totalUsers = await User.find({ Roles: { $in: [role] } }).count();
+      const totalUsers = await User.find({ role: { $in: [role] } }).count();
 
       const totalPages = Math.ceil(totalUsers / itemsPerPage);
-
-      if (users.length == 0) {
-        throw new Error("Não há usuários pra essa busca");
-      }
 
       return { users, totalPages };
     } catch (error: any) {
@@ -67,9 +72,14 @@ class UserService {
 
   static async getUsername(users: any) {
     try {
-      const { username, idCompany, idDepartment } = users;
+      const { username, idCompany, idDepartment, role } = users;
 
-      const query: any = { username, idCompany, deleted: false };
+      const query: any = {
+        username,
+        idCompany,
+        role: { $in: [role] },
+        deleted: false,
+      };
 
       if (idDepartment) {
         query["idDepartment"] = idDepartment;

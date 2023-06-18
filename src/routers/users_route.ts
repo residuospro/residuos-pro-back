@@ -8,41 +8,49 @@ import {
   getUsernameSchema,
 } from "../middleware/schemas/userSchema";
 
-const admin_route = express.Router();
-const admin_controller = new UserController();
+const user_route = express.Router();
+const user_controller = new UserController();
 
-admin_route
+user_route
   .get(
-    Routes.GET_ADMIN_BY_USERNAME,
+    Routes.GET_USER_BY_USERNAME,
     getUsernameSchema,
     validRequest,
     verifyPermission([Permissions.SUPPORT]),
-    admin_controller.getUserByUsername
-  )
-  .get(
-    Routes.GET_ADMIN,
-    getUserByRoleSchema,
-    validRequest,
-    verifyPermission([Permissions.SUPPORT]),
-    admin_controller.getUsersByRole
+    user_controller.getUserByUsername
   )
   .post(
-    Routes.SAVE_ADMIN,
+    Routes.GET_USERS,
+    getUserByRoleSchema,
+    validRequest,
+    verifyPermission([
+      Permissions.SUPPORT,
+      Permissions.ADMIN,
+      Permissions.MANAGER,
+    ]),
+    user_controller.getUsersByRole
+  )
+  .post(
+    Routes.SAVE_USER,
     userCreateSchema,
     validRequest,
-    verifyPermission([Permissions.SUPPORT]),
-    admin_controller.createUser
+    verifyPermission([
+      Permissions.SUPPORT,
+      Permissions.ADMIN,
+      Permissions.MANAGER,
+    ]),
+    user_controller.createUser
   )
   .put(
-    Routes.UPDATE_ADMIN,
+    Routes.UPDATE_USER,
 
     verifyPermission([Permissions.SUPPORT]),
-    admin_controller.updateUsers
+    user_controller.updateUsers
   )
   .delete(
-    Routes.DELETE_ADMIN,
+    Routes.DELETE_USER,
     verifyPermission([Permissions.SUPPORT]),
-    admin_controller.deleteUsers
+    user_controller.deleteUsers
   );
 
-export default admin_route;
+export default user_route;

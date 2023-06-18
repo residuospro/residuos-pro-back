@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const users_1 = __importDefault(require("../models/users"));
 const department_1 = __importDefault(require("../models/department"));
 class DepartmentService {
     static createDepartmentService(department) {
@@ -44,9 +45,6 @@ class DepartmentService {
                     deleted: false,
                 }).count();
                 const totalPages = Math.ceil(totalDepartments / itemsPerPage);
-                if (departments.length == 0) {
-                    throw new Error("Não há departamentos pra essa busca");
-                }
                 return { departments, totalPages };
             }
             catch (error) {
@@ -61,9 +59,6 @@ class DepartmentService {
                     idCompany,
                     deleted: false,
                 });
-                if (departments.length == 0) {
-                    throw new Error("Não há departamentos pra essa busca");
-                }
                 return departments;
             }
             catch (error) {
@@ -109,6 +104,12 @@ class DepartmentService {
                     }
                 }
                 const updateCompany = yield department.save();
+                if (updatedData[0].name) {
+                    const user = yield users_1.default.updateMany({ idDepartment: id }, {
+                        department: updatedData[0].name,
+                    });
+                    console.log(user);
+                }
                 return updateCompany;
             }
             catch (error) {
@@ -120,11 +121,15 @@ class DepartmentService {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const currentDate = new Date();
-                const company = yield department_1.default.findByIdAndUpdate(id, {
+                const department = yield department_1.default.findByIdAndUpdate(id, {
                     deleted: true,
                     deletedAt: currentDate,
                 }, { new: true });
-                return company;
+                yield users_1.default.updateMany({ idDepartment: id }, {
+                    deleted: true,
+                    deletedAt: currentDate,
+                });
+                return department;
             }
             catch (error) {
                 throw new Error("Departamento não encontrado");
