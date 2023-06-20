@@ -5,6 +5,7 @@ var Routes;
 (function (Routes) {
     Routes["GET_USERS"] = "/users";
     Routes["GET_USER_BY_USERNAME"] = "/user/by-username";
+    Routes["GET_ALL_USERNAMES"] = "/user/all";
     Routes["SAVE_USER"] = "/user/save";
     Routes["UPDATE_USER"] = "/user/:id";
     Routes["DELETE_USER"] = "/user/:id";

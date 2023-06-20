@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import DepartmentService from "../services/department_service";
+import HandleError from "../utils/errors/handleError";
 
 class DepartmentController {
   async createDepartment(req: Request, res: Response) {
@@ -18,9 +19,14 @@ class DepartmentController {
 
       return res.status(201).json(department);
     } catch (error: any) {
+      if (error instanceof HandleError) {
+        return res.status(error.statusCode).send({ message: error.message });
+      }
+
       return res.status(500).send({ message: error.message });
     }
   }
+
   async getDepartmentsByPage(req: Request, res: Response) {
     try {
       const { page, itemsPerPage, idCompany } = req.body;
@@ -79,19 +85,25 @@ class DepartmentController {
 
   async updateDepartment(req: Request, res: Response) {
     try {
-      let { name, responsible, email, ramal } = req.body;
+      let { name, responsible, email, ramal, idCompany } = req.body;
 
-      name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+      if (name) {
+        name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+      }
 
       const { id } = req.params;
 
       const department = await DepartmentService.updateDepartmentService(
-        [{ name, responsible, email, ramal }],
+        [{ name, responsible, email, ramal, idCompany }],
         id
       );
 
       return res.status(201).json(department);
     } catch (error: any) {
+      if (error instanceof HandleError) {
+        return res.status(error.statusCode).send({ message: error.message });
+      }
+
       return res.status(500).send({ message: error.message });
     }
   }

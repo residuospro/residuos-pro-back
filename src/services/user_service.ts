@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 import User from "../models/users";
 import { IUser, UserDataService } from "../utils/interfaces";
 import { Permissions } from "../utils/enum";
+import HandleError from "../utils/errors/handleError";
 
 class UserService {
   static async createUser(userData: UserDataService) {
@@ -12,7 +13,7 @@ class UserService {
       const existingUser = await User.findOne({ username, idCompany });
 
       if (existingUser != null) {
-        throw new Error("Nome de usuário já existe");
+        throw new HandleError("Nome de usuário já existe", 409);
       }
 
       const saltRounds = 8;
@@ -36,6 +37,10 @@ class UserService {
 
       return savedUser;
     } catch (error: any) {
+      if (error instanceof HandleError) {
+        throw error;
+      }
+
       throw new Error(error.message);
     }
   }
@@ -72,7 +77,7 @@ class UserService {
 
   static async getUsername(users: any) {
     try {
-      const { username, idCompany, idDepartment, role } = users;
+      const { username, idCompany, role } = users;
 
       const query: any = {
         username,
@@ -81,14 +86,24 @@ class UserService {
         deleted: false,
       };
 
-      if (idDepartment) {
-        query["idDepartment"] = idDepartment;
-      }
-
       const user = await User.findOne(query);
 
       return user;
     } catch (error: any) {
+      throw new Error(error.message);
+    }
+  }
+
+  static async getAllUsernamesService(idCompany: string, role: string[]) {
+    try {
+      const users = await User.find({
+        idCompany,
+        role: { $in: [role] },
+        deleted: false,
+      });
+
+      return users;
+    } catch (error) {
       throw new Error(error.message);
     }
   }

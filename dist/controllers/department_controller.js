@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const department_service_1 = __importDefault(require("../services/department_service"));
+const handleError_1 = __importDefault(require("../utils/errors/handleError"));
 class DepartmentController {
     createDepartment(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -29,6 +30,9 @@ class DepartmentController {
                 return res.status(201).json(department);
             }
             catch (error) {
+                if (error instanceof handleError_1.default) {
+                    return res.status(error.statusCode).send({ message: error.message });
+                }
                 return res.status(500).send({ message: error.message });
             }
         });
@@ -88,13 +92,18 @@ class DepartmentController {
     updateDepartment(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                let { name, responsible, email, ramal } = req.body;
-                name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+                let { name, responsible, email, ramal, idCompany } = req.body;
+                if (name) {
+                    name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+                }
                 const { id } = req.params;
-                const department = yield department_service_1.default.updateDepartmentService([{ name, responsible, email, ramal }], id);
+                const department = yield department_service_1.default.updateDepartmentService([{ name, responsible, email, ramal, idCompany }], id);
                 return res.status(201).json(department);
             }
             catch (error) {
+                if (error instanceof handleError_1.default) {
+                    return res.status(error.statusCode).send({ message: error.message });
+                }
                 return res.status(500).send({ message: error.message });
             }
         });

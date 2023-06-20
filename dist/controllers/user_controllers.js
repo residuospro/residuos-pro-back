@@ -13,12 +13,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const user_service_1 = __importDefault(require("../services/user_service"));
+const handleError_1 = __importDefault(require("../utils/errors/handleError"));
 class UserController {
     createUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { name, idDepartment, department, idCompany, role, ramal, username, email, } = req.body;
-                // Chame o método do service para criar o usuário
                 const password = process.env.DEFAULT_PASSWORD;
                 const createUser = yield user_service_1.default.createUser({
                     name,
@@ -34,6 +34,9 @@ class UserController {
                 return res.status(201).json(createUser);
             }
             catch (error) {
+                if (error instanceof handleError_1.default) {
+                    return res.status(error.statusCode).send({ message: error.message });
+                }
                 return res.status(500).send({ message: error.message });
             }
         });
@@ -44,6 +47,18 @@ class UserController {
                 const { page, itemsPerPage, role, idCompany, idDepartment } = req.body;
                 const skip = (parseInt(page) - 1) * parseInt(itemsPerPage);
                 const users = yield user_service_1.default.getUsers(role, skip, itemsPerPage, idCompany, idDepartment);
+                return res.status(200).json(users);
+            }
+            catch (error) {
+                return res.status(500).send({ message: error.message });
+            }
+        });
+    }
+    getAllUsernames(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { idCompany, role } = req.body;
+                const users = yield user_service_1.default.getAllUsernamesService(idCompany, role);
                 return res.status(200).json(users);
             }
             catch (error) {

@@ -97,4 +97,5 @@ export interface IUpdateDepartment {
   responsible: string;
   email: string;
   ramal: number;
+  idCompany: string;
 }

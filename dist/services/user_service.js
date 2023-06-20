@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const users_1 = __importDefault(require("../models/users"));
 const enum_1 = require("../utils/enum");
+const handleError_1 = __importDefault(require("../utils/errors/handleError"));
 class UserService {
     static createUser(userData) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -23,7 +24,7 @@ class UserService {
                 // Verifique se o username já existe no banco de dados
                 const existingUser = yield users_1.default.findOne({ username, idCompany });
                 if (existingUser != null) {
-                    throw new Error("Nome de usuário já existe");
+                    throw new handleError_1.default("Nome de usuário já existe", 409);
                 }
                 const saltRounds = 8;
                 const hashedPassword = yield bcrypt_1.default.hash(userData.password, saltRounds);
@@ -42,6 +43,9 @@ class UserService {
                 return savedUser;
             }
             catch (error) {
+                if (error instanceof handleError_1.default) {
+                    throw error;
+                }
                 throw new Error(error.message);
             }
         });
@@ -69,18 +73,30 @@ class UserService {
     static getUsername(users) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { username, idCompany, idDepartment, role } = users;
+                const { username, idCompany, role } = users;
                 const query = {
                     username,
                     idCompany,
                     role: { $in: [role] },
                     deleted: false,
                 };
-                if (idDepartment) {
-                    query["idDepartment"] = idDepartment;
-                }
                 const user = yield users_1.default.findOne(query);
                 return user;
+            }
+            catch (error) {
+                throw new Error(error.message);
+            }
+        });
+    }
+    static getAllUsernamesService(idCompany, role) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const users = yield users_1.default.find({
+                    idCompany,
+                    role: { $in: [role] },
+                    deleted: false,
+                });
+                return users;
             }
             catch (error) {
                 throw new Error(error.message);

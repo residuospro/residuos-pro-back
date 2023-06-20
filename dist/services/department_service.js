@@ -14,20 +14,28 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const users_1 = __importDefault(require("../models/users"));
 const department_1 = __importDefault(require("../models/department"));
+const handleError_1 = __importDefault(require("../utils/errors/handleError"));
 class DepartmentService {
     static createDepartmentService(department) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { name, idCompany } = department;
-                const existingCompany = yield department_1.default.findOne({ name, idCompany });
-                if (existingCompany != null) {
-                    throw new Error("Esse departamento já existe");
+                const existingDepartment = yield department_1.default.findOne({
+                    name,
+                    idCompany,
+                    delete: false,
+                });
+                if (existingDepartment != null) {
+                    throw new handleError_1.default("Esse departamento já existe", 409);
                 }
                 const departments = new department_1.default(Object.assign({}, department));
                 const savedDepartment = yield departments.save();
                 return savedDepartment;
             }
             catch (error) {
+                if (error instanceof handleError_1.default) {
+                    throw error;
+                }
                 throw new Error(error.message);
             }
         });
@@ -96,6 +104,14 @@ class DepartmentService {
     static updateDepartmentService(updatedData, id) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
+                const existingDepartment = yield department_1.default.findOne({
+                    name: updatedData[0].name,
+                    idCompany: updatedData[0].idCompany,
+                    delete: false,
+                });
+                if (existingDepartment != null) {
+                    throw new handleError_1.default("Esse departamento já existe", 409);
+                }
                 let department = (yield department_1.default.findById(id));
                 for (const key in updatedData[0]) {
                     const value = updatedData[0][key];
@@ -108,11 +124,13 @@ class DepartmentService {
                     const user = yield users_1.default.updateMany({ idDepartment: id }, {
                         department: updatedData[0].name,
                     });
-                    console.log(user);
                 }
                 return updateCompany;
             }
             catch (error) {
+                if (error instanceof handleError_1.default) {
+                    throw error;
+                }
                 throw new Error("Departamento não encontrado");
             }
         });

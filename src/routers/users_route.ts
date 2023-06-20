@@ -31,6 +31,15 @@ user_route
     user_controller.getUsersByRole
   )
   .post(
+    Routes.GET_ALL_USERNAMES,
+    verifyPermission([
+      Permissions.ADMIN,
+      Permissions.MANAGER,
+      Permissions.SUPPORT,
+    ]),
+    user_controller.getAllUsernames
+  )
+  .post(
     Routes.SAVE_USER,
     userCreateSchema,
     validRequest,

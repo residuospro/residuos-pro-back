@@ -1,21 +1,21 @@
 import User from "../models/users";
 import Department from "../models/department";
-import {
-  IDepartment,
-  IDepartmentService,
-  IUpdateDepartment,
-} from "../utils/interfaces";
-import { log } from "console";
+import { IDepartmentService, IUpdateDepartment } from "../utils/interfaces";
+import HandleError from "../utils/errors/handleError";
 
 class DepartmentService {
   static async createDepartmentService(department: IDepartmentService) {
     try {
       const { name, idCompany } = department;
 
-      const existingCompany = await Department.findOne({ name, idCompany });
+      const existingDepartment = await Department.findOne({
+        name,
+        idCompany,
+        delete: false,
+      });
 
-      if (existingCompany != null) {
-        throw new Error("Esse departamento já existe");
+      if (existingDepartment != null) {
+        throw new HandleError("Esse departamento já existe", 409);
       }
 
       const departments = new Department({
@@ -26,6 +26,10 @@ class DepartmentService {
 
       return savedDepartment;
     } catch (error: any) {
+      if (error instanceof HandleError) {
+        throw error;
+      }
+
       throw new Error(error.message);
     }
   }
@@ -99,6 +103,16 @@ class DepartmentService {
     id: string
   ) {
     try {
+      const existingDepartment = await Department.findOne({
+        name: updatedData[0].name,
+        idCompany: updatedData[0].idCompany,
+        delete: false,
+      });
+
+      if (existingDepartment != null) {
+        throw new HandleError("Esse departamento já existe", 409);
+      }
+
       let department = (await Department.findById(id)) as any;
 
       for (const key in updatedData[0]) {
@@ -118,12 +132,14 @@ class DepartmentService {
             department: updatedData[0].name,
           }
         );
-
-        console.log(user);
       }
 
       return updateCompany;
     } catch (error: any) {
+      if (error instanceof HandleError) {
+        throw error;
+      }
+
       throw new Error("Departamento não encontrado");
     }
   }

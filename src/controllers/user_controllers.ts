@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import UserService from "../services/user_service";
 import { IUser } from "../utils/interfaces";
+import HandleError from "../utils/errors/handleError";
 
 class UserController {
   async createUser(req: Request, res: Response) {
@@ -15,8 +16,6 @@ class UserController {
         username,
         email,
       } = req.body;
-
-      // Chame o método do service para criar o usuário
 
       const password = process.env.DEFAULT_PASSWORD;
 
@@ -34,9 +33,14 @@ class UserController {
 
       return res.status(201).json(createUser);
     } catch (error: any) {
+      if (error instanceof HandleError) {
+        return res.status(error.statusCode).send({ message: error.message });
+      }
+
       return res.status(500).send({ message: error.message });
     }
   }
+
   async getUsersByRole(req: Request, res: Response) {
     try {
       const { page, itemsPerPage, role, idCompany, idDepartment } = req.body;
@@ -52,6 +56,18 @@ class UserController {
 
       return res.status(200).json(users);
     } catch (error: any) {
+      return res.status(500).send({ message: error.message });
+    }
+  }
+
+  async getAllUsernames(req: Request, res: Response) {
+    try {
+      const { idCompany, role } = req.body;
+
+      const users = await UserService.getAllUsernamesService(idCompany, role);
+
+      return res.status(200).json(users);
+    } catch (error) {
       return res.status(500).send({ message: error.message });
     }
   }

@@ -17,6 +17,11 @@ user_route
     enum_1.Permissions.ADMIN,
     enum_1.Permissions.MANAGER,
 ]), user_controller.getUsersByRole)
+    .post(enum_1.Routes.GET_ALL_USERNAMES, (0, middleware_1.verifyPermission)([
+    enum_1.Permissions.ADMIN,
+    enum_1.Permissions.MANAGER,
+    enum_1.Permissions.SUPPORT,
+]), user_controller.getAllUsernames)
     .post(enum_1.Routes.SAVE_USER, userSchema_1.userCreateSchema, middleware_1.validRequest, (0, middleware_1.verifyPermission)([
     enum_1.Permissions.SUPPORT,
     enum_1.Permissions.ADMIN,
