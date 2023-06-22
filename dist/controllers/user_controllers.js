@@ -69,11 +69,10 @@ class UserController {
     getUserByUsername(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { username, idCompany, idDepartment, role } = req.query;
+                const { username, idCompany, role } = req.body;
                 const user = yield user_service_1.default.getUsername({
                     username,
                     idCompany,
-                    idDepartment,
                     role,
                 });
                 if (user) {
@@ -89,9 +88,9 @@ class UserController {
     updateUsers(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { name, username, password, ramal, email } = req.body;
+                const { name, username, password, ramal, email, department, idDepartment, } = req.body;
                 const { id } = req.params;
-                const user = yield user_service_1.default.updateUser([{ name, username, password, ramal, email }], id);
+                const user = yield user_service_1.default.updateUser([{ name, username, password, ramal, email, department, idDepartment }], id);
                 return res.status(200).json(user);
             }
             catch (error) {

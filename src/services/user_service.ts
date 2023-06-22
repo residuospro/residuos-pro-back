@@ -65,7 +65,10 @@ class UserService {
 
       const users = await User.find(query).skip(skip).limit(itemsPerPage);
 
-      const totalUsers = await User.find({ role: { $in: [role] } }).count();
+      const totalUsers = await User.find({
+        role: { $in: [role] },
+        deleted: false,
+      }).count();
 
       const totalPages = Math.ceil(totalUsers / itemsPerPage);
 

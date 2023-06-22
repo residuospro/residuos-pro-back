@@ -12,11 +12,15 @@ const user_route = express.Router();
 const user_controller = new UserController();
 
 user_route
-  .get(
+  .post(
     Routes.GET_USER_BY_USERNAME,
     getUsernameSchema,
     validRequest,
-    verifyPermission([Permissions.SUPPORT]),
+    verifyPermission([
+      Permissions.SUPPORT,
+      Permissions.ADMIN,
+      Permissions.MANAGER,
+    ]),
     user_controller.getUserByUsername
   )
   .post(
@@ -52,13 +56,20 @@ user_route
   )
   .put(
     Routes.UPDATE_USER,
-
-    verifyPermission([Permissions.SUPPORT]),
+    verifyPermission([
+      Permissions.SUPPORT,
+      Permissions.ADMIN,
+      Permissions.MANAGER,
+    ]),
     user_controller.updateUsers
   )
   .delete(
     Routes.DELETE_USER,
-    verifyPermission([Permissions.SUPPORT]),
+    verifyPermission([
+      Permissions.SUPPORT,
+      Permissions.ADMIN,
+      Permissions.MANAGER,
+    ]),
     user_controller.deleteUsers
   );
 

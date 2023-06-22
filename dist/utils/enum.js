@@ -7,7 +7,7 @@ var Routes;
     Routes["GET_USER_BY_USERNAME"] = "/user/by-username";
     Routes["GET_ALL_USERNAMES"] = "/user/all";
     Routes["SAVE_USER"] = "/user/save";
-    Routes["UPDATE_USER"] = "/user/:id";
+    Routes["UPDATE_USER"] = "/user/update/:id";
     Routes["DELETE_USER"] = "/user/:id";
     Routes["SAVE_SUPPORT"] = "/support";
     Routes["GET_MANAGER"] = "/manager";

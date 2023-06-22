@@ -74,12 +74,11 @@ class UserController {
 
   async getUserByUsername(req: Request, res: Response) {
     try {
-      const { username, idCompany, idDepartment, role } = req.query;
+      const { username, idCompany, role } = req.body;
 
       const user = await UserService.getUsername({
         username,
         idCompany,
-        idDepartment,
         role,
       });
 
@@ -95,12 +94,20 @@ class UserController {
 
   async updateUsers(req: Request, res: Response) {
     try {
-      const { name, username, password, ramal, email }: IUser = req.body;
+      const {
+        name,
+        username,
+        password,
+        ramal,
+        email,
+        department,
+        idDepartment,
+      }: IUser = req.body;
 
       const { id } = req.params;
 
       const user = await UserService.updateUser(
-        [{ name, username, password, ramal, email }],
+        [{ name, username, password, ramal, email, department, idDepartment }],
         id
       );
 

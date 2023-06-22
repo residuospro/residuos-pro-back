@@ -3,7 +3,7 @@ export enum Routes {
   GET_USER_BY_USERNAME = "/user/by-username",
   GET_ALL_USERNAMES = "/user/all",
   SAVE_USER = "/user/save",
-  UPDATE_USER = "/user/:id",
+  UPDATE_USER = "/user/update/:id",
   DELETE_USER = "/user/:id",
 
   SAVE_SUPPORT = "/support",

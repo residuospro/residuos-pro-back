@@ -4,7 +4,9 @@ export interface IUser {
   username: string;
   password: string;
   email: string;
-  ramal: number;
+  ramal: string;
+  department: string;
+  idDepartment: string;
 }
 
 export interface ICompany {

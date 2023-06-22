@@ -61,7 +61,10 @@ class UserService {
                     query["idDepartment"] = idDepartment;
                 }
                 const users = yield users_1.default.find(query).skip(skip).limit(itemsPerPage);
-                const totalUsers = yield users_1.default.find({ role: { $in: [role] } }).count();
+                const totalUsers = yield users_1.default.find({
+                    role: { $in: [role] },
+                    deleted: false,
+                }).count();
                 const totalPages = Math.ceil(totalUsers / itemsPerPage);
                 return { users, totalPages };
             }

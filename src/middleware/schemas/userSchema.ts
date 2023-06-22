@@ -62,15 +62,21 @@ export const getUserByRoleSchema = checkSchema({
 
 export const getUsernameSchema = checkSchema({
   username: {
-    in: ["query"],
+    in: ["body"],
     isString: true,
     notEmpty: true,
     errorMessage: "Username não fornecido",
   },
   idCompany: {
-    in: ["query"],
+    in: ["body"],
     isString: true,
     notEmpty: true,
     errorMessage: "Id da empresa não fornecido",
+  },
+  role: {
+    in: ["body"],
+    isArray: true,
+    notEmpty: true,
+    errorMessage: "Permissão não fornecida",
   },
 });
