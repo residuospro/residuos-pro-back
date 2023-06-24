@@ -1,10 +1,10 @@
 import express from "express";
-
 import dotenv from "dotenv";
 import router from "./routers";
 import dbConnection from "./config/dbConfig";
 
 dotenv.config();
+
 const server = express();
 
 router(server);
