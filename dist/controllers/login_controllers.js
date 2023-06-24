@@ -46,7 +46,6 @@ class LoginController {
                 res.json({ token, refreshToken });
             }
             catch (error) {
-                console.error("Erro ao fazer login:", error);
                 res.status(500).json({ error: "Erro ao fazer login" });
             }
         });

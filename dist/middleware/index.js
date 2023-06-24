@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.verifyPermission = exports.verifyToken = exports.validRequest = void 0;
+exports.cacheControlMiddleware = exports.verifyPermission = exports.verifyToken = exports.validRequest = void 0;
 const express_validator_1 = require("express-validator");
 const token_service_1 = __importDefault(require("../services/token_service"));
 const validRequest = (req, res, next) => {
@@ -60,4 +60,9 @@ const verifyPermission = (permission) => {
     };
 };
 exports.verifyPermission = verifyPermission;
+const cacheControlMiddleware = (req, res, next) => {
+    res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+    next();
+};
+exports.cacheControlMiddleware = cacheControlMiddleware;
 //# sourceMappingURL=index.js.map

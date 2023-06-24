@@ -26,7 +26,9 @@ class LoginController {
       const [username, password] = credentials.split(":");
 
       // Verificar se o usuário existe no banco de dados
+
       const user = await User.findOne({ username });
+
       if (!user) {
         return res.status(401).json({ error: "Usuário não encontrado" });
       }
@@ -51,7 +53,6 @@ class LoginController {
       // Retornar o token JWT para o cliente
       res.json({ token, refreshToken });
     } catch (error) {
-      console.error("Erro ao fazer login:", error);
       res.status(500).json({ error: "Erro ao fazer login" });
     }
   }

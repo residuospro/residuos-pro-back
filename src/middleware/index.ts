@@ -74,3 +74,12 @@ export const verifyPermission = (permission: string[]): RequestHandler => {
     }
   };
 };
+
+export const cacheControlMiddleware = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+  next();
+};

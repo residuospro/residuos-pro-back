@@ -3,7 +3,7 @@ import users_route from "./users_route";
 import companies_route from "./companies_route";
 import login_route from "./login_route";
 import payload_route from "./payload_route";
-import { verifyToken } from "../middleware";
+import { verifyToken, cacheControlMiddleware } from "../middleware";
 import support_route from "./support_route";
 import manager_route from "./manager_route";
 import collaborator_route from "./collaborator_route";
@@ -18,6 +18,7 @@ const router = (app: Express) => {
   app.use(
     express.json(),
     cors(),
+    cacheControlMiddleware,
     login_route,
     support_route,
     verifyToken,
