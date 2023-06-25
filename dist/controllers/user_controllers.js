@@ -50,6 +50,9 @@ class UserController {
                 return res.status(200).json(users);
             }
             catch (error) {
+                if (error instanceof handleError_1.default) {
+                    return res.status(error.statusCode).send({ message: error.message });
+                }
                 return res.status(500).send({ message: error.message });
             }
         });
@@ -94,6 +97,9 @@ class UserController {
                 return res.status(200).json(user);
             }
             catch (error) {
+                if (error instanceof handleError_1.default) {
+                    return res.status(error.statusCode).send({ message: error.message });
+                }
                 return res.status(404).send({ message: error.message });
             }
         });

@@ -22,7 +22,11 @@ class UserService {
             try {
                 const { username, idCompany } = userData;
                 // Verifique se o username já existe no banco de dados
-                const existingUser = yield users_1.default.findOne({ username, idCompany });
+                const existingUser = yield users_1.default.findOne({
+                    username,
+                    idCompany,
+                    deleted: false,
+                });
                 if (existingUser != null) {
                     throw new handleError_1.default("Nome de usuário já existe", 409);
                 }
@@ -61,14 +65,17 @@ class UserService {
                     query["idDepartment"] = idDepartment;
                 }
                 const users = yield users_1.default.find(query).skip(skip).limit(itemsPerPage);
-                const totalUsers = yield users_1.default.find({
-                    role: { $in: [role] },
-                    deleted: false,
-                }).count();
+                if (users.length == 0) {
+                    throw new handleError_1.default("Não há registros para essa busca", 404);
+                }
+                const totalUsers = yield users_1.default.find(query).count();
                 const totalPages = Math.ceil(totalUsers / itemsPerPage);
                 return { users, totalPages };
             }
             catch (error) {
+                if (error instanceof handleError_1.default) {
+                    throw error;
+                }
                 throw new Error(error.message);
             }
         });
@@ -109,6 +116,16 @@ class UserService {
     static updateUser(updatedData, id) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
+                let existingUser;
+                if (updatedData[0].username) {
+                    existingUser = yield users_1.default.findOne({
+                        username: updatedData[0].username,
+                        deleted: false,
+                    });
+                }
+                if (existingUser != null) {
+                    throw new handleError_1.default("Nome de usuário já existe", 409);
+                }
                 let user = (yield users_1.default.findById(id));
                 for (const key in updatedData[0]) {
                     const value = updatedData[0][key];
@@ -120,6 +137,9 @@ class UserService {
                 return updatedUser;
             }
             catch (error) {
+                if (error instanceof handleError_1.default) {
+                    throw error;
+                }
                 throw new Error("Usuário não encontrado");
             }
         });

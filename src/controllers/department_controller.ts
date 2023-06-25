@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import DepartmentService from "../services/department_service";
 import HandleError from "../utils/errors/handleError";
+import Department from "../models/department";
 
 class DepartmentController {
   async createDepartment(req: Request, res: Response) {
@@ -40,9 +41,14 @@ class DepartmentController {
 
       return res.status(200).json(departments);
     } catch (error: any) {
+      if (error instanceof HandleError) {
+        return res.status(error.statusCode).send({ message: error.message });
+      }
+
       return res.status(500).send({ message: error.message });
     }
   }
+
   async getAllDepartment(req: Request, res: Response) {
     try {
       const { idCompany } = req.body;

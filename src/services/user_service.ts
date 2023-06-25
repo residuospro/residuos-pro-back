@@ -10,7 +10,11 @@ class UserService {
       const { username, idCompany } = userData;
 
       // Verifique se o username já existe no banco de dados
-      const existingUser = await User.findOne({ username, idCompany });
+      const existingUser = await User.findOne({
+        username,
+        idCompany,
+        deleted: false,
+      });
 
       if (existingUser != null) {
         throw new HandleError("Nome de usuário já existe", 409);
@@ -65,15 +69,20 @@ class UserService {
 
       const users = await User.find(query).skip(skip).limit(itemsPerPage);
 
-      const totalUsers = await User.find({
-        role: { $in: [role] },
-        deleted: false,
-      }).count();
+      if (users.length == 0) {
+        throw new HandleError("Não há registros para essa busca", 404);
+      }
+
+      const totalUsers = await User.find(query).count();
 
       const totalPages = Math.ceil(totalUsers / itemsPerPage);
 
       return { users, totalPages };
     } catch (error: any) {
+      if (error instanceof HandleError) {
+        throw error;
+      }
+
       throw new Error(error.message);
     }
   }
@@ -113,6 +122,19 @@ class UserService {
 
   static async updateUser(updatedData: IUser[], id: string) {
     try {
+      let existingUser: any;
+
+      if (updatedData[0].username) {
+        existingUser = await User.findOne({
+          username: updatedData[0].username,
+          deleted: false,
+        });
+      }
+
+      if (existingUser != null) {
+        throw new HandleError("Nome de usuário já existe", 409);
+      }
+
       let user = (await User.findById(id)) as any;
 
       for (const key in updatedData[0]) {
@@ -127,6 +149,10 @@ class UserService {
 
       return updatedUser;
     } catch (error: any) {
+      if (error instanceof HandleError) {
+        throw error;
+      }
+
       throw new Error("Usuário não encontrado");
     }
   }

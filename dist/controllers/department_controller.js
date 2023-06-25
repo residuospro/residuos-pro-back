@@ -46,6 +46,9 @@ class DepartmentController {
                 return res.status(200).json(departments);
             }
             catch (error) {
+                if (error instanceof handleError_1.default) {
+                    return res.status(error.statusCode).send({ message: error.message });
+                }
                 return res.status(500).send({ message: error.message });
             }
         });

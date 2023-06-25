@@ -8,13 +8,16 @@ class DepartmentService {
     try {
       const { name, idCompany } = department;
 
-      const existingDepartment = await Department.findOne({
-        name,
+      const validate = await Department.find({
         idCompany,
-        delete: false,
+        deleted: false,
       });
 
-      if (existingDepartment != null) {
+      const existingDepartment = validate.filter(
+        (e: any) => e._doc.name == name
+      );
+
+      if (existingDepartment.length > 0) {
         throw new HandleError("Esse departamento já existe", 409);
       }
 
@@ -47,14 +50,23 @@ class DepartmentService {
         .skip(skip)
         .limit(itemsPerPage);
 
+      if (departments.length == 0) {
+        throw new HandleError("Não há registros para essa busca", 404);
+      }
+
       const totalDepartments = await Department.find({
         deleted: false,
+        idCompany,
       }).count();
 
       const totalPages = Math.ceil(totalDepartments / itemsPerPage);
 
       return { departments, totalPages };
     } catch (error: any) {
+      if (error instanceof HandleError) {
+        throw error;
+      }
+
       throw new Error(error.message);
     }
   }
@@ -103,13 +115,16 @@ class DepartmentService {
     id: string
   ) {
     try {
-      const existingDepartment = await Department.findOne({
-        name: updatedData[0].name,
+      const validate = await Department.find({
         idCompany: updatedData[0].idCompany,
-        delete: false,
+        deleted: false,
       });
 
-      if (existingDepartment != null) {
+      const existingDepartment = validate.filter(
+        (e: any) => e._doc.name == updatedData[0].name
+      );
+
+      if (existingDepartment.length > 0) {
         throw new HandleError("Esse departamento já existe", 409);
       }
 
@@ -130,6 +145,15 @@ class DepartmentService {
           { idDepartment: id },
           {
             department: updatedData[0].name,
+          }
+        );
+      }
+
+      if (updatedData[0].ramal) {
+        const user = await User.updateMany(
+          { idDepartment: id },
+          {
+            ramal: updatedData[0].ramal,
           }
         );
       }
