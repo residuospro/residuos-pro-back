@@ -11,16 +11,16 @@ const userSchema_1 = require("../middleware/schemas/userSchema");
 const user_route = express_1.default.Router();
 const user_controller = new user_controllers_1.default();
 user_route
-    .post(enum_1.Routes.GET_USER_BY_USERNAME, userSchema_1.getUsernameSchema, middleware_1.validRequest, (0, middleware_1.verifyPermission)([
-    enum_1.Permissions.SUPPORT,
-    enum_1.Permissions.ADMIN,
-    enum_1.Permissions.MANAGER,
-]), user_controller.getUserByUsername)
     .post(enum_1.Routes.GET_USERS, userSchema_1.getUserByRoleSchema, middleware_1.validRequest, (0, middleware_1.verifyPermission)([
     enum_1.Permissions.SUPPORT,
     enum_1.Permissions.ADMIN,
     enum_1.Permissions.MANAGER,
 ]), user_controller.getUsersByRole)
+    .post(enum_1.Routes.GET_USER_BY_USERNAME, userSchema_1.getUsernameSchema, middleware_1.validRequest, (0, middleware_1.verifyPermission)([
+    enum_1.Permissions.SUPPORT,
+    enum_1.Permissions.ADMIN,
+    enum_1.Permissions.MANAGER,
+]), user_controller.getUserByUsername)
     .post(enum_1.Routes.GET_ALL_USERNAMES, (0, middleware_1.verifyPermission)([
     enum_1.Permissions.ADMIN,
     enum_1.Permissions.MANAGER,

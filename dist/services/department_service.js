@@ -15,17 +15,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const users_1 = __importDefault(require("../models/users"));
 const department_1 = __importDefault(require("../models/department"));
 const handleError_1 = __importDefault(require("../utils/errors/handleError"));
+const user_service_1 = __importDefault(require("./user_service"));
 class DepartmentService {
     static createDepartmentService(department) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { name, idCompany } = department;
-                const validate = yield department_1.default.find({
-                    idCompany,
-                    deleted: false,
-                });
-                const existingDepartment = validate.filter((e) => e._doc.name == name);
-                if (existingDepartment.length > 0) {
+                const existingDepartment = yield this.validatesIfTheDepartmentExists(idCompany, name);
+                if (existingDepartment) {
                     throw new handleError_1.default("Esse departamento já existe", 409);
                 }
                 const departments = new department_1.default(Object.assign({}, department));
@@ -111,12 +108,8 @@ class DepartmentService {
     static updateDepartmentService(updatedData, id) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const validate = yield department_1.default.find({
-                    idCompany: updatedData[0].idCompany,
-                    deleted: false,
-                });
-                const existingDepartment = validate.filter((e) => e._doc.name == updatedData[0].name);
-                if (existingDepartment.length > 0) {
+                const existingDepartment = yield this.validatesIfTheDepartmentExists(updatedData[0].idCompany, updatedData[0].name);
+                if (existingDepartment) {
                     throw new handleError_1.default("Esse departamento já existe", 409);
                 }
                 let department = (yield department_1.default.findById(id));
@@ -127,16 +120,7 @@ class DepartmentService {
                     }
                 }
                 const updateCompany = yield department.save();
-                if (updatedData[0].name) {
-                    const user = yield users_1.default.updateMany({ idDepartment: id }, {
-                        department: updatedData[0].name,
-                    });
-                }
-                if (updatedData[0].ramal) {
-                    const user = yield users_1.default.updateMany({ idDepartment: id }, {
-                        ramal: updatedData[0].ramal,
-                    });
-                }
+                yield user_service_1.default.updateUserAfterUpdateDepartment(updatedData[0].name, updatedData[0].ramal, id);
                 return updateCompany;
             }
             catch (error) {
@@ -145,6 +129,18 @@ class DepartmentService {
                 }
                 throw new Error("Departamento não encontrado");
             }
+        });
+    }
+    static validatesIfTheDepartmentExists(idCompany, name) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const validate = yield department_1.default.find({
+                idCompany,
+                deleted: false,
+            });
+            const existingDepartment = validate.filter((e) => e._doc.name == name);
+            if (existingDepartment.length > 0)
+                return true;
+            return false;
         });
     }
     static deleteDepartmentService(id) {

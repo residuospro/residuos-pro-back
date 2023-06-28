@@ -7,6 +7,7 @@ import { verifyToken, cacheControlMiddleware } from "../middleware";
 import support_route from "./support_route";
 import manager_route from "./manager_route";
 import collaborator_route from "./collaborator_route";
+import refresh_token_route from "./refreshToken_route";
 import department_route from "./department_route";
 import cors from "cors";
 
@@ -27,7 +28,8 @@ const router = (app: Express) => {
     manager_route,
     collaborator_route,
     department_route,
-    payload_route
+    payload_route,
+    refresh_token_route
   );
 };
 

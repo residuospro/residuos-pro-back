@@ -125,6 +125,8 @@ class UserController {
     }
   }
 
+
+
   async deleteUsers(req: Request, res: Response) {
     try {
       const { id } = req.params;

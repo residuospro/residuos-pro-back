@@ -36,6 +36,7 @@ var Routes;
     Routes["DELETE_DEPARTMENT"] = "/department/:id";
     Routes["LOGIN"] = "/login";
     Routes["PAYLOAD"] = "/payload";
+    Routes["REFRESH_TOKEN"] = "/refresh_token";
 })(Routes = exports.Routes || (exports.Routes = {}));
 var Permissions;
 (function (Permissions) {

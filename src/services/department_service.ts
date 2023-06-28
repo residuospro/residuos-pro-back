@@ -2,22 +2,19 @@ import User from "../models/users";
 import Department from "../models/department";
 import { IDepartmentService, IUpdateDepartment } from "../utils/interfaces";
 import HandleError from "../utils/errors/handleError";
+import UserService from "./user_service";
 
 class DepartmentService {
   static async createDepartmentService(department: IDepartmentService) {
     try {
       const { name, idCompany } = department;
 
-      const validate = await Department.find({
+      const existingDepartment = await this.validatesIfTheDepartmentExists(
         idCompany,
-        deleted: false,
-      });
-
-      const existingDepartment = validate.filter(
-        (e: any) => e._doc.name == name
+        name
       );
 
-      if (existingDepartment.length > 0) {
+      if (existingDepartment) {
         throw new HandleError("Esse departamento já existe", 409);
       }
 
@@ -115,16 +112,12 @@ class DepartmentService {
     id: string
   ) {
     try {
-      const validate = await Department.find({
-        idCompany: updatedData[0].idCompany,
-        deleted: false,
-      });
-
-      const existingDepartment = validate.filter(
-        (e: any) => e._doc.name == updatedData[0].name
+      const existingDepartment = await this.validatesIfTheDepartmentExists(
+        updatedData[0].idCompany,
+        updatedData[0].name
       );
 
-      if (existingDepartment.length > 0) {
+      if (existingDepartment) {
         throw new HandleError("Esse departamento já existe", 409);
       }
 
@@ -140,23 +133,11 @@ class DepartmentService {
 
       const updateCompany = await department!.save();
 
-      if (updatedData[0].name) {
-        const user = await User.updateMany(
-          { idDepartment: id },
-          {
-            department: updatedData[0].name,
-          }
-        );
-      }
-
-      if (updatedData[0].ramal) {
-        const user = await User.updateMany(
-          { idDepartment: id },
-          {
-            ramal: updatedData[0].ramal,
-          }
-        );
-      }
+      await UserService.updateUserAfterUpdateDepartment(
+        updatedData[0].name,
+        updatedData[0].ramal,
+        id
+      );
 
       return updateCompany;
     } catch (error: any) {
@@ -166,6 +147,19 @@ class DepartmentService {
 
       throw new Error("Departamento não encontrado");
     }
+  }
+
+  static async validatesIfTheDepartmentExists(idCompany: string, name: string) {
+    const validate = await Department.find({
+      idCompany,
+      deleted: false,
+    });
+
+    const existingDepartment = validate.filter((e: any) => e._doc.name == name);
+
+    if (existingDepartment.length > 0) return true;
+
+    return false;
   }
 
   static async deleteDepartmentService(id: string) {

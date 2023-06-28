@@ -144,6 +144,20 @@ class UserService {
             }
         });
     }
+    static updateUserAfterUpdateDepartment(name, ramal, id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (name) {
+                const user = yield users_1.default.updateMany({ idDepartment: id }, {
+                    department: name,
+                });
+            }
+            if (ramal) {
+                const user = yield users_1.default.updateMany({ idDepartment: id }, {
+                    ramal,
+                });
+            }
+        });
+    }
     static deleteUser(userId) {
         return __awaiter(this, void 0, void 0, function* () {
             try {

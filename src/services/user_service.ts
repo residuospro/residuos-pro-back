@@ -157,6 +157,30 @@ class UserService {
     }
   }
 
+  static async updateUserAfterUpdateDepartment(
+    name: string,
+    ramal: number,
+    id: string
+  ) {
+    if (name) {
+      const user = await User.updateMany(
+        { idDepartment: id },
+        {
+          department: name,
+        }
+      );
+    }
+
+    if (ramal) {
+      const user = await User.updateMany(
+        { idDepartment: id },
+        {
+          ramal,
+        }
+      );
+    }
+  }
+
   static async deleteUser(userId: string) {
     try {
       const currentDate = new Date();

@@ -38,6 +38,7 @@ export enum Routes {
 
   LOGIN = "/login",
   PAYLOAD = "/payload",
+  REFRESH_TOKEN = "/refresh_token",
 }
 
 export enum Permissions {

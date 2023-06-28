@@ -13,17 +13,6 @@ const user_controller = new UserController();
 
 user_route
   .post(
-    Routes.GET_USER_BY_USERNAME,
-    getUsernameSchema,
-    validRequest,
-    verifyPermission([
-      Permissions.SUPPORT,
-      Permissions.ADMIN,
-      Permissions.MANAGER,
-    ]),
-    user_controller.getUserByUsername
-  )
-  .post(
     Routes.GET_USERS,
     getUserByRoleSchema,
     validRequest,
@@ -33,6 +22,17 @@ user_route
       Permissions.MANAGER,
     ]),
     user_controller.getUsersByRole
+  )
+  .post(
+    Routes.GET_USER_BY_USERNAME,
+    getUsernameSchema,
+    validRequest,
+    verifyPermission([
+      Permissions.SUPPORT,
+      Permissions.ADMIN,
+      Permissions.MANAGER,
+    ]),
+    user_controller.getUserByUsername
   )
   .post(
     Routes.GET_ALL_USERNAMES,
