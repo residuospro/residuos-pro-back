@@ -11,9 +11,9 @@ export const userInfo = (jwtToken: string): UserPayload | null => {
   const decodedToken = jwt.decode(jwtToken) as UserPayload;
 
   if (decodedToken && decodedToken.exp) {
-    const { exp, name, username, permission, company } = decodedToken;
+    const { exp, name, username, permission, company, userId } = decodedToken;
 
-    return { exp, name, username, permission, company };
+    return { exp, name, username, permission, company, userId };
   }
   return null;
 };

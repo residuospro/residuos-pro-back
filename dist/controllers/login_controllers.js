@@ -40,7 +40,7 @@ class LoginController {
                     return res.status(401).json({ error: "Senha incorreta" });
                 }
                 // Gerar o token JWT com a permissão do usuário
-                const token = token_service_1.default.generateAcessToken(user.role, user.name, user.username, user.idCompany);
+                const token = token_service_1.default.generateAcessToken(user.role, user.name, user.username, user.idCompany, user._id);
                 const refreshToken = yield token_service_1.default.generateRefreshToken(user.id);
                 // Retornar o token JWT para o cliente
                 res.json({ token, refreshToken });

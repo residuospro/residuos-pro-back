@@ -10,12 +10,12 @@ class TokenService {
       const refreshToken = jwt.sign({ userId }, JWT_SECRET, {
         expiresIn: "2d",
       });
-      
+
       const token = new TokenModel({
         userId,
         refreshToken,
       });
-      
+
       const saveToken = await token.save();
 
       if (saveToken) return refreshToken;
@@ -28,7 +28,8 @@ class TokenService {
     permission: string[],
     name: string,
     username: string,
-    company: string
+    company: string,
+    userId: string
   ): string {
     const token = jwt.sign(
       {
@@ -36,6 +37,7 @@ class TokenService {
         name,
         username,
         company,
+        userId,
       },
       JWT_SECRET,
       { expiresIn: "5h" }
@@ -61,10 +63,11 @@ class TokenService {
         user.role,
         user.name,
         user.username,
-        user.idCompany
+        user.idCompany,
+        userId
       );
 
-      const refreshToken = this.generateRefreshToken(user.id);
+      const refreshToken = await this.generateRefreshToken(user.id);
 
       return { token, refreshToken };
     }

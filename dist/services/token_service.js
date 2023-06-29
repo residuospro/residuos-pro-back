@@ -36,12 +36,13 @@ class TokenService {
             }
         });
     }
-    static generateAcessToken(permission, name, username, company) {
+    static generateAcessToken(permission, name, username, company, userId) {
         const token = jsonwebtoken_1.default.sign({
             permission,
             name,
             username,
             company,
+            userId,
         }, JWT_SECRET, { expiresIn: "5h" });
         return token;
     }
@@ -56,8 +57,8 @@ class TokenService {
             });
             const user = yield users_1.default.findById(userId);
             if (refresh_token) {
-                const token = this.generateAcessToken(user.role, user.name, user.username, user.idCompany);
-                const refreshToken = this.generateRefreshToken(user.id);
+                const token = this.generateAcessToken(user.role, user.name, user.username, user.idCompany, userId);
+                const refreshToken = yield this.generateRefreshToken(user.id);
                 return { token, refreshToken };
             }
             return null;

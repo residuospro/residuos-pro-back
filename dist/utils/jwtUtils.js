@@ -8,8 +8,8 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const userInfo = (jwtToken) => {
     const decodedToken = jsonwebtoken_1.default.decode(jwtToken);
     if (decodedToken && decodedToken.exp) {
-        const { exp, name, username, permission, company } = decodedToken;
-        return { exp, name, username, permission, company };
+        const { exp, name, username, permission, company, userId } = decodedToken;
+        return { exp, name, username, permission, company, userId };
     }
     return null;
 };
