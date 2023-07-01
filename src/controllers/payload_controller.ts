@@ -7,13 +7,22 @@ class PayloadController {
 
     const user = userInfo(token);
 
-    const data = {
+    let data: any = {
       name: user?.name,
       username: user?.username,
       permission: user?.permission,
       company: user.company,
       userId: user.userId,
     };
+
+    if (user?.idDepartment) {
+      data = {
+        ...data,
+        idDepartment: user.idDepartment,
+        department: user.department,
+        ramal: user.ramal,
+      };
+    }
 
     if (!user) {
       res.status(401).send({ message: "Token inválido" });

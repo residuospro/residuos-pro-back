@@ -66,9 +66,13 @@ class UserController {
 
   async getAllUsernames(req: Request, res: Response) {
     try {
-      const { idCompany, role } = req.body;
+      const { idCompany, role, idDepartment } = req.body;
 
-      const users = await UserService.getAllUsernamesService(idCompany, role);
+      const users = await UserService.getAllUsernamesService(
+        idCompany,
+        role,
+        idDepartment
+      );
 
       return res.status(200).json(users);
     } catch (error) {
@@ -124,8 +128,6 @@ class UserController {
       return res.status(404).send({ message: error.message });
     }
   }
-
-
 
   async deleteUsers(req: Request, res: Response) {
     try {

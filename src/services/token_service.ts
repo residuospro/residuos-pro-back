@@ -29,19 +29,24 @@ class TokenService {
     name: string,
     username: string,
     company: string,
-    userId: string
+    userId: string,
+    idDepartment?: string,
+    department?: string,
+    ramal?: number
   ): string {
-    const token = jwt.sign(
-      {
-        permission,
-        name,
-        username,
-        company,
-        userId,
-      },
-      JWT_SECRET,
-      { expiresIn: "5h" }
-    );
+    let config: any = {
+      permission,
+      name,
+      username,
+      company,
+      userId,
+    };
+
+    if (idDepartment) {
+      config = { ...config, idDepartment, department, ramal };
+    }
+
+    const token = jwt.sign(config, JWT_SECRET, { expiresIn: "5h" });
     return token;
   }
 

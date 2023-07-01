@@ -46,7 +46,10 @@ class LoginController {
         user.name,
         user.username,
         user.idCompany,
-        user._id
+        user._id,
+        user.idDepartment,
+        user.department,
+        user.ramal
       );
 
       const refreshToken = await TokenService.generateRefreshToken(user.id);

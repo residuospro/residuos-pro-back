@@ -60,8 +60,8 @@ class UserController {
     getAllUsernames(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { idCompany, role } = req.body;
-                const users = yield user_service_1.default.getAllUsernamesService(idCompany, role);
+                const { idCompany, role, idDepartment } = req.body;
+                const users = yield user_service_1.default.getAllUsernamesService(idCompany, role, idDepartment);
                 return res.status(200).json(users);
             }
             catch (error) {

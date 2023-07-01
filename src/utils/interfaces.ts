@@ -56,6 +56,7 @@ export interface IDepartment extends Document {
 export interface IUserSchema extends Document {
   name: string;
   idDepartment?: string;
+  department?: string;
   idCompany?: string;
   role: string[];
   ramal: number;

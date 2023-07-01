@@ -106,13 +106,23 @@ class UserService {
     }
   }
 
-  static async getAllUsernamesService(idCompany: string, role: string[]) {
+  static async getAllUsernamesService(
+    idCompany: string,
+    role: string[],
+    idDepartment: string
+  ) {
     try {
-      const users = await User.find({
+      let query: any = {
         idCompany,
         role: { $in: [role] },
         deleted: false,
-      });
+      };
+
+      if (idDepartment) {
+        query = { ...query, idDepartment };
+      }
+
+      const users = await User.find(query);
 
       return users;
     } catch (error) {

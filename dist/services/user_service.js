@@ -98,14 +98,18 @@ class UserService {
             }
         });
     }
-    static getAllUsernamesService(idCompany, role) {
+    static getAllUsernamesService(idCompany, role, idDepartment) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const users = yield users_1.default.find({
+                let query = {
                     idCompany,
                     role: { $in: [role] },
                     deleted: false,
-                });
+                };
+                if (idDepartment) {
+                    query = Object.assign(Object.assign({}, query), { idDepartment });
+                }
+                const users = yield users_1.default.find(query);
                 return users;
             }
             catch (error) {

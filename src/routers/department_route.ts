@@ -20,7 +20,11 @@ department_route
   )
   .post(
     Routes.GET_ALL_DEPARTMENT,
-    verifyPermission([Permissions.SUPPORT, Permissions.ADMIN]),
+    verifyPermission([
+      Permissions.SUPPORT,
+      Permissions.ADMIN,
+      Permissions.MANAGER,
+    ]),
     department_controller.getAllDepartment
   )
   .get(

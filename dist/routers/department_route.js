@@ -13,7 +13,11 @@ const department_controller = new department_controller_1.default();
 department_route
     .post(enum_1.Routes.GET_DEPARTMENT_BY_NAME, (0, middleware_1.verifyPermission)([enum_1.Permissions.SUPPORT, enum_1.Permissions.ADMIN]), department_controller.getDepartmentByName)
     .post(enum_1.Routes.GET_DEPARTMENT_BY_PAGE, (0, middleware_1.verifyPermission)([enum_1.Permissions.SUPPORT, enum_1.Permissions.ADMIN]), department_controller.getDepartmentsByPage)
-    .post(enum_1.Routes.GET_ALL_DEPARTMENT, (0, middleware_1.verifyPermission)([enum_1.Permissions.SUPPORT, enum_1.Permissions.ADMIN]), department_controller.getAllDepartment)
+    .post(enum_1.Routes.GET_ALL_DEPARTMENT, (0, middleware_1.verifyPermission)([
+    enum_1.Permissions.SUPPORT,
+    enum_1.Permissions.ADMIN,
+    enum_1.Permissions.MANAGER,
+]), department_controller.getAllDepartment)
     .get(enum_1.Routes.GET_DEPARTMENT_BY_ID, (0, middleware_1.verifyPermission)([enum_1.Permissions.SUPPORT, enum_1.Permissions.ADMIN]), department_controller.getDepartmentById)
     .post(enum_1.Routes.SAVE_DEPARTMENT, departmentSchema_1.departmentCreateSchema, middleware_1.validRequest, (0, middleware_1.verifyPermission)([enum_1.Permissions.SUPPORT, enum_1.Permissions.ADMIN]), department_controller.createDepartment)
     .put(enum_1.Routes.UPDATE_DEPARTMENT, (0, middleware_1.verifyPermission)([enum_1.Permissions.SUPPORT, enum_1.Permissions.ADMIN]), department_controller.updateDepartment)

@@ -36,14 +36,18 @@ class TokenService {
             }
         });
     }
-    static generateAcessToken(permission, name, username, company, userId) {
-        const token = jsonwebtoken_1.default.sign({
+    static generateAcessToken(permission, name, username, company, userId, idDepartment, department, ramal) {
+        let config = {
             permission,
             name,
             username,
             company,
             userId,
-        }, JWT_SECRET, { expiresIn: "5h" });
+        };
+        if (idDepartment) {
+            config = Object.assign(Object.assign({}, config), { idDepartment, department, ramal });
+        }
+        const token = jsonwebtoken_1.default.sign(config, JWT_SECRET, { expiresIn: "5h" });
         return token;
     }
     static verifyToken(token) {
