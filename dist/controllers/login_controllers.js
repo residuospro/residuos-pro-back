@@ -30,14 +30,14 @@ class LoginController {
                 }
                 const [username, password] = credentials.split(":");
                 // Verificar se o usuário existe no banco de dados
-                const user = yield users_1.default.findOne({ username });
+                const user = yield users_1.default.findOne({ username, deleted: false });
                 if (!user) {
-                    return res.status(401).json({ error: "Usuário não encontrado" });
+                    return res.status(403).json({ error: "Usuário não encontrado" });
                 }
                 // Verificar se a senha está correta
                 const passwordMatch = yield bcrypt_1.default.compare(password, user.password);
                 if (!passwordMatch) {
-                    return res.status(401).json({ error: "Senha incorreta" });
+                    return res.status(403).json({ error: "Senha incorreta" });
                 }
                 // Gerar o token JWT com a permissão do usuário
                 const token = token_service_1.default.generateAcessToken(user.role, user.name, user.username, user.idCompany, user._id, user.idDepartment, user.department, user.ramal);

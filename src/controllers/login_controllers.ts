@@ -27,17 +27,17 @@ class LoginController {
 
       // Verificar se o usuário existe no banco de dados
 
-      const user = await User.findOne({ username });
+      const user = await User.findOne({ username, deleted: false });
 
       if (!user) {
-        return res.status(401).json({ error: "Usuário não encontrado" });
+        return res.status(403).json({ error: "Usuário não encontrado" });
       }
 
       // Verificar se a senha está correta
       const passwordMatch = await bcrypt.compare(password, user.password);
 
       if (!passwordMatch) {
-        return res.status(401).json({ error: "Senha incorreta" });
+        return res.status(403).json({ error: "Senha incorreta" });
       }
 
       // Gerar o token JWT com a permissão do usuário
