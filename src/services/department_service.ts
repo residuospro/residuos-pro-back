@@ -2,7 +2,7 @@ import User from "../models/users";
 import Department from "../models/department";
 import { IDepartmentService, IUpdateDepartment } from "../utils/interfaces";
 import HandleError from "../utils/errors/handleError";
-import UserService from "./user_service";
+//import UserService from "./user_service";
 
 class DepartmentService {
   static async createDepartmentService(department: IDepartmentService) {
@@ -133,11 +133,11 @@ class DepartmentService {
 
       const updateCompany = await department!.save();
 
-      await UserService.updateUserAfterUpdateDepartment(
-        updatedData[0].name,
-        updatedData[0].ramal,
-        id
-      );
+      // await UserService.updateUserAfterUpdateDepartment(
+      //   updatedData[0].name,
+      //   updatedData[0].ramal,
+      //   id
+      // );
 
       return updateCompany;
     } catch (error: any) {
@@ -175,13 +175,13 @@ class DepartmentService {
         { new: true }
       );
 
-      await User.updateMany(
-        { idDepartment: id },
-        {
-          deleted: true,
-          deletedAt: currentDate,
-        }
-      );
+      // await User.updateMany(
+      //   { idDepartment: id },
+      //   {
+      //     deleted: true,
+      //     deletedAt: currentDate,
+      //   }
+      // );
 
       return department;
     } catch (error: any) {

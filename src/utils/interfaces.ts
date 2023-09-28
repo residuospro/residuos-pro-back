@@ -1,4 +1,5 @@
 import { Document } from "mongoose";
+
 export interface IUser {
   name: string;
   username: string;

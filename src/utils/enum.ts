@@ -1,11 +1,4 @@
 export enum Routes {
-  GET_USERS = "/users",
-  GET_USER_BY_USERNAME = "/user/by-username",
-  GET_ALL_USERNAMES = "/user/all",
-  SAVE_USER = "/user/save",
-  UPDATE_USER = "/user/update/:id",
-  DELETE_USER = "/user/:id",
-
   SAVE_SUPPORT = "/support",
 
   GET_MANAGER = "/manager",
@@ -24,7 +17,7 @@ export enum Routes {
   GET_COMPANIES_BY_ID = "/companies/:id",
   GET_COMPANIES_BY_CNPJ = "/companies/by-cnpj",
   GET_COMPANIES_DELETED = "/companies/deleted",
-  SAVE_COMPANIES = "/companies/save",
+  SAVE_COMPANIES = "/api/companies/save",
   UPDATE_COMPANIES = "/companies/:id",
   DELETE_COMPANIES = "/companies/:id",
 
@@ -36,9 +29,7 @@ export enum Routes {
   UPDATE_DEPARTMENT = "/department/update/:id",
   DELETE_DEPARTMENT = "/department/:id",
 
-  LOGIN = "/login",
-  PAYLOAD = "/payload",
-  REFRESH_TOKEN = "/refresh_token",
+  VERIFYTOKEN = "/api/verifyToken",
 }
 
 export enum Permissions {

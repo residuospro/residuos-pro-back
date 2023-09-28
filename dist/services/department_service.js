@@ -12,10 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const users_1 = __importDefault(require("../models/users"));
 const department_1 = __importDefault(require("../models/department"));
 const handleError_1 = __importDefault(require("../utils/errors/handleError"));
-const user_service_1 = __importDefault(require("./user_service"));
+//import UserService from "./user_service";
 class DepartmentService {
     static createDepartmentService(department) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -120,7 +119,11 @@ class DepartmentService {
                     }
                 }
                 const updateCompany = yield department.save();
-                yield user_service_1.default.updateUserAfterUpdateDepartment(updatedData[0].name, updatedData[0].ramal, id);
+                // await UserService.updateUserAfterUpdateDepartment(
+                //   updatedData[0].name,
+                //   updatedData[0].ramal,
+                //   id
+                // );
                 return updateCompany;
             }
             catch (error) {
@@ -151,10 +154,13 @@ class DepartmentService {
                     deleted: true,
                     deletedAt: currentDate,
                 }, { new: true });
-                yield users_1.default.updateMany({ idDepartment: id }, {
-                    deleted: true,
-                    deletedAt: currentDate,
-                });
+                // await User.updateMany(
+                //   { idDepartment: id },
+                //   {
+                //     deleted: true,
+                //     deletedAt: currentDate,
+                //   }
+                // );
                 return department;
             }
             catch (error) {

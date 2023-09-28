@@ -8,26 +8,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const token_service_1 = __importDefault(require("../services/token_service"));
-class TokenController {
-    createRefreshToken(req, res) {
-        var _a;
+const enum_1 = require("../utils/enum");
+const AxiosClient_1 = require("../clients/AxiosClient");
+class ExternalApiService {
+    static validateToken(token) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.replace("Bearer ", "");
-                const { userId } = req.body;
-                const refresh_token = yield token_service_1.default.updateRefreshToken(token, userId);
-                return res.status(200).json(refresh_token);
+                (0, AxiosClient_1.setBearerAuthorization)((0, AxiosClient_1.useClient)(), token);
+                const response = yield (0, AxiosClient_1.useClient)().post(enum_1.Routes.VERIFYTOKEN);
+                return response;
             }
             catch (error) {
-                return res.status(500).send({ message: error.message });
+                throw error;
             }
         });
     }
 }
-exports.default = TokenController;
-//# sourceMappingURL=token_controller.js.map
+exports.default = ExternalApiService;
+//# sourceMappingURL=externalApi_service.js.map

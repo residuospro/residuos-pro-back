@@ -2,12 +2,15 @@ import express from "express";
 import dotenv from "dotenv";
 import router from "./routers";
 import dbConnection from "./config/dbConfig";
+import { setupClient } from "./clients/AxiosClient";
 
 dotenv.config();
 
 const server = express();
 
 router(server);
+
+setupClient(process.env.AUTHENTICATOR_BACK);
 
 dbConnection.on("error", console.log.bind("Error ao conectar com o banco"));
 dbConnection.once("open", () =>

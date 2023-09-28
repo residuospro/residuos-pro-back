@@ -1,7 +1,7 @@
 import { validationResult } from "express-validator";
 import { NextFunction, Request, Response, RequestHandler } from "express";
 import { UserPayload } from "../utils/jwtUtils";
-import TokenService from "../services/token_service";
+import ExternalApiService from "../services/externalApi_service";
 
 export const validRequest = (
   req: Request,
@@ -35,28 +35,28 @@ declare module "express" {
   }
 }
 
-export const verifyToken = (
+export const verifyToken = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  try {
-    const token = req.headers.authorization?.replace("Bearer ", "");
-    if (!token) {
-      res.status(401).json({ message: "Token não fornecido" });
-      return;
-    }
+  const token = req.headers.authorization?.replace("Bearer ", "");
 
-    const validToken = TokenService.verifyToken(token);
+  if (!token) {
+    res.status(401).json({ message: "Token não fornecido" });
+    return;
+  }
 
-    if (validToken) {
-      req.token = token as string;
-      req.user = validToken as UserPayload;
+  const validToken = await ExternalApiService.validateToken(token);
 
-      next();
-    }
-  } catch (error: any) {
+  if (validToken.status == 200) {
+    req.token = token as string;
+    req.user = validToken.data as UserPayload;
+
+    next();
+  } else {
     res.status(401).json({ message: "Token inválido" });
+    return;
   }
 };
 
