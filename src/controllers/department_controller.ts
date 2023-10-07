@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import DepartmentService from "../services/department_service";
 import HandleError from "../utils/errors/handleError";
-import Department from "../models/department";
+import ExternalApiService from "../services/externalApi_service";
 
 class DepartmentController {
   async createDepartment(req: Request, res: Response) {
@@ -18,7 +18,19 @@ class DepartmentController {
         idCompany,
       });
 
-      return res.status(201).json(department);
+      const page = 1;
+      const itemsPerPage = 10;
+
+      const skip = (page - 1) * itemsPerPage;
+
+      const { totalPages } =
+        await DepartmentService.getDepartmentsByPageService(
+          idCompany,
+          skip,
+          itemsPerPage
+        );
+
+      return res.status(201).json({ department, totalPages });
     } catch (error: any) {
       if (error instanceof HandleError) {
         return res.status(error.statusCode).send({ message: error.message });
@@ -104,6 +116,8 @@ class DepartmentController {
         id
       );
 
+      await ExternalApiService.updateUserAfterDepartment(name, ramal, id);
+
       return res.status(201).json(department);
     } catch (error: any) {
       if (error instanceof HandleError) {
@@ -118,9 +132,11 @@ class DepartmentController {
     try {
       const { id } = req.params;
 
-      const company = await DepartmentService.deleteDepartmentService(id);
+      await DepartmentService.deleteDepartmentService(id);
 
-      return res.status(200).json(company);
+      await ExternalApiService.deleteUserAfterDepartment(id);
+
+      return res.status(204).json("Departamento excluido com sucesso");
     } catch (error: any) {
       return res.status(500).send({ message: error.message });
     }

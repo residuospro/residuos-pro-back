@@ -30,6 +30,8 @@ export enum Routes {
   DELETE_DEPARTMENT = "/department/:id",
 
   VERIFYTOKEN = "/api/verifyToken",
+  UPDATE_USER_AFTER_DEPARTMENT = "/api/update/user_by_department",
+  DELETE_USER_AFTER_DEPARTMENT = "/api/delete/user_by_department/",
 }
 
 export enum Permissions {

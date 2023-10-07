@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const department_service_1 = __importDefault(require("../services/department_service"));
 const handleError_1 = __importDefault(require("../utils/errors/handleError"));
+const externalApi_service_1 = __importDefault(require("../services/externalApi_service"));
 class DepartmentController {
     createDepartment(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -27,7 +28,11 @@ class DepartmentController {
                     ramal,
                     idCompany,
                 });
-                return res.status(201).json(department);
+                const page = 1;
+                const itemsPerPage = 10;
+                const skip = (page - 1) * itemsPerPage;
+                const { totalPages } = yield department_service_1.default.getDepartmentsByPageService(idCompany, skip, itemsPerPage);
+                return res.status(201).json({ department, totalPages });
             }
             catch (error) {
                 if (error instanceof handleError_1.default) {
@@ -101,6 +106,7 @@ class DepartmentController {
                 }
                 const { id } = req.params;
                 const department = yield department_service_1.default.updateDepartmentService([{ name, responsible, email, ramal, idCompany }], id);
+                yield externalApi_service_1.default.updateUserAfterDepartment(name, ramal, id);
                 return res.status(201).json(department);
             }
             catch (error) {
@@ -115,8 +121,9 @@ class DepartmentController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { id } = req.params;
-                const company = yield department_service_1.default.deleteDepartmentService(id);
-                return res.status(200).json(company);
+                yield department_service_1.default.deleteDepartmentService(id);
+                yield externalApi_service_1.default.deleteUserAfterDepartment(id);
+                return res.status(204).json("Departamento excluido com sucesso");
             }
             catch (error) {
                 return res.status(500).send({ message: error.message });

@@ -16,7 +16,34 @@ class ExternalApiService {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 (0, AxiosClient_1.setBearerAuthorization)((0, AxiosClient_1.useClient)(), token);
-                const response = yield (0, AxiosClient_1.useClient)().post(enum_1.Routes.VERIFYTOKEN);
+                const response = yield (0, AxiosClient_1.useClient)().get(enum_1.Routes.VERIFYTOKEN);
+                return response;
+            }
+            catch (error) {
+                throw error;
+            }
+        });
+    }
+    static updateUserAfterDepartment(name, ramal, idDepartment) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const data = {
+                    name,
+                    ramal,
+                    idDepartment,
+                };
+                const response = yield (0, AxiosClient_1.useClient)().post(enum_1.Routes.UPDATE_USER_AFTER_DEPARTMENT, data);
+                return response;
+            }
+            catch (error) {
+                throw error;
+            }
+        });
+    }
+    static deleteUserAfterDepartment(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const response = yield (0, AxiosClient_1.useClient)().delete(`${enum_1.Routes.DELETE_USER_AFTER_DEPARTMENT}${id}`);
                 return response;
             }
             catch (error) {
