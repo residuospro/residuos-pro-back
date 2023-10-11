@@ -15,10 +15,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const department_service_1 = __importDefault(require("../services/department_service"));
 const handleError_1 = __importDefault(require("../utils/errors/handleError"));
 const externalApi_service_1 = __importDefault(require("../services/externalApi_service"));
+const mongoose_1 = __importDefault(require("mongoose"));
 class DepartmentController {
     createDepartment(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
+                const session = yield mongoose_1.default.startSession();
+                session.startTransaction();
                 let { name, responsible, email, ramal, idCompany } = req.body;
                 name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
                 const department = yield department_service_1.default.createDepartmentService({
@@ -27,11 +30,21 @@ class DepartmentController {
                     email,
                     ramal,
                     idCompany,
-                });
+                }, session);
                 const page = 1;
                 const itemsPerPage = 10;
                 const skip = (page - 1) * itemsPerPage;
-                const { totalPages } = yield department_service_1.default.getDepartmentsByPageService(idCompany, skip, itemsPerPage);
+                const { totalPages } = yield department_service_1.default.getDepartmentsByPageService(idCompany, skip, itemsPerPage, false);
+                yield externalApi_service_1.default.createUserAfterDepartment({
+                    responsible,
+                    email,
+                    ramal,
+                    idCompany,
+                    department: name,
+                    idDepartment: department.id,
+                });
+                yield session.commitTransaction();
+                session.endSession();
                 return res.status(201).json({ department, totalPages });
             }
             catch (error) {
@@ -47,7 +60,7 @@ class DepartmentController {
             try {
                 const { page, itemsPerPage, idCompany } = req.body;
                 const skip = (parseInt(page) - 1) * parseInt(itemsPerPage);
-                const departments = yield department_service_1.default.getDepartmentsByPageService(idCompany, skip, itemsPerPage);
+                const departments = yield department_service_1.default.getDepartmentsByPageService(idCompany, skip, itemsPerPage, true);
                 return res.status(200).json(departments);
             }
             catch (error) {

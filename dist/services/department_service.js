@@ -14,9 +14,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const department_1 = __importDefault(require("../models/department"));
 const handleError_1 = __importDefault(require("../utils/errors/handleError"));
-//import UserService from "./user_service";
 class DepartmentService {
-    static createDepartmentService(department) {
+    static createDepartmentService(department, session) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { name, idCompany } = department;
@@ -25,7 +24,7 @@ class DepartmentService {
                     throw new handleError_1.default("Esse departamento já existe", 409);
                 }
                 const departments = new department_1.default(Object.assign({}, department));
-                const savedDepartment = yield departments.save();
+                const savedDepartment = yield departments.save({ session });
                 return savedDepartment;
             }
             catch (error) {
@@ -36,7 +35,7 @@ class DepartmentService {
             }
         });
     }
-    static getDepartmentsByPageService(idCompany, skip, itemsPerPage) {
+    static getDepartmentsByPageService(idCompany, skip, itemsPerPage, throwException = false) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const departments = yield department_1.default.find({
@@ -45,7 +44,7 @@ class DepartmentService {
                 })
                     .skip(skip)
                     .limit(itemsPerPage);
-                if (departments.length == 0) {
+                if (departments.length == 0 && throwException) {
                     throw new handleError_1.default("Não há registros para essa busca", 404);
                 }
                 const totalDepartments = yield department_1.default.find({

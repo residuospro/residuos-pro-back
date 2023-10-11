@@ -1,18 +1,4 @@
 export enum Routes {
-  SAVE_SUPPORT = "/support",
-
-  GET_MANAGER = "/manager",
-  GET_MANAGER_BY_USERNAME = "/manager/by-username",
-  SAVE_MANAGER = "/manager/save",
-  UPDATE_MANAGER = "/manager/:id",
-  DELETE_MANAGER = "/manager/:id",
-
-  GET_COLLABORATOR = "/collaborator",
-  GET_COLLABORATOR_BY_USERNAME = "/collaborator/by-username",
-  SAVE_COLLABORATOR = "/collaborator/save",
-  UPDATE_COLLABORATOR = "/collaborator/:id",
-  DELETE_COLLABORATOR = "/collaborator/:id",
-
   GET_COMPANIES = "/companies",
   GET_COMPANIES_BY_ID = "/companies/:id",
   GET_COMPANIES_BY_CNPJ = "/companies/by-cnpj",
@@ -32,6 +18,8 @@ export enum Routes {
   VERIFYTOKEN = "/api/verifyToken",
   UPDATE_USER_AFTER_DEPARTMENT = "/api/update/user_by_department",
   DELETE_USER_AFTER_DEPARTMENT = "/api/delete/user_by_department/",
+
+  SAVE_USER = "/api/user/save",
 }
 
 export enum Permissions {

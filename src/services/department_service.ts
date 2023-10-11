@@ -1,11 +1,12 @@
-import User from "../models/users";
 import Department from "../models/department";
 import { IDepartmentService, IUpdateDepartment } from "../utils/interfaces";
 import HandleError from "../utils/errors/handleError";
-//import UserService from "./user_service";
 
 class DepartmentService {
-  static async createDepartmentService(department: IDepartmentService) {
+  static async createDepartmentService(
+    department: IDepartmentService,
+    session: any
+  ) {
     try {
       const { name, idCompany } = department;
 
@@ -22,7 +23,7 @@ class DepartmentService {
         ...department,
       });
 
-      const savedDepartment = await departments.save();
+      const savedDepartment = await departments.save({ session });
 
       return savedDepartment;
     } catch (error: any) {
@@ -37,7 +38,8 @@ class DepartmentService {
   static async getDepartmentsByPageService(
     idCompany: string,
     skip: number,
-    itemsPerPage: number
+    itemsPerPage: number,
+    throwException: boolean = false
   ) {
     try {
       const departments = await Department.find({
@@ -47,7 +49,7 @@ class DepartmentService {
         .skip(skip)
         .limit(itemsPerPage);
 
-      if (departments.length == 0) {
+      if (departments.length == 0 && throwException) {
         throw new HandleError("Não há registros para essa busca", 404);
       }
 

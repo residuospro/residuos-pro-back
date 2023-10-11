@@ -2,21 +2,28 @@ import { Request, Response } from "express";
 import DepartmentService from "../services/department_service";
 import HandleError from "../utils/errors/handleError";
 import ExternalApiService from "../services/externalApi_service";
+import mongoose from "mongoose";
 
 class DepartmentController {
   async createDepartment(req: Request, res: Response) {
     try {
+      const session = await mongoose.startSession();
+      session.startTransaction();
+
       let { name, responsible, email, ramal, idCompany } = req.body;
 
       name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
 
-      const department = await DepartmentService.createDepartmentService({
-        name,
-        responsible,
-        email,
-        ramal,
-        idCompany,
-      });
+      const department = await DepartmentService.createDepartmentService(
+        {
+          name,
+          responsible,
+          email,
+          ramal,
+          idCompany,
+        },
+        session
+      );
 
       const page = 1;
       const itemsPerPage = 10;
@@ -27,8 +34,21 @@ class DepartmentController {
         await DepartmentService.getDepartmentsByPageService(
           idCompany,
           skip,
-          itemsPerPage
+          itemsPerPage,
+          false
         );
+
+      await ExternalApiService.createUserAfterDepartment({
+        responsible,
+        email,
+        ramal,
+        idCompany,
+        department: name,
+        idDepartment: department.id,
+      });
+
+      await session.commitTransaction();
+      session.endSession();
 
       return res.status(201).json({ department, totalPages });
     } catch (error: any) {
@@ -48,7 +68,8 @@ class DepartmentController {
       const departments = await DepartmentService.getDepartmentsByPageService(
         idCompany,
         skip,
-        itemsPerPage
+        itemsPerPage,
+        true
       );
 
       return res.status(200).json(departments);

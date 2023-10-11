@@ -1,6 +1,7 @@
 import { Routes } from "../utils/enum";
 import { setBearerAuthorization, useClient } from "../clients/AxiosClient";
 import { AxiosResponse } from "axios";
+import { ICreateUsers } from "../utils/interfaces";
 
 class ExternalApiService {
   static async validateToken(token: string): Promise<AxiosResponse<any, any>> {
@@ -45,6 +46,26 @@ class ExternalApiService {
       );
 
       return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static async createUserAfterDepartment(user: ICreateUsers) {
+    try {
+      const data = {
+        name: user.responsible,
+        email: user.email,
+        department: user.department,
+        idDepartment: user.idDepartment,
+        ramal: user.ramal,
+        idCompany: user.idCompany,
+        service: "Residuos-Pro",
+      };
+
+      const res = await useClient().post(Routes.SAVE_USER, data);
+
+      return res;
     } catch (error) {
       throw error;
     }

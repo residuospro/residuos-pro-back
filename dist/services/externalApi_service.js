@@ -51,6 +51,26 @@ class ExternalApiService {
             }
         });
     }
+    static createUserAfterDepartment(user) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const data = {
+                    name: user.responsible,
+                    email: user.email,
+                    department: user.department,
+                    idDepartment: user.idDepartment,
+                    ramal: user.ramal,
+                    idCompany: user.idCompany,
+                    service: "Residuos-Pro",
+                };
+                const res = yield (0, AxiosClient_1.useClient)().post(enum_1.Routes.SAVE_USER, data);
+                return res;
+            }
+            catch (error) {
+                throw error;
+            }
+        });
+    }
 }
 exports.default = ExternalApiService;
 //# sourceMappingURL=externalApi_service.js.map

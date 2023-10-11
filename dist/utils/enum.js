@@ -3,17 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Permissions = exports.Routes = void 0;
 var Routes;
 (function (Routes) {
-    Routes["SAVE_SUPPORT"] = "/support";
-    Routes["GET_MANAGER"] = "/manager";
-    Routes["GET_MANAGER_BY_USERNAME"] = "/manager/by-username";
-    Routes["SAVE_MANAGER"] = "/manager/save";
-    Routes["UPDATE_MANAGER"] = "/manager/:id";
-    Routes["DELETE_MANAGER"] = "/manager/:id";
-    Routes["GET_COLLABORATOR"] = "/collaborator";
-    Routes["GET_COLLABORATOR_BY_USERNAME"] = "/collaborator/by-username";
-    Routes["SAVE_COLLABORATOR"] = "/collaborator/save";
-    Routes["UPDATE_COLLABORATOR"] = "/collaborator/:id";
-    Routes["DELETE_COLLABORATOR"] = "/collaborator/:id";
     Routes["GET_COMPANIES"] = "/companies";
     Routes["GET_COMPANIES_BY_ID"] = "/companies/:id";
     Routes["GET_COMPANIES_BY_CNPJ"] = "/companies/by-cnpj";
@@ -31,6 +20,7 @@ var Routes;
     Routes["VERIFYTOKEN"] = "/api/verifyToken";
     Routes["UPDATE_USER_AFTER_DEPARTMENT"] = "/api/update/user_by_department";
     Routes["DELETE_USER_AFTER_DEPARTMENT"] = "/api/delete/user_by_department/";
+    Routes["SAVE_USER"] = "/api/user/save";
 })(Routes = exports.Routes || (exports.Routes = {}));
 var Permissions;
 (function (Permissions) {

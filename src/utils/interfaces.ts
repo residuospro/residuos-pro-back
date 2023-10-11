@@ -10,6 +10,15 @@ export interface IUser {
   idDepartment: string;
 }
 
+export interface ICreateUsers {
+  email: string;
+  department: string;
+  ramal: string;
+  idDepartment: string;
+  idCompany: string;
+  responsible: string;
+}
+
 export interface ICompany {
   name: string;
   address: string;
