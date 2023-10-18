@@ -3,6 +3,7 @@ import DepartmentService from "../services/department_service";
 import HandleError from "../utils/errors/handleError";
 import ExternalApiService from "../services/externalApi_service";
 import mongoose from "mongoose";
+import { Messages } from "../utils/enum";
 
 class DepartmentController {
   async createDepartment(req: Request, res: Response) {
@@ -30,13 +31,15 @@ class DepartmentController {
 
       const skip = (page - 1) * itemsPerPage;
 
-      const { totalPages } =
+      let { departments, totalPages } =
         await DepartmentService.getDepartmentsByPageService(
           idCompany,
           skip,
           itemsPerPage,
           false
         );
+
+      if (departments.length == 10) totalPages += 1;
 
       await ExternalApiService.createUserAfterDepartment({
         responsible,
@@ -50,13 +53,30 @@ class DepartmentController {
       await session.commitTransaction();
       session.endSession();
 
-      return res.status(201).json({ department, totalPages });
+      return res.status(201).json({
+        department,
+        totalPages,
+        message: {
+          title: Messages.TITLE_REGISTER,
+          subTitle: Messages.SUBTITLE_REGISTER,
+        },
+      });
     } catch (error: any) {
       if (error instanceof HandleError) {
-        return res.status(error.statusCode).send({ message: error.message });
+        return res.status(error.statusCode).json({
+          message: {
+            title: Messages.TITLE_ERROR_REGISTER,
+            subTitle: Messages.SUBTITLE_EXISTENT_DEPARTMENT,
+          },
+        });
       }
 
-      return res.status(500).send({ message: error.message });
+      return res.status(500).json({
+        message: {
+          title: Messages.TITLE_ERROR,
+          subTitle: Messages.SUBTITLE_ERROR,
+        },
+      });
     }
   }
 
@@ -75,10 +95,20 @@ class DepartmentController {
       return res.status(200).json(departments);
     } catch (error: any) {
       if (error instanceof HandleError) {
-        return res.status(error.statusCode).send({ message: error.message });
+        return res.status(error.statusCode).json({
+          message: {
+            title: Messages.TITLE_THERE_ARE_NO_RECORDS,
+            subTitle: Messages.SUBTITLE_THERE_ARE_NO_RECORDS,
+          },
+        });
       }
 
-      return res.status(500).send({ message: error.message });
+      return res.status(500).json({
+        message: {
+          title: Messages.TITLE_ERROR,
+          subTitle: Messages.SUBTITLE_ERROR,
+        },
+      });
     }
   }
 
@@ -91,7 +121,7 @@ class DepartmentController {
       );
       return res.status(200).json(departments);
     } catch (error) {
-      return res.status(500).send({ message: error.message });
+      return res.status(500).json({ message: error.message });
     }
   }
 
@@ -103,13 +133,18 @@ class DepartmentController {
 
       return res.status(200).json(department);
     } catch (error: any) {
-      return res.status(500).send({ message: error.message });
+      return res.status(500).json({
+        message: {
+          title: Messages.TITLE_ERROR,
+          subTitle: Messages.SUBTITLE_ERROR,
+        },
+      });
     }
   }
 
   async getDepartmentByName(req: Request, res: Response) {
     try {
-      const { idCompany, name } = req.body;
+      let { idCompany, name } = req.body;
 
       const department = await DepartmentService.getDepartmentByNameService({
         name,
@@ -118,7 +153,12 @@ class DepartmentController {
 
       return res.status(200).json(department);
     } catch (error: any) {
-      return res.status(500).send({ message: error.message });
+      return res.status(500).json({
+        message: {
+          title: Messages.TITLE_ERROR,
+          subTitle: Messages.SUBTITLE_ERROR,
+        },
+      });
     }
   }
 
@@ -139,13 +179,29 @@ class DepartmentController {
 
       await ExternalApiService.updateUserAfterDepartment(name, ramal, id);
 
-      return res.status(201).json(department);
+      return res.status(201).json({
+        department,
+        message: {
+          title: Messages.TITLE_UPDATE_REGISTER,
+          subTitle: Messages.SUBTITLE_UPDATE_REGISTER,
+        },
+      });
     } catch (error: any) {
       if (error instanceof HandleError) {
-        return res.status(error.statusCode).send({ message: error.message });
+        return res.status(error.statusCode).json({
+          message: {
+            title: Messages.TITLE_ERROR_UPDATE_REGISTER,
+            subTitle: Messages.SUBTITLE_ERROR_UPDATE_DEPARTMENT,
+          },
+        });
       }
 
-      return res.status(500).send({ message: error.message });
+      return res.status(500).json({
+        message: {
+          title: Messages.TITLE_ERROR,
+          subTitle: Messages.SUBTITLE_ERROR,
+        },
+      });
     }
   }
 
@@ -157,9 +213,19 @@ class DepartmentController {
 
       await ExternalApiService.deleteUserAfterDepartment(id);
 
-      return res.status(204).json("Departamento excluido com sucesso");
+      return res.status(201).json({
+        message: {
+          title: Messages.TITLE_DELETE_REGISTER,
+          subTitle: Messages.SUBTITLE_DELETE_REGISTER,
+        },
+      });
     } catch (error: any) {
-      return res.status(500).send({ message: error.message });
+      return res.status(500).json({
+        message: {
+          title: Messages.TITLE_ERROR,
+          subTitle: Messages.SUBTITLE_ERROR,
+        },
+      });
     }
   }
 }

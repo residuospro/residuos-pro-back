@@ -16,6 +16,7 @@ const department_service_1 = __importDefault(require("../services/department_ser
 const handleError_1 = __importDefault(require("../utils/errors/handleError"));
 const externalApi_service_1 = __importDefault(require("../services/externalApi_service"));
 const mongoose_1 = __importDefault(require("mongoose"));
+const enum_1 = require("../utils/enum");
 class DepartmentController {
     createDepartment(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -34,7 +35,9 @@ class DepartmentController {
                 const page = 1;
                 const itemsPerPage = 10;
                 const skip = (page - 1) * itemsPerPage;
-                const { totalPages } = yield department_service_1.default.getDepartmentsByPageService(idCompany, skip, itemsPerPage, false);
+                let { departments, totalPages } = yield department_service_1.default.getDepartmentsByPageService(idCompany, skip, itemsPerPage, false);
+                if (departments.length == 10)
+                    totalPages += 1;
                 yield externalApi_service_1.default.createUserAfterDepartment({
                     responsible,
                     email,
@@ -45,13 +48,30 @@ class DepartmentController {
                 });
                 yield session.commitTransaction();
                 session.endSession();
-                return res.status(201).json({ department, totalPages });
+                return res.status(201).json({
+                    department,
+                    totalPages,
+                    message: {
+                        title: enum_1.Messages.TITLE_REGISTER,
+                        subTitle: enum_1.Messages.SUBTITLE_REGISTER,
+                    },
+                });
             }
             catch (error) {
                 if (error instanceof handleError_1.default) {
-                    return res.status(error.statusCode).send({ message: error.message });
+                    return res.status(error.statusCode).json({
+                        message: {
+                            title: enum_1.Messages.TITLE_ERROR_REGISTER,
+                            subTitle: enum_1.Messages.SUBTITLE_EXISTENT_DEPARTMENT,
+                        },
+                    });
                 }
-                return res.status(500).send({ message: error.message });
+                return res.status(500).json({
+                    message: {
+                        title: enum_1.Messages.TITLE_ERROR,
+                        subTitle: enum_1.Messages.SUBTITLE_ERROR,
+                    },
+                });
             }
         });
     }
@@ -65,9 +85,19 @@ class DepartmentController {
             }
             catch (error) {
                 if (error instanceof handleError_1.default) {
-                    return res.status(error.statusCode).send({ message: error.message });
+                    return res.status(error.statusCode).json({
+                        message: {
+                            title: enum_1.Messages.TITLE_THERE_ARE_NO_RECORDS,
+                            subTitle: enum_1.Messages.SUBTITLE_THERE_ARE_NO_RECORDS,
+                        },
+                    });
                 }
-                return res.status(500).send({ message: error.message });
+                return res.status(500).json({
+                    message: {
+                        title: enum_1.Messages.TITLE_ERROR,
+                        subTitle: enum_1.Messages.SUBTITLE_ERROR,
+                    },
+                });
             }
         });
     }
@@ -79,7 +109,7 @@ class DepartmentController {
                 return res.status(200).json(departments);
             }
             catch (error) {
-                return res.status(500).send({ message: error.message });
+                return res.status(500).json({ message: error.message });
             }
         });
     }
@@ -91,14 +121,19 @@ class DepartmentController {
                 return res.status(200).json(department);
             }
             catch (error) {
-                return res.status(500).send({ message: error.message });
+                return res.status(500).json({
+                    message: {
+                        title: enum_1.Messages.TITLE_ERROR,
+                        subTitle: enum_1.Messages.SUBTITLE_ERROR,
+                    },
+                });
             }
         });
     }
     getDepartmentByName(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { idCompany, name } = req.body;
+                let { idCompany, name } = req.body;
                 const department = yield department_service_1.default.getDepartmentByNameService({
                     name,
                     idCompany,
@@ -106,7 +141,12 @@ class DepartmentController {
                 return res.status(200).json(department);
             }
             catch (error) {
-                return res.status(500).send({ message: error.message });
+                return res.status(500).json({
+                    message: {
+                        title: enum_1.Messages.TITLE_ERROR,
+                        subTitle: enum_1.Messages.SUBTITLE_ERROR,
+                    },
+                });
             }
         });
     }
@@ -120,13 +160,29 @@ class DepartmentController {
                 const { id } = req.params;
                 const department = yield department_service_1.default.updateDepartmentService([{ name, responsible, email, ramal, idCompany }], id);
                 yield externalApi_service_1.default.updateUserAfterDepartment(name, ramal, id);
-                return res.status(201).json(department);
+                return res.status(201).json({
+                    department,
+                    message: {
+                        title: enum_1.Messages.TITLE_UPDATE_REGISTER,
+                        subTitle: enum_1.Messages.SUBTITLE_UPDATE_REGISTER,
+                    },
+                });
             }
             catch (error) {
                 if (error instanceof handleError_1.default) {
-                    return res.status(error.statusCode).send({ message: error.message });
+                    return res.status(error.statusCode).json({
+                        message: {
+                            title: enum_1.Messages.TITLE_ERROR_UPDATE_REGISTER,
+                            subTitle: enum_1.Messages.SUBTITLE_ERROR_UPDATE_DEPARTMENT,
+                        },
+                    });
                 }
-                return res.status(500).send({ message: error.message });
+                return res.status(500).json({
+                    message: {
+                        title: enum_1.Messages.TITLE_ERROR,
+                        subTitle: enum_1.Messages.SUBTITLE_ERROR,
+                    },
+                });
             }
         });
     }
@@ -136,10 +192,20 @@ class DepartmentController {
                 const { id } = req.params;
                 yield department_service_1.default.deleteDepartmentService(id);
                 yield externalApi_service_1.default.deleteUserAfterDepartment(id);
-                return res.status(204).json("Departamento excluido com sucesso");
+                return res.status(201).json({
+                    message: {
+                        title: enum_1.Messages.TITLE_DELETE_REGISTER,
+                        subTitle: enum_1.Messages.SUBTITLE_DELETE_REGISTER,
+                    },
+                });
             }
             catch (error) {
-                return res.status(500).send({ message: error.message });
+                return res.status(500).json({
+                    message: {
+                        title: enum_1.Messages.TITLE_ERROR,
+                        subTitle: enum_1.Messages.SUBTITLE_ERROR,
+                    },
+                });
             }
         });
     }

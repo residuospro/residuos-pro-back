@@ -5,6 +5,9 @@ let restClient: AxiosInstance;
 export const setupClient = (baseUrl: string | undefined) => {
   restClient = axios.create({
     baseURL: baseUrl,
+    validateStatus(status) {
+      return status < 500;
+    },
   });
 };
 

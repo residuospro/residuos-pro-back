@@ -28,3 +28,32 @@ export enum Permissions {
   MANAGER = "MANAGER",
   COLLABORATOR = "COLLABORATOR",
 }
+
+export enum Messages {
+  TITLE_REGISTER = "Cadastrado",
+  SUBTITLE_REGISTER = "Cadastro realizado com sucesso",
+
+  TITLE_ERROR_REGISTER = "Erro ao cadastrar",
+  SUBTITLE_ERROR_REGISTER = "Houve um erro inesperado no cadastro",
+
+  TITLE_ERROR = "Houve um erro inesperado",
+  SUBTITLE_ERROR = "Tivemos um erro em nosso servidor, por favor tente novamente",
+
+  TITLE_DELETE_REGISTER = "Deletado",
+  SUBTITLE_DELETE_REGISTER = "Registro deletado com sucesso",
+
+  TITLE_ERROR_DELETE_REGISTER = "Erro ao deletar",
+  SUBTITLE_ERROR_DELETE_REGISTER = "Houve um erro inesperado ao deletar",
+
+  TITLE_UPDATE_REGISTER = "Atualizado",
+  SUBTITLE_UPDATE_REGISTER = "Registro atualizazdo com sucesso",
+
+  TITLE_ERROR_UPDATE_REGISTER = "Erro ao atualizar",
+  SUBTITLE_ERROR_UPDATE_REGISTER = "Houve um erro inesperado ao atualizar",
+
+  SUBTITLE_EXISTENT_DEPARTMENT = "O departamento que você está tentando criar já existe em nosso banco",
+  SUBTITLE_ERROR_UPDATE_DEPARTMENT = "Esse nome de departamento já existe em nosso banco",
+
+  TITLE_THERE_ARE_NO_RECORDS = "Não há registros",
+  SUBTITLE_THERE_ARE_NO_RECORDS = "Não foram encontrados registros para essa busca",
+}
