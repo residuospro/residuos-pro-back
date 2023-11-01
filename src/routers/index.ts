@@ -3,6 +3,7 @@ import companies_route from "./companies_route";
 import { verifyToken, cacheControlMiddleware } from "../middleware";
 import department_route from "./department_route";
 import cors from "cors";
+import sediments_route from "./sediments_route";
 
 const router = (app: Express) => {
   app.route("/").get((req: Request, res: Response) => {
@@ -16,6 +17,7 @@ const router = (app: Express) => {
     verifyToken,
     companies_route,
     department_route,
+    sediments_route
   );
 };
 

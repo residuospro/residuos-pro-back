@@ -21,6 +21,9 @@ var Routes;
     Routes["UPDATE_USER_AFTER_DEPARTMENT"] = "/api/update/user_by_department";
     Routes["DELETE_USER_AFTER_DEPARTMENT"] = "/api/delete/user_by_department/";
     Routes["SAVE_USER"] = "/api/user/save";
+    Routes["SAVE_SEDIMENTS"] = "/api/sediments/save";
+    Routes["GET_SEDIMENTS_BY_PAGE"] = "/api/sediments/pagineted";
+    Routes["GET_NAME_OF_SEDIMENTS"] = "/api/sediments/by-name";
 })(Routes = exports.Routes || (exports.Routes = {}));
 var Permissions;
 (function (Permissions) {
@@ -46,6 +49,7 @@ var Messages;
     Messages["TITLE_ERROR_UPDATE_REGISTER"] = "Erro ao atualizar";
     Messages["SUBTITLE_ERROR_UPDATE_REGISTER"] = "Houve um erro inesperado ao atualizar";
     Messages["SUBTITLE_EXISTENT_DEPARTMENT"] = "O departamento que voc\u00EA est\u00E1 tentando criar j\u00E1 existe em nosso banco";
+    Messages["SUBTITLE_EXISTENT_SEDIMENT"] = "O res\u00EDduo que voc\u00EA est\u00E1 tentando criar j\u00E1 existe em nosso banco";
     Messages["SUBTITLE_ERROR_UPDATE_DEPARTMENT"] = "Esse nome de departamento j\u00E1 existe em nosso banco";
     Messages["TITLE_THERE_ARE_NO_RECORDS"] = "N\u00E3o h\u00E1 registros";
     Messages["SUBTITLE_THERE_ARE_NO_RECORDS"] = "N\u00E3o foram encontrados registros para essa busca";

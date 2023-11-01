@@ -8,11 +8,12 @@ const companies_route_1 = __importDefault(require("./companies_route"));
 const middleware_1 = require("../middleware");
 const department_route_1 = __importDefault(require("./department_route"));
 const cors_1 = __importDefault(require("cors"));
+const sediments_route_1 = __importDefault(require("./sediments_route"));
 const router = (app) => {
     app.route("/").get((req, res) => {
         res.status(200).send("Pro Resíduos Ativo");
     });
-    app.use(express_1.default.json(), (0, cors_1.default)(), middleware_1.cacheControlMiddleware, middleware_1.verifyToken, companies_route_1.default, department_route_1.default);
+    app.use(express_1.default.json(), (0, cors_1.default)(), middleware_1.cacheControlMiddleware, middleware_1.verifyToken, companies_route_1.default, department_route_1.default, sediments_route_1.default);
 };
 exports.default = router;
 //# sourceMappingURL=index.js.map

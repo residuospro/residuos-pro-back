@@ -1,4 +1,5 @@
 import { Document } from "mongoose";
+import { type } from "os";
 
 export interface IUser {
   name: string;
@@ -18,6 +19,31 @@ export interface ICreateUsers {
   idCompany: string;
   responsible: string;
 }
+
+export interface ISediments {
+  name: string;
+  classification: string;
+  risk: string;
+  state: string;
+  packaging: string;
+  idDepartment: string;
+  idCompany: string;
+  createdAt: Date;
+  deletedAt?: Date;
+  updatedAt?: Date;
+  deleted: boolean;
+}
+
+export type ISedimentsService = Pick<
+  ISediments,
+  | "classification"
+  | "name"
+  | "risk"
+  | "state"
+  | "packaging"
+  | "idDepartment"
+  | "idCompany"
+>;
 
 export interface ICompany {
   name: string;

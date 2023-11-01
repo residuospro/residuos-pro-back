@@ -20,6 +20,10 @@ export enum Routes {
   DELETE_USER_AFTER_DEPARTMENT = "/api/delete/user_by_department/",
 
   SAVE_USER = "/api/user/save",
+
+  SAVE_SEDIMENTS = "/api/sediments/save",
+  GET_SEDIMENTS_BY_PAGE = "/api/sediments/pagineted",
+  GET_NAME_OF_SEDIMENTS = "/api/sediments/by-name",
 }
 
 export enum Permissions {
@@ -52,6 +56,7 @@ export enum Messages {
   SUBTITLE_ERROR_UPDATE_REGISTER = "Houve um erro inesperado ao atualizar",
 
   SUBTITLE_EXISTENT_DEPARTMENT = "O departamento que você está tentando criar já existe em nosso banco",
+  SUBTITLE_EXISTENT_SEDIMENT = "O resíduo que você está tentando criar já existe em nosso banco",
   SUBTITLE_ERROR_UPDATE_DEPARTMENT = "Esse nome de departamento já existe em nosso banco",
 
   TITLE_THERE_ARE_NO_RECORDS = "Não há registros",
