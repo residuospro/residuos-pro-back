@@ -27,9 +27,7 @@ class SedimentsController {
                 const page = 1;
                 const itemsPerPage = 10;
                 const skip = (page - 1) * itemsPerPage;
-                let { sediments, totalPages } = yield sediments_service_1.default.getSedimentsByPageService(sediment.idCompany, sediment.idDepartment, skip, itemsPerPage);
-                if (sediments.length == 10)
-                    totalPages += 1;
+                let { totalPages } = yield sediments_service_1.default.getSedimentsByPageService(sediment.idCompany, sediment.idDepartment, skip, itemsPerPage, false);
                 return res.status(201).json({
                     createSediment,
                     totalPages,
@@ -62,7 +60,7 @@ class SedimentsController {
             try {
                 const { page, itemsPerPage, idCompany, idDepartment } = req.body;
                 const skip = (parseInt(page) - 1) * parseInt(itemsPerPage);
-                const sediments = yield sediments_service_1.default.getSedimentsByPageService(idCompany, idDepartment, skip, itemsPerPage);
+                const sediments = yield sediments_service_1.default.getSedimentsByPageService(idCompany, idDepartment, skip, itemsPerPage, true);
                 return res.status(200).json(sediments);
             }
             catch (error) {
@@ -90,6 +88,82 @@ class SedimentsController {
                 const sediments = yield sediments_service_1.default.getNameOfSedimentsService(idCompany, idDepartment);
                 const nameOfSediments = sediments.map((s) => s.name);
                 return res.status(200).json({ nameOfSediments });
+            }
+            catch (error) {
+                return res.status(500).json({
+                    message: {
+                        title: enum_1.Messages.TITLE_ERROR,
+                        subTitle: enum_1.Messages.SUBTITLE_ERROR,
+                    },
+                });
+            }
+        });
+    }
+    getSedimentByName(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { name, idCompany, idDepartment } = req.body;
+                const sediment = yield sediments_service_1.default.getSedimentByNameService(name, idCompany, idDepartment);
+                return res.status(200).json(sediment);
+            }
+            catch (error) {
+                return res.status(500).json({
+                    message: {
+                        title: enum_1.Messages.TITLE_ERROR,
+                        subTitle: enum_1.Messages.SUBTITLE_ERROR,
+                    },
+                });
+            }
+        });
+    }
+    updateSediments(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const sediment = req.body;
+                if (sediment.name) {
+                    sediment.name =
+                        sediment.name.charAt(0).toUpperCase() +
+                            sediment.name.slice(1).toLowerCase();
+                }
+                const { id } = req.params;
+                const updateSediment = yield sediments_service_1.default.updateSedimentService([sediment], id);
+                return res.status(201).json({
+                    updateSediment,
+                    message: {
+                        title: enum_1.Messages.TITLE_UPDATE_REGISTER,
+                        subTitle: enum_1.Messages.SUBTITLE_UPDATE_REGISTER,
+                    },
+                });
+            }
+            catch (error) {
+                if (error instanceof handleError_1.default) {
+                    return res.status(error.statusCode).json({
+                        message: {
+                            title: enum_1.Messages.TITLE_ERROR_UPDATE_REGISTER,
+                            subTitle: enum_1.Messages.SUBTITLE_ERROR_UPDATE_SEDIMENTS,
+                        },
+                    });
+                }
+                return res.status(500).json({
+                    message: {
+                        title: enum_1.Messages.TITLE_ERROR,
+                        subTitle: enum_1.Messages.SUBTITLE_ERROR,
+                    },
+                });
+            }
+        });
+    }
+    deleteSediments(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { id } = req.params;
+                yield sediments_service_1.default.deleteSedimentService(id);
+                return res.status(201).json({
+                    message: {
+                        title: enum_1.Messages.TITLE_DELETE_REGISTER,
+                        subTitle: enum_1.Messages.SUBTITLE_DELETE_REGISTER,
+                    },
+                });
             }
             catch (error) {
                 return res.status(500).json({

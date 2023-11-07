@@ -12,6 +12,9 @@ const sedments_controller = new sediments_controller_1.default();
 sediments_route
     .post(enum_1.Routes.SAVE_SEDIMENTS, (0, middleware_1.verifyPermission)([enum_1.Permissions.MANAGER]), sedments_controller.createSediments)
     .post(enum_1.Routes.GET_SEDIMENTS_BY_PAGE, (0, middleware_1.verifyPermission)([enum_1.Permissions.MANAGER]), sedments_controller.getSedimentsByPage)
-    .post(enum_1.Routes.GET_NAME_OF_SEDIMENTS, (0, middleware_1.verifyPermission)([enum_1.Permissions.MANAGER]), sedments_controller.getNameOfSediments);
+    .post(enum_1.Routes.GET_NAME_OF_SEDIMENTS, (0, middleware_1.verifyPermission)([enum_1.Permissions.MANAGER]), sedments_controller.getNameOfSediments)
+    .post(enum_1.Routes.GET_SEDIMENTS_BY_NAME, (0, middleware_1.verifyPermission)([enum_1.Permissions.MANAGER]), sedments_controller.getSedimentByName)
+    .put(enum_1.Routes.UPDATE_SEDIMENTS, (0, middleware_1.verifyPermission)([enum_1.Permissions.MANAGER]), sedments_controller.updateSediments)
+    .delete(enum_1.Routes.DELETE_SEDIMENT, (0, middleware_1.verifyPermission)([enum_1.Permissions.MANAGER]), sedments_controller.deleteSediments);
 exports.default = sediments_route;
 //# sourceMappingURL=sediments_route.js.map

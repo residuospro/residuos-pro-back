@@ -35,7 +35,7 @@ class DepartmentService {
             }
         });
     }
-    static getDepartmentsByPageService(idCompany, skip, itemsPerPage, throwException = false) {
+    static getDepartmentsByPageService(idCompany, skip, itemsPerPage, throwException) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const departments = yield department_1.default.find({
@@ -47,10 +47,12 @@ class DepartmentService {
                 if (departments.length == 0 && throwException) {
                     throw new handleError_1.default("Não há registros para essa busca", 404);
                 }
-                const totalDepartments = yield department_1.default.find({
+                let totalDepartments = yield department_1.default.find({
                     deleted: false,
                     idCompany,
                 }).count();
+                if (!throwException)
+                    totalDepartments += 1;
                 const totalPages = Math.ceil(totalDepartments / itemsPerPage);
                 return { departments, totalPages };
             }
@@ -106,9 +108,11 @@ class DepartmentService {
     static updateDepartmentService(updatedData, id) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const existingDepartment = yield this.validatesIfTheDepartmentExists(updatedData[0].idCompany, updatedData[0].name);
-                if (existingDepartment) {
-                    throw new handleError_1.default("Esse departamento já existe", 409);
+                if (updatedData[0].name) {
+                    const existingDepartment = yield this.validatesIfTheDepartmentExists(updatedData[0].idCompany, updatedData[0].name);
+                    if (existingDepartment) {
+                        throw new handleError_1.default("Esse departamento já existe", 409);
+                    }
                 }
                 let department = (yield department_1.default.findById(id));
                 for (const key in updatedData[0]) {
@@ -118,11 +122,6 @@ class DepartmentService {
                     }
                 }
                 const updateCompany = yield department.save();
-                // await UserService.updateUserAfterUpdateDepartment(
-                //   updatedData[0].name,
-                //   updatedData[0].ramal,
-                //   id
-                // );
                 return updateCompany;
             }
             catch (error) {
@@ -153,13 +152,6 @@ class DepartmentService {
                     deleted: true,
                     deletedAt: currentDate,
                 }, { new: true });
-                // await User.updateMany(
-                //   { idDepartment: id },
-                //   {
-                //     deleted: true,
-                //     deletedAt: currentDate,
-                //   }
-                // );
                 return department;
             }
             catch (error) {

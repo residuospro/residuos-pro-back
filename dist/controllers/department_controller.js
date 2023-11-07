@@ -32,12 +32,9 @@ class DepartmentController {
                     ramal,
                     idCompany,
                 }, session);
-                const page = 1;
                 const itemsPerPage = 10;
-                const skip = (page - 1) * itemsPerPage;
-                let { departments, totalPages } = yield department_service_1.default.getDepartmentsByPageService(idCompany, skip, itemsPerPage, false);
-                if (departments.length == 10)
-                    totalPages += 1;
+                const skip = 0;
+                let { totalPages } = yield department_service_1.default.getDepartmentsByPageService(idCompany, skip, itemsPerPage, false);
                 yield externalApi_service_1.default.createUserAfterDepartment({
                     responsible,
                     email,

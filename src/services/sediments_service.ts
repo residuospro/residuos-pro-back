@@ -1,4 +1,4 @@
-import { ISedimentsService } from "../utils/interfaces";
+import { ISediments, ISedimentsService } from "../utils/interfaces";
 import Sediments from "../models/sediment";
 import HandleError from "../utils/errors/handleError";
 
@@ -14,7 +14,7 @@ class SedimentsService {
       });
 
       if (existingSediment != null) {
-        throw new Error("Esse resíduo já foi cadastrado");
+        throw new HandleError("Esse resíduo já foi cadastrado", 409);
       }
 
       const sediments = new Sediments({
@@ -25,6 +25,10 @@ class SedimentsService {
 
       return saveSedments;
     } catch (error) {
+      if (error instanceof HandleError) {
+        throw error;
+      }
+
       throw new Error(error.message);
     }
   }
@@ -33,7 +37,8 @@ class SedimentsService {
     idCompany: string,
     idDepartment: string,
     skip: number,
-    itemsPerPage: number
+    itemsPerPage: number,
+    throwException: boolean
   ) {
     try {
       const sediments = await Sediments.find({
@@ -44,11 +49,11 @@ class SedimentsService {
         .skip(skip)
         .limit(itemsPerPage);
 
-      if (sediments.length == 0) {
+      if (sediments.length == 0 && throwException) {
         throw new HandleError("Não há registros pra esse busca", 404);
       }
 
-      const totalSediments = await Sediments.find({
+      let totalSediments = await Sediments.find({
         idCompany,
         idDepartment,
         deleted: false,
@@ -58,6 +63,10 @@ class SedimentsService {
 
       return { sediments, totalPages };
     } catch (error) {
+      if (error instanceof HandleError) {
+        throw error;
+      }
+
       throw new Error(error.message);
     }
   }
@@ -76,6 +85,86 @@ class SedimentsService {
       return sediments;
     } catch (error: any) {
       throw new Error(error.message);
+    }
+  }
+
+  static async getSedimentByNameService(
+    name: string,
+    idCompany: string,
+    idDepartment: string
+  ) {
+    try {
+      const sediment = await Sediments.findOne({
+        name,
+        idCompany,
+        idDepartment,
+        deleted: false,
+      });
+
+      return sediment;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+
+  static async updateSedimentService(
+    sediment: ISedimentsService[],
+    id: string
+  ) {
+    try {
+      const { name, idCompany, idDepartment } = sediment[0];
+
+      if (name) {
+        let existingSediment = (await Sediments.findOne({
+          name,
+          idCompany,
+          idDepartment,
+          deleted: false,
+        })) as any;
+
+        if (existingSediment) {
+          throw new HandleError("Esse resíduo já existe", 409);
+        }
+      }
+
+      let sedimentToEdit = (await Sediments.findById(id)) as any;
+
+      for (const key in sediment[0]) {
+        const value = sediment[0][key as keyof ISedimentsService];
+
+        if (value) {
+          sedimentToEdit[key] = value;
+        }
+      }
+
+      const updateSediment = await sedimentToEdit.save();
+
+      return updateSediment;
+    } catch (error) {
+      if (error instanceof HandleError) {
+        throw error;
+      }
+
+      throw new Error("Resíduo não encontrado");
+    }
+  }
+
+  static async deleteSedimentService(id: string) {
+    try {
+      const currentDate = new Date();
+
+      const sediment = await Sediments.findByIdAndUpdate(
+        id,
+        {
+          deleted: true,
+          deletedAt: currentDate,
+        },
+        { new: true }
+      );
+
+      return sediment;
+    } catch (error: any) {
+      throw new Error("Resíduo não encontrado");
     }
   }
 }

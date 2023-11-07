@@ -24,6 +24,9 @@ export enum Routes {
   SAVE_SEDIMENTS = "/api/sediments/save",
   GET_SEDIMENTS_BY_PAGE = "/api/sediments/pagineted",
   GET_NAME_OF_SEDIMENTS = "/api/sediments/by-name",
+  GET_SEDIMENTS_BY_NAME = "/api/sediments/get-name",
+  UPDATE_SEDIMENTS = "/sediments/update/:id",
+  DELETE_SEDIMENT = "/sediment/:id",
 }
 
 export enum Permissions {
@@ -58,6 +61,7 @@ export enum Messages {
   SUBTITLE_EXISTENT_DEPARTMENT = "O departamento que você está tentando criar já existe em nosso banco",
   SUBTITLE_EXISTENT_SEDIMENT = "O resíduo que você está tentando criar já existe em nosso banco",
   SUBTITLE_ERROR_UPDATE_DEPARTMENT = "Esse nome de departamento já existe em nosso banco",
+  SUBTITLE_ERROR_UPDATE_SEDIMENTS = "Esse nome de resíduo já existe em nosso banco",
 
   TITLE_THERE_ARE_NO_RECORDS = "Não há registros",
   SUBTITLE_THERE_ARE_NO_RECORDS = "Não foram encontrados registros para essa busca",

@@ -26,20 +26,16 @@ class DepartmentController {
         session
       );
 
-      const page = 1;
       const itemsPerPage = 10;
 
-      const skip = (page - 1) * itemsPerPage;
+      const skip = 0;
 
-      let { departments, totalPages } =
-        await DepartmentService.getDepartmentsByPageService(
-          idCompany,
-          skip,
-          itemsPerPage,
-          false
-        );
-
-      if (departments.length == 10) totalPages += 1;
+      let { totalPages } = await DepartmentService.getDepartmentsByPageService(
+        idCompany,
+        skip,
+        itemsPerPage,
+        false
+      );
 
       await ExternalApiService.createUserAfterDepartment({
         responsible,

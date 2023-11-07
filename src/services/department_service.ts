@@ -39,7 +39,7 @@ class DepartmentService {
     idCompany: string,
     skip: number,
     itemsPerPage: number,
-    throwException: boolean = false
+    throwException: boolean
   ) {
     try {
       const departments = await Department.find({
@@ -53,10 +53,12 @@ class DepartmentService {
         throw new HandleError("Não há registros para essa busca", 404);
       }
 
-      const totalDepartments = await Department.find({
+      let totalDepartments = await Department.find({
         deleted: false,
         idCompany,
       }).count();
+
+      if (!throwException) totalDepartments += 1;
 
       const totalPages = Math.ceil(totalDepartments / itemsPerPage);
 
@@ -114,13 +116,15 @@ class DepartmentService {
     id: string
   ) {
     try {
-      const existingDepartment = await this.validatesIfTheDepartmentExists(
-        updatedData[0].idCompany,
-        updatedData[0].name
-      );
+      if (updatedData[0].name) {
+        const existingDepartment = await this.validatesIfTheDepartmentExists(
+          updatedData[0].idCompany,
+          updatedData[0].name
+        );
 
-      if (existingDepartment) {
-        throw new HandleError("Esse departamento já existe", 409);
+        if (existingDepartment) {
+          throw new HandleError("Esse departamento já existe", 409);
+        }
       }
 
       let department = (await Department.findById(id)) as any;
@@ -134,12 +138,6 @@ class DepartmentService {
       }
 
       const updateCompany = await department!.save();
-
-      // await UserService.updateUserAfterUpdateDepartment(
-      //   updatedData[0].name,
-      //   updatedData[0].ramal,
-      //   id
-      // );
 
       return updateCompany;
     } catch (error: any) {
@@ -176,14 +174,6 @@ class DepartmentService {
         },
         { new: true }
       );
-
-      // await User.updateMany(
-      //   { idDepartment: id },
-      //   {
-      //     deleted: true,
-      //     deletedAt: currentDate,
-      //   }
-      // );
 
       return department;
     } catch (error: any) {

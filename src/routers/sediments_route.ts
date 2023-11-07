@@ -21,6 +21,21 @@ sediments_route
     Routes.GET_NAME_OF_SEDIMENTS,
     verifyPermission([Permissions.MANAGER]),
     sedments_controller.getNameOfSediments
+  )
+  .post(
+    Routes.GET_SEDIMENTS_BY_NAME,
+    verifyPermission([Permissions.MANAGER]),
+    sedments_controller.getSedimentByName
+  )
+  .put(
+    Routes.UPDATE_SEDIMENTS,
+    verifyPermission([Permissions.MANAGER]),
+    sedments_controller.updateSediments
+  )
+  .delete(
+    Routes.DELETE_SEDIMENT,
+    verifyPermission([Permissions.MANAGER]),
+    sedments_controller.deleteSediments
   );
 
 export default sediments_route;

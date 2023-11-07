@@ -24,6 +24,9 @@ var Routes;
     Routes["SAVE_SEDIMENTS"] = "/api/sediments/save";
     Routes["GET_SEDIMENTS_BY_PAGE"] = "/api/sediments/pagineted";
     Routes["GET_NAME_OF_SEDIMENTS"] = "/api/sediments/by-name";
+    Routes["GET_SEDIMENTS_BY_NAME"] = "/api/sediments/get-name";
+    Routes["UPDATE_SEDIMENTS"] = "/sediments/update/:id";
+    Routes["DELETE_SEDIMENT"] = "/sediment/:id";
 })(Routes = exports.Routes || (exports.Routes = {}));
 var Permissions;
 (function (Permissions) {
@@ -51,6 +54,7 @@ var Messages;
     Messages["SUBTITLE_EXISTENT_DEPARTMENT"] = "O departamento que voc\u00EA est\u00E1 tentando criar j\u00E1 existe em nosso banco";
     Messages["SUBTITLE_EXISTENT_SEDIMENT"] = "O res\u00EDduo que voc\u00EA est\u00E1 tentando criar j\u00E1 existe em nosso banco";
     Messages["SUBTITLE_ERROR_UPDATE_DEPARTMENT"] = "Esse nome de departamento j\u00E1 existe em nosso banco";
+    Messages["SUBTITLE_ERROR_UPDATE_SEDIMENTS"] = "Esse nome de res\u00EDduo j\u00E1 existe em nosso banco";
     Messages["TITLE_THERE_ARE_NO_RECORDS"] = "N\u00E3o h\u00E1 registros";
     Messages["SUBTITLE_THERE_ARE_NO_RECORDS"] = "N\u00E3o foram encontrados registros para essa busca";
 })(Messages = exports.Messages || (exports.Messages = {}));
