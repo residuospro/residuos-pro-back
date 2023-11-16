@@ -29,11 +29,8 @@ class DepartmentController {
 
       const itemsPerPage = 10;
 
-      const skip = 0;
-
       let { totalPages } = await DepartmentService.getDepartmentsByPageService(
         idCompany,
-        skip,
         itemsPerPage,
         false
       );
@@ -79,12 +76,10 @@ class DepartmentController {
 
   async getDepartmentsByPage(req: Request, res: Response) {
     try {
-      const { page, itemsPerPage, idCompany } = req.body;
-      const skip = (parseInt(page) - 1) * parseInt(itemsPerPage);
+      const { itemsPerPage, idCompany } = req.body;
 
       const departments = await DepartmentService.getDepartmentsByPageService(
         idCompany,
-        skip,
         itemsPerPage,
         true
       );

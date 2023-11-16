@@ -33,8 +33,7 @@ class DepartmentController {
                     idCompany,
                 }, session);
                 const itemsPerPage = 10;
-                const skip = 0;
-                let { totalPages } = yield department_service_1.default.getDepartmentsByPageService(idCompany, skip, itemsPerPage, false);
+                let { totalPages } = yield department_service_1.default.getDepartmentsByPageService(idCompany, itemsPerPage, false);
                 yield externalApi_service_1.default.createUserAfterDepartment({
                     responsible,
                     email,
@@ -75,9 +74,8 @@ class DepartmentController {
     getDepartmentsByPage(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { page, itemsPerPage, idCompany } = req.body;
-                const skip = (parseInt(page) - 1) * parseInt(itemsPerPage);
-                const departments = yield department_service_1.default.getDepartmentsByPageService(idCompany, skip, itemsPerPage, true);
+                const { itemsPerPage, idCompany } = req.body;
+                const departments = yield department_service_1.default.getDepartmentsByPageService(idCompany, itemsPerPage, true);
                 return res.status(200).json(departments);
             }
             catch (error) {

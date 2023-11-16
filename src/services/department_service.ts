@@ -37,7 +37,6 @@ class DepartmentService {
 
   static async getDepartmentsByPageService(
     idCompany: string,
-    skip: number,
     itemsPerPage: number,
     throwException: boolean
   ) {
@@ -45,9 +44,7 @@ class DepartmentService {
       const departments = await Department.find({
         idCompany,
         deleted: false,
-      })
-        .skip(skip)
-        .limit(itemsPerPage);
+      });
 
       if (departments.length == 0 && throwException) {
         throw new HandleError("Não há registros para essa busca", 404);

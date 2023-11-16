@@ -5,7 +5,6 @@ import router from "./routers";
 import dbConnection from "./config/dbConfig";
 import { setupClient } from "./clients/AxiosClient";
 import WebSocketService from "./services/webSocketService";
-import { Server } from "socket.io";
 
 dotenv.config();
 

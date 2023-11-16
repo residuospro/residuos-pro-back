@@ -40,7 +40,6 @@ export const verifyToken = async (
   res: Response,
   next: NextFunction
 ) => {
-  const io = req.token;
   const token =
     req.headers.authorization?.replace("Bearer ", "") ||
     req.token?.replace("Bearer ", "");
