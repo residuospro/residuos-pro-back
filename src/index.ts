@@ -1,14 +1,23 @@
 import express from "express";
 import dotenv from "dotenv";
+import http from "http";
 import router from "./routers";
 import dbConnection from "./config/dbConfig";
 import { setupClient } from "./clients/AxiosClient";
+import WebSocketService from "./services/webSocketService";
+import { Server } from "socket.io";
 
 dotenv.config();
 
-const server = express();
+const app = express();
+const server = http.createServer(app);
 
-router(server);
+const { io, token } = WebSocketService.configureWebSocket(server);
+
+app.set("io", io);
+app.set("token", token);
+
+router(app);
 
 setupClient(process.env.AUTHENTICATOR_BACK);
 
@@ -17,6 +26,10 @@ dbConnection.once("open", () =>
   console.log("A conexão com o banco foi realizada com sucesso")
 );
 
-server.listen(process.env.PORT || 5000, () =>
+app.listen(process.env.PORT || 5000, () =>
   console.log("Server running at " + process.env.PORT || 5000)
+);
+
+server.listen(process.env.WS || 5001, () =>
+  console.log("WS running at " + process.env.WS || 5001)
 );

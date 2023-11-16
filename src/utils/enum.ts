@@ -66,3 +66,7 @@ export enum Messages {
   TITLE_THERE_ARE_NO_RECORDS = "Não há registros",
   SUBTITLE_THERE_ARE_NO_RECORDS = "Não foram encontrados registros para essa busca",
 }
+
+export enum Event {
+  DEPARTMENT = "department",
+}

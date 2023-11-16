@@ -4,6 +4,7 @@ import HandleError from "../utils/errors/handleError";
 import ExternalApiService from "../services/externalApi_service";
 import mongoose from "mongoose";
 import { Messages } from "../utils/enum";
+import { Server as SocketIoServer } from "socket.io";
 
 class DepartmentController {
   async createDepartment(req: Request, res: Response) {

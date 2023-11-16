@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Messages = exports.Permissions = exports.Routes = void 0;
+exports.Event = exports.Messages = exports.Permissions = exports.Routes = void 0;
 var Routes;
 (function (Routes) {
     Routes["GET_COMPANIES"] = "/companies";
@@ -58,4 +58,8 @@ var Messages;
     Messages["TITLE_THERE_ARE_NO_RECORDS"] = "N\u00E3o h\u00E1 registros";
     Messages["SUBTITLE_THERE_ARE_NO_RECORDS"] = "N\u00E3o foram encontrados registros para essa busca";
 })(Messages = exports.Messages || (exports.Messages = {}));
+var Event;
+(function (Event) {
+    Event["DEPARTMENT"] = "department";
+})(Event = exports.Event || (exports.Event = {}));
 //# sourceMappingURL=enum.js.map

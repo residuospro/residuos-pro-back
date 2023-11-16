@@ -36,8 +36,10 @@ const validRequest = (req, res, next) => {
 };
 exports.validRequest = validRequest;
 const verifyToken = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
-    const token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.replace("Bearer ", "");
+    var _a, _b;
+    const io = req.token;
+    const token = ((_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.replace("Bearer ", "")) ||
+        ((_b = req.token) === null || _b === void 0 ? void 0 : _b.replace("Bearer ", ""));
     if (!token) {
         res.status(401).json({ message: "Token não fornecido" });
         return;

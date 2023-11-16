@@ -40,7 +40,10 @@ export const verifyToken = async (
   res: Response,
   next: NextFunction
 ) => {
-  const token = req.headers.authorization?.replace("Bearer ", "");
+  const io = req.token;
+  const token =
+    req.headers.authorization?.replace("Bearer ", "") ||
+    req.token?.replace("Bearer ", "");
 
   if (!token) {
     res.status(401).json({ message: "Token não fornecido" });
