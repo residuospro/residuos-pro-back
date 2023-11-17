@@ -16,7 +16,7 @@ const router = (app) => {
     app.use(express_1.default.json(), (0, cors_1.default)({
         credentials: true,
         methods: ["GET", "POST", "PUT", "DELETE"],
-        origin: "http://localhost:8081",
+        origin: "http://localhost:8080",
     }), middleware_1.cacheControlMiddleware, (req, res, next) => {
         req.io = app.get("io");
         req.token = app.get("token");

@@ -8,6 +8,12 @@ import WebSocketService from "../services/webSocketService";
 const department_route = express.Router();
 const department_controller = new DepartmentController();
 
+interface IRes {
+  departments: any[];
+  department: any[];
+  totalPages: number;
+}
+
 department_route
   .post(
     Routes.GET_DEPARTMENT_BY_NAME,
@@ -39,8 +45,16 @@ department_route
     validRequest,
     verifyPermission([Permissions.SUPPORT, Permissions.ADMIN]),
     async (req: Request, res: Response) => {
-      await department_controller.createDepartment(req, res);
-      WebSocketService.emitEvent(req, res, Event.DEPARTMENT);
+      const departmentResponse: any =
+        await department_controller.createDepartment(req, res);
+
+      const departments = departmentResponse.departments as any[];
+      const department = departmentResponse.department;
+      const totalPages = departmentResponse.totalPages;
+
+      departments.push(department);
+
+      WebSocketService.departmentEvent(req, departments, totalPages);
     }
   )
   .put(
@@ -48,7 +62,7 @@ department_route
     verifyPermission([Permissions.SUPPORT, Permissions.ADMIN]),
     async (req: Request, res: Response) => {
       await department_controller.updateDepartment(req, res);
-      WebSocketService.emitEvent(req, res, Event.DEPARTMENT);
+      // WebSocketService.departmentEvent(req, departments, totalPages);
     }
   )
   .delete(
@@ -56,7 +70,7 @@ department_route
     verifyPermission([Permissions.SUPPORT, Permissions.ADMIN]),
     async (req: Request, res: Response) => {
       await department_controller.deleteDepartment(req, res);
-      WebSocketService.emitEvent(req, res, Event.DEPARTMENT);
+      // WebSocketService.departmentEvent(req, res, Event.DEPARTMENT);
     }
   );
 

@@ -22,7 +22,7 @@ const router = (app: Express) => {
     cors({
       credentials: true,
       methods: ["GET", "POST", "PUT", "DELETE"],
-      origin: "http://localhost:8081",
+      origin: "http://localhost:8080",
     }),
     cacheControlMiddleware,
     (req: Request, res, next) => {

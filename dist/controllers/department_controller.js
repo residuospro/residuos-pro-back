@@ -33,7 +33,7 @@ class DepartmentController {
                     idCompany,
                 }, session);
                 const itemsPerPage = 10;
-                let { totalPages } = yield department_service_1.default.getDepartmentsByPageService(idCompany, itemsPerPage, false);
+                let { departments, totalPages } = yield department_service_1.default.getDepartmentsByPageService(idCompany, itemsPerPage, false);
                 yield externalApi_service_1.default.createUserAfterDepartment({
                     responsible,
                     email,
@@ -44,14 +44,19 @@ class DepartmentController {
                 });
                 yield session.commitTransaction();
                 session.endSession();
-                return res.status(201).json({
+                return {
+                    departments,
                     department,
                     totalPages,
-                    message: {
-                        title: enum_1.Messages.TITLE_REGISTER,
-                        subTitle: enum_1.Messages.SUBTITLE_REGISTER,
-                    },
-                });
+                    res: res.status(201).json({
+                        department,
+                        totalPages,
+                        message: {
+                            title: enum_1.Messages.TITLE_REGISTER,
+                            subTitle: enum_1.Messages.SUBTITLE_REGISTER,
+                        },
+                    }),
+                };
             }
             catch (error) {
                 if (error instanceof handleError_1.default) {

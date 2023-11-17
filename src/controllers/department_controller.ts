@@ -29,11 +29,12 @@ class DepartmentController {
 
       const itemsPerPage = 10;
 
-      let { totalPages } = await DepartmentService.getDepartmentsByPageService(
-        idCompany,
-        itemsPerPage,
-        false
-      );
+      let { departments, totalPages } =
+        await DepartmentService.getDepartmentsByPageService(
+          idCompany,
+          itemsPerPage,
+          false
+        );
 
       await ExternalApiService.createUserAfterDepartment({
         responsible,
@@ -47,14 +48,19 @@ class DepartmentController {
       await session.commitTransaction();
       session.endSession();
 
-      return res.status(201).json({
+      return {
+        departments,
         department,
         totalPages,
-        message: {
-          title: Messages.TITLE_REGISTER,
-          subTitle: Messages.SUBTITLE_REGISTER,
-        },
-      });
+        res: res.status(201).json({
+          department,
+          totalPages,
+          message: {
+            title: Messages.TITLE_REGISTER,
+            subTitle: Messages.SUBTITLE_REGISTER,
+          },
+        }),
+      };
     } catch (error: any) {
       if (error instanceof HandleError) {
         return res.status(error.statusCode).json({
