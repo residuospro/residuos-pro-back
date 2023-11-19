@@ -31,19 +31,15 @@ department_route
     .get(enum_1.Routes.GET_DEPARTMENT_BY_ID, (0, middleware_1.verifyPermission)([enum_1.Permissions.SUPPORT, enum_1.Permissions.ADMIN]), department_controller.getDepartmentById)
     .post(enum_1.Routes.SAVE_DEPARTMENT, departmentSchema_1.departmentCreateSchema, middleware_1.validRequest, (0, middleware_1.verifyPermission)([enum_1.Permissions.SUPPORT, enum_1.Permissions.ADMIN]), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const departmentResponse = yield department_controller.createDepartment(req, res);
-    const departments = departmentResponse.departments;
-    const department = departmentResponse.department;
-    const totalPages = departmentResponse.totalPages;
-    departments.push(department);
-    webSocketService_1.default.departmentEvent(req, departments, totalPages);
+    webSocketService_1.default.departmentEvent(req, departmentResponse, enum_1.Event.DEPARTMENT_CREATED);
 }))
     .put(enum_1.Routes.UPDATE_DEPARTMENT, (0, middleware_1.verifyPermission)([enum_1.Permissions.SUPPORT, enum_1.Permissions.ADMIN]), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    yield department_controller.updateDepartment(req, res);
-    // WebSocketService.departmentEvent(req, departments, totalPages);
+    const departmentResponse = yield department_controller.updateDepartment(req, res);
+    webSocketService_1.default.departmentEvent(req, departmentResponse, enum_1.Event.UPDATED_DEPARTMENT);
 }))
-    .delete(enum_1.Routes.DELETE_DEPARTMENT, (0, middleware_1.verifyPermission)([enum_1.Permissions.SUPPORT, enum_1.Permissions.ADMIN]), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    yield department_controller.deleteDepartment(req, res);
-    // WebSocketService.departmentEvent(req, res, Event.DEPARTMENT);
+    .post(enum_1.Routes.DELETE_DEPARTMENT, (0, middleware_1.verifyPermission)([enum_1.Permissions.SUPPORT, enum_1.Permissions.ADMIN]), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const departmentResponse = yield department_controller.deleteDepartment(req, res);
+    webSocketService_1.default.departmentEvent(req, departmentResponse, enum_1.Event.DELETED_DEPARTMENT);
 }));
 exports.default = department_route;
 //# sourceMappingURL=department_route.js.map

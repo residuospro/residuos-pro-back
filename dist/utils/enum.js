@@ -60,6 +60,8 @@ var Messages;
 })(Messages = exports.Messages || (exports.Messages = {}));
 var Event;
 (function (Event) {
-    Event["DEPARTMENT"] = "department";
+    Event["DEPARTMENT_CREATED"] = "department_created";
+    Event["UPDATED_DEPARTMENT"] = "updated_department";
+    Event["DELETED_DEPARTMENT"] = "deleted_department";
 })(Event = exports.Event || (exports.Event = {}));
 //# sourceMappingURL=enum.js.map

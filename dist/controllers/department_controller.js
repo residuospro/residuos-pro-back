@@ -23,7 +23,7 @@ class DepartmentController {
             try {
                 const session = yield mongoose_1.default.startSession();
                 session.startTransaction();
-                let { name, responsible, email, ramal, idCompany } = req.body;
+                let { name, responsible, email, ramal, idCompany, totalItems } = req.body;
                 name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
                 const department = yield department_service_1.default.createDepartmentService({
                     name,
@@ -33,7 +33,6 @@ class DepartmentController {
                     idCompany,
                 }, session);
                 const itemsPerPage = 10;
-                let { departments, totalPages } = yield department_service_1.default.getDepartmentsByPageService(idCompany, itemsPerPage, false);
                 yield externalApi_service_1.default.createUserAfterDepartment({
                     responsible,
                     email,
@@ -42,10 +41,11 @@ class DepartmentController {
                     department: name,
                     idDepartment: department.id,
                 });
+                totalItems += 1;
+                const totalPages = Math.ceil(totalItems / itemsPerPage);
                 yield session.commitTransaction();
                 session.endSession();
                 return {
-                    departments,
                     department,
                     totalPages,
                     res: res.status(201).json({
@@ -80,7 +80,7 @@ class DepartmentController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { itemsPerPage, idCompany } = req.body;
-                const departments = yield department_service_1.default.getDepartmentsByPageService(idCompany, itemsPerPage, true);
+                const departments = yield department_service_1.default.getDepartmentsByPageService(idCompany, itemsPerPage);
                 return res.status(200).json(departments);
             }
             catch (error) {
@@ -160,13 +160,16 @@ class DepartmentController {
                 const { id } = req.params;
                 const department = yield department_service_1.default.updateDepartmentService([{ name, responsible, email, ramal, idCompany }], id);
                 yield externalApi_service_1.default.updateUserAfterDepartment(name, ramal, id);
-                return res.status(201).json({
+                return {
                     department,
-                    message: {
-                        title: enum_1.Messages.TITLE_UPDATE_REGISTER,
-                        subTitle: enum_1.Messages.SUBTITLE_UPDATE_REGISTER,
-                    },
-                });
+                    res: res.status(201).json({
+                        department,
+                        message: {
+                            title: enum_1.Messages.TITLE_UPDATE_REGISTER,
+                            subTitle: enum_1.Messages.SUBTITLE_UPDATE_REGISTER,
+                        },
+                    }),
+                };
             }
             catch (error) {
                 if (error instanceof handleError_1.default) {
@@ -190,14 +193,18 @@ class DepartmentController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { id } = req.params;
-                yield department_service_1.default.deleteDepartmentService(id);
+                const department = yield department_service_1.default.deleteDepartmentService(id);
                 yield externalApi_service_1.default.deleteUserAfterDepartment(id);
-                return res.status(201).json({
-                    message: {
-                        title: enum_1.Messages.TITLE_DELETE_REGISTER,
-                        subTitle: enum_1.Messages.SUBTITLE_DELETE_REGISTER,
-                    },
-                });
+                return {
+                    department,
+                    res: res.status(201).json({
+                        department,
+                        message: {
+                            title: enum_1.Messages.TITLE_DELETE_REGISTER,
+                            subTitle: enum_1.Messages.SUBTITLE_DELETE_REGISTER,
+                        },
+                    }),
+                };
             }
             catch (error) {
                 return res.status(500).json({

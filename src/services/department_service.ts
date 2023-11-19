@@ -37,8 +37,7 @@ class DepartmentService {
 
   static async getDepartmentsByPageService(
     idCompany: string,
-    itemsPerPage: number,
-    throwException: boolean
+    itemsPerPage: number
   ) {
     try {
       const departments = await Department.find({
@@ -46,7 +45,7 @@ class DepartmentService {
         deleted: false,
       });
 
-      if (departments.length == 0 && throwException) {
+      if (departments.length == 0) {
         throw new HandleError("Não há registros para essa busca", 404);
       }
 
@@ -54,8 +53,6 @@ class DepartmentService {
         deleted: false,
         idCompany,
       }).count();
-
-      if (!throwException) totalDepartments += 1;
 
       const totalPages = Math.ceil(totalDepartments / itemsPerPage);
 

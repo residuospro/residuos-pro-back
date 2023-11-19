@@ -35,22 +35,20 @@ class DepartmentService {
             }
         });
     }
-    static getDepartmentsByPageService(idCompany, itemsPerPage, throwException) {
+    static getDepartmentsByPageService(idCompany, itemsPerPage) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const departments = yield department_1.default.find({
                     idCompany,
                     deleted: false,
                 });
-                if (departments.length == 0 && throwException) {
+                if (departments.length == 0) {
                     throw new handleError_1.default("Não há registros para essa busca", 404);
                 }
                 let totalDepartments = yield department_1.default.find({
                     deleted: false,
                     idCompany,
                 }).count();
-                if (!throwException)
-                    totalDepartments += 1;
                 const totalPages = Math.ceil(totalDepartments / itemsPerPage);
                 return { departments, totalPages };
             }

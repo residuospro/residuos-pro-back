@@ -27,14 +27,17 @@ class WebSocketService {
 
   static async departmentEvent(
     req: Request,
-    department: any[],
-    totalPages: number
+    departmentResponse: any,
+    event: string
   ) {
     const io = req.io as any;
 
     const { idCompany } = req.body;
 
-    io.emit(Event.DEPARTMENT, { department, totalPages, idCompany });
+    const department = departmentResponse.department;
+    const totalPages = departmentResponse.totalPages;
+
+    io.emit(event, { department, totalPages, idCompany });
   }
 }
 

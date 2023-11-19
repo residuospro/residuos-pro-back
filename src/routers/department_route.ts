@@ -48,29 +48,39 @@ department_route
       const departmentResponse: any =
         await department_controller.createDepartment(req, res);
 
-      const departments = departmentResponse.departments as any[];
-      const department = departmentResponse.department;
-      const totalPages = departmentResponse.totalPages;
-
-      departments.push(department);
-
-      WebSocketService.departmentEvent(req, departments, totalPages);
+      WebSocketService.departmentEvent(
+        req,
+        departmentResponse,
+        Event.DEPARTMENT_CREATED
+      );
     }
   )
   .put(
     Routes.UPDATE_DEPARTMENT,
     verifyPermission([Permissions.SUPPORT, Permissions.ADMIN]),
     async (req: Request, res: Response) => {
-      await department_controller.updateDepartment(req, res);
-      // WebSocketService.departmentEvent(req, departments, totalPages);
+      const departmentResponse: any =
+        await department_controller.updateDepartment(req, res);
+
+      WebSocketService.departmentEvent(
+        req,
+        departmentResponse,
+        Event.UPDATED_DEPARTMENT
+      );
     }
   )
-  .delete(
+  .post(
     Routes.DELETE_DEPARTMENT,
     verifyPermission([Permissions.SUPPORT, Permissions.ADMIN]),
     async (req: Request, res: Response) => {
-      await department_controller.deleteDepartment(req, res);
-      // WebSocketService.departmentEvent(req, res, Event.DEPARTMENT);
+      const departmentResponse: any =
+        await department_controller.deleteDepartment(req, res);
+
+      WebSocketService.departmentEvent(
+        req,
+        departmentResponse,
+        Event.DELETED_DEPARTMENT
+      );
     }
   );
 

@@ -68,5 +68,7 @@ export enum Messages {
 }
 
 export enum Event {
-  DEPARTMENT = "department",
+  DEPARTMENT_CREATED = "department_created",
+  UPDATED_DEPARTMENT = "updated_department",
+  DELETED_DEPARTMENT = "deleted_department",
 }

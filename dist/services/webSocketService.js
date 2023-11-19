@@ -10,7 +10,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const socket_io_1 = require("socket.io");
-const enum_1 = require("../utils/enum");
 class WebSocketService {
     static configureWebSocket(server) {
         const io = new socket_io_1.Server(server, {
@@ -27,11 +26,13 @@ class WebSocketService {
         });
         return { io, token };
     }
-    static departmentEvent(req, department, totalPages) {
+    static departmentEvent(req, departmentResponse, event) {
         return __awaiter(this, void 0, void 0, function* () {
             const io = req.io;
             const { idCompany } = req.body;
-            io.emit(enum_1.Event.DEPARTMENT, { department, totalPages, idCompany });
+            const department = departmentResponse.department;
+            const totalPages = departmentResponse.totalPages;
+            io.emit(event, { department, totalPages, idCompany });
         });
     }
 }

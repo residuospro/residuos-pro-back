@@ -4,7 +4,6 @@ import HandleError from "../utils/errors/handleError";
 import ExternalApiService from "../services/externalApi_service";
 import mongoose from "mongoose";
 import { Messages } from "../utils/enum";
-import { Server as SocketIoServer } from "socket.io";
 
 class DepartmentController {
   async createDepartment(req: Request, res: Response) {
@@ -12,7 +11,7 @@ class DepartmentController {
       const session = await mongoose.startSession();
       session.startTransaction();
 
-      let { name, responsible, email, ramal, idCompany } = req.body;
+      let { name, responsible, email, ramal, idCompany, totalItems } = req.body;
 
       name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
 
@@ -29,13 +28,6 @@ class DepartmentController {
 
       const itemsPerPage = 10;
 
-      let { departments, totalPages } =
-        await DepartmentService.getDepartmentsByPageService(
-          idCompany,
-          itemsPerPage,
-          false
-        );
-
       await ExternalApiService.createUserAfterDepartment({
         responsible,
         email,
@@ -45,11 +37,14 @@ class DepartmentController {
         idDepartment: department.id,
       });
 
+      totalItems += 1;
+
+      const totalPages = Math.ceil(totalItems / itemsPerPage);
+
       await session.commitTransaction();
       session.endSession();
 
       return {
-        departments,
         department,
         totalPages,
         res: res.status(201).json({
@@ -86,8 +81,7 @@ class DepartmentController {
 
       const departments = await DepartmentService.getDepartmentsByPageService(
         idCompany,
-        itemsPerPage,
-        true
+        itemsPerPage
       );
 
       return res.status(200).json(departments);
@@ -177,13 +171,16 @@ class DepartmentController {
 
       await ExternalApiService.updateUserAfterDepartment(name, ramal, id);
 
-      return res.status(201).json({
+      return {
         department,
-        message: {
-          title: Messages.TITLE_UPDATE_REGISTER,
-          subTitle: Messages.SUBTITLE_UPDATE_REGISTER,
-        },
-      });
+        res: res.status(201).json({
+          department,
+          message: {
+            title: Messages.TITLE_UPDATE_REGISTER,
+            subTitle: Messages.SUBTITLE_UPDATE_REGISTER,
+          },
+        }),
+      };
     } catch (error: any) {
       if (error instanceof HandleError) {
         return res.status(error.statusCode).json({
@@ -207,16 +204,20 @@ class DepartmentController {
     try {
       const { id } = req.params;
 
-      await DepartmentService.deleteDepartmentService(id);
+      const department = await DepartmentService.deleteDepartmentService(id);
 
       await ExternalApiService.deleteUserAfterDepartment(id);
 
-      return res.status(201).json({
-        message: {
-          title: Messages.TITLE_DELETE_REGISTER,
-          subTitle: Messages.SUBTITLE_DELETE_REGISTER,
-        },
-      });
+      return {
+        department,
+        res: res.status(201).json({
+          department,
+          message: {
+            title: Messages.TITLE_DELETE_REGISTER,
+            subTitle: Messages.SUBTITLE_DELETE_REGISTER,
+          },
+        }),
+      };
     } catch (error: any) {
       return res.status(500).json({
         message: {
