@@ -20,11 +20,7 @@ const router = (app: Express) => {
 
   app.use(
     express.json(),
-    cors({
-      credentials: true,
-      methods: ["GET", "POST", "PUT", "DELETE"],
-      origin: process.env.FRONT_REDISUOS_PRO,
-    }),
+    cors(),
     cacheControlMiddleware,
     (req: Request, res, next) => {
       req.io = app.get("io");

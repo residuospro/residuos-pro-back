@@ -13,11 +13,7 @@ const router = (app) => {
     app.route("/").get((req, res) => {
         res.status(200).send("Pro Resíduos Ativo");
     });
-    app.use(express_1.default.json(), (0, cors_1.default)({
-        credentials: true,
-        methods: ["GET", "POST", "PUT", "DELETE"],
-        origin: process.env.FRONT_REDISUOS_PRO,
-    }), middleware_1.cacheControlMiddleware, (req, res, next) => {
+    app.use(express_1.default.json(), (0, cors_1.default)(), middleware_1.cacheControlMiddleware, (req, res, next) => {
         req.io = app.get("io");
         req.token = app.get("token");
         req.pusher = app.get("pusher");
