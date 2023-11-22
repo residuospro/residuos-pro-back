@@ -23,7 +23,7 @@ const router = (app: Express) => {
     cors({
       credentials: true,
       methods: ["GET", "POST", "PUT", "DELETE"],
-      origin: "http://localhost:8080",
+      origin: process.env.FRONT_REDISUOS_PRO,
     }),
     cacheControlMiddleware,
     (req: Request, res, next) => {
