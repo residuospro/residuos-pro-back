@@ -1,28 +1,18 @@
-import { Server as httpServer } from "http";
-import { Server } from "socket.io";
-import { Request, Response } from "express";
-import DepartmentService from "./department_service";
 import { Event } from "../utils/enum";
+import { Request } from "express";
+import Pusher from "pusher";
 
 class WebSocketService {
-  static configureWebSocket(server: httpServer): any {
-    const io = new Server(server, {
-      cors: {
-        origin: "http://localhost:8080",
-        credentials: true,
-        methods: ["GET", "POST", "PUT", "DELETE"],
-      },
+  static configurePusherChannel() {
+    const pusher = new Pusher({
+      appId: process.env.PUSHER_APP_ID,
+      key: process.env.PUSHER_KEY,
+      secret: process.env.PUSHER_SECRET,
+      cluster: process.env.PUSHER_CLUSTER,
+      useTLS: Boolean(process.env.PUSHER_USE_TLS),
     });
 
-    let token: string;
-
-    io.on("connection", (socket) => {
-      token = socket.handshake.headers.authorization;
-
-      console.log("a user connected");
-    });
-
-    return { io, token };
+    return pusher;
   }
 
   static async departmentEvent(
@@ -30,14 +20,18 @@ class WebSocketService {
     departmentResponse: any,
     event: string
   ) {
-    const io = req.io as any;
+    const pusher = req.pusher as any;
 
     const { idCompany } = req.body;
 
     const department = departmentResponse.department;
     const totalPages = departmentResponse.totalPages;
 
-    io.emit(event, { department, totalPages, idCompany });
+    pusher.trigger(Event.CHANNEL, event, {
+      department,
+      totalPages,
+      idCompany,
+    });
   }
 }
 

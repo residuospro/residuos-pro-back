@@ -20,6 +20,7 @@ const router = (app) => {
     }), middleware_1.cacheControlMiddleware, (req, res, next) => {
         req.io = app.get("io");
         req.token = app.get("token");
+        req.pusher = app.get("pusher");
         next();
     }, middleware_1.verifyToken, companies_route_1.default, department_route_1.default, sediments_route_1.default);
 };

@@ -9,6 +9,7 @@ import { Socket } from "socket.io";
 declare module "express-serve-static-core" {
   interface Request {
     io: Socket;
+    pusher: any;
   }
 }
 
@@ -28,6 +29,7 @@ const router = (app: Express) => {
     (req: Request, res, next) => {
       req.io = app.get("io");
       req.token = app.get("token");
+      req.pusher = app.get("pusher");
       next();
     },
     verifyToken,

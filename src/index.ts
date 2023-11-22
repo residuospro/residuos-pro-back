@@ -1,6 +1,5 @@
 import express from "express";
 import dotenv from "dotenv";
-import http from "http";
 import router from "./routers";
 import dbConnection from "./config/dbConfig";
 import { setupClient } from "./clients/AxiosClient";
@@ -9,16 +8,18 @@ import WebSocketService from "./services/webSocketService";
 dotenv.config();
 
 const app = express();
-const server = http.createServer(app);
 
-const { io, token } = WebSocketService.configureWebSocket(server);
+const pusher = WebSocketService.configurePusherChannel();
 
-app.set("io", io);
-app.set("token", token);
+app.set("pusher", pusher);
 
 router(app);
 
 setupClient(process.env.AUTHENTICATOR_BACK);
+
+pusher.trigger("residuos-pro", "connected", {
+  message: "conexão estabelecida",
+});
 
 dbConnection.on("error", console.log.bind("Error ao conectar com o banco"));
 dbConnection.once("open", () =>
@@ -27,8 +28,4 @@ dbConnection.once("open", () =>
 
 app.listen(process.env.PORT || 5000, () =>
   console.log("Server running at " + process.env.PORT || 5000)
-);
-
-server.listen(process.env.WS || 5001, () =>
-  console.log("WS running at " + process.env.WS || 5001)
 );

@@ -8,31 +8,34 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const socket_io_1 = require("socket.io");
+const enum_1 = require("../utils/enum");
+const pusher_1 = __importDefault(require("pusher"));
 class WebSocketService {
-    static configureWebSocket(server) {
-        const io = new socket_io_1.Server(server, {
-            cors: {
-                origin: "http://localhost:8080",
-                credentials: true,
-                methods: ["GET", "POST", "PUT", "DELETE"],
-            },
+    static configurePusherChannel() {
+        const pusher = new pusher_1.default({
+            appId: process.env.PUSHER_APP_ID,
+            key: process.env.PUSHER_KEY,
+            secret: process.env.PUSHER_SECRET,
+            cluster: process.env.PUSHER_CLUSTER,
+            useTLS: Boolean(process.env.PUSHER_USE_TLS),
         });
-        let token;
-        io.on("connection", (socket) => {
-            token = socket.handshake.headers.authorization;
-            console.log("a user connected");
-        });
-        return { io, token };
+        return pusher;
     }
     static departmentEvent(req, departmentResponse, event) {
         return __awaiter(this, void 0, void 0, function* () {
-            const io = req.io;
+            const pusher = req.pusher;
             const { idCompany } = req.body;
             const department = departmentResponse.department;
             const totalPages = departmentResponse.totalPages;
-            io.emit(event, { department, totalPages, idCompany });
+            pusher.trigger(enum_1.Event.CHANNEL, event, {
+                department,
+                totalPages,
+                idCompany,
+            });
         });
     }
 }
