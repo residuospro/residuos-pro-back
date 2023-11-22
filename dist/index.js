@@ -18,7 +18,7 @@ app.set("pusher", pusher);
 pusher.trigger("residuos-pro", "connected", {
     message: "conexão estabelecida",
 });
-dbConfig_1.default.on("error", console.log.bind("Error ao conectar com o banco"));
+dbConfig_1.default.on("error", console.log.bind("Error ao conectar-se com o banco"));
 dbConfig_1.default.once("open", () => console.log("A conexão com o banco foi realizada com sucesso"));
 app.listen(process.env.PORT || 5000, () => console.log("Server running at " + process.env.PORT || 5000));
 //# sourceMappingURL=index.js.map

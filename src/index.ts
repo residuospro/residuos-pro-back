@@ -21,7 +21,7 @@ pusher.trigger("residuos-pro", "connected", {
   message: "conexão estabelecida",
 });
 
-dbConnection.on("error", console.log.bind("Error ao conectar com o banco"));
+dbConnection.on("error", console.log.bind("Error ao conectar-se com o banco"));
 dbConnection.once("open", () =>
   console.log("A conexão com o banco foi realizada com sucesso")
 );
