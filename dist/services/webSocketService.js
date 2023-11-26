@@ -38,6 +38,20 @@ class WebSocketService {
             });
         });
     }
+    static sedimentEvent(req, sedimentResponse, event) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const pusher = req.pusher;
+            const { idCompany, idDepartment } = req.body;
+            const sediment = sedimentResponse.sediments;
+            const totalPages = sedimentResponse.totalPages;
+            pusher.trigger(enum_1.Event.CHANNEL, event, {
+                sediment,
+                totalPages,
+                idCompany,
+                idDepartment,
+            });
+        });
+    }
 }
 exports.default = WebSocketService;
 //# sourceMappingURL=webSocketService.js.map

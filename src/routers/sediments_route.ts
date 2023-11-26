@@ -1,7 +1,8 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import SedimentsController from "../controllers/sediments_controller";
-import { Permissions, Routes } from "../utils/enum";
+import { Event, Permissions, Routes } from "../utils/enum";
 import { verifyPermission } from "../middleware";
+import WebSocketService from "../services/webSocketService";
 
 const sediments_route = express.Router();
 const sedments_controller = new SedimentsController();
@@ -10,32 +11,56 @@ sediments_route
   .post(
     Routes.SAVE_SEDIMENTS,
     verifyPermission([Permissions.MANAGER]),
-    sedments_controller.createSediments
+    async (req: Request, res: Response) => {
+      const sedimentResponse: any = await sedments_controller.createSediments(
+        req,
+        res
+      );
+
+      WebSocketService.sedimentEvent(
+        req,
+        sedimentResponse,
+        Event.SEDIMENT_CREATED
+      );
+    }
   )
   .post(
     Routes.GET_SEDIMENTS_BY_PAGE,
     verifyPermission([Permissions.MANAGER]),
     sedments_controller.getSedimentsByPage
   )
-  .post(
-    Routes.GET_NAME_OF_SEDIMENTS,
-    verifyPermission([Permissions.MANAGER]),
-    sedments_controller.getNameOfSediments
-  )
-  .post(
-    Routes.GET_SEDIMENTS_BY_NAME,
-    verifyPermission([Permissions.MANAGER]),
-    sedments_controller.getSedimentByName
-  )
   .put(
     Routes.UPDATE_SEDIMENTS,
     verifyPermission([Permissions.MANAGER]),
-    sedments_controller.updateSediments
+
+    async (req: Request, res: Response) => {
+      const sedimentResponse: any = await sedments_controller.updateSediments(
+        req,
+        res
+      );
+
+      WebSocketService.sedimentEvent(
+        req,
+        sedimentResponse,
+        Event.UPDATED_SEDIMENT
+      );
+    }
   )
-  .delete(
+  .post(
     Routes.DELETE_SEDIMENT,
     verifyPermission([Permissions.MANAGER]),
-    sedments_controller.deleteSediments
+    async (req: Request, res: Response) => {
+      const sedimentResponse: any = await sedments_controller.deleteSediments(
+        req,
+        res
+      );
+
+      WebSocketService.sedimentEvent(
+        req,
+        sedimentResponse,
+        Event.DELETED_SEDIMENT
+      );
+    }
   );
 
 export default sediments_route;

@@ -79,32 +79,6 @@ class DepartmentService {
     }
   }
 
-  static async getDepartmentByIdService(id: string) {
-    try {
-      const department = await Department.findById(id);
-
-      return department;
-    } catch (error: any) {
-      throw new Error("Não há departamento pra essa busca");
-    }
-  }
-
-  static async getDepartmentByNameService(info: any) {
-    try {
-      const { name, idCompany } = info;
-
-      const department = await Department.findOne({
-        name,
-        idCompany,
-        deleted: false,
-      });
-
-      return department;
-    } catch (error: any) {
-      throw new Error("Não há departamento pra essa busca");
-    }
-  }
-
   static async updateDepartmentService(
     updatedData: IUpdateDepartment[],
     id: string

@@ -39,17 +39,15 @@ class SedimentsService {
             }
         });
     }
-    static getSedimentsByPageService(idCompany, idDepartment, skip, itemsPerPage, throwException) {
+    static getSedimentsByPageService(idCompany, idDepartment, itemsPerPage) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const sediments = yield sediment_1.default.find({
                     idCompany,
                     idDepartment,
                     deleted: false,
-                })
-                    .skip(skip)
-                    .limit(itemsPerPage);
-                if (sediments.length == 0 && throwException) {
+                });
+                if (sediments.length == 0) {
                     throw new handleError_1.default("Não há registros pra esse busca", 404);
                 }
                 let totalSediments = yield sediment_1.default.find({
@@ -64,37 +62,6 @@ class SedimentsService {
                 if (error instanceof handleError_1.default) {
                     throw error;
                 }
-                throw new Error(error.message);
-            }
-        });
-    }
-    static getNameOfSedimentsService(idCompany, idDepartment) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const sediments = yield sediment_1.default.find({
-                    idCompany,
-                    idDepartment,
-                    deleted: false,
-                });
-                return sediments;
-            }
-            catch (error) {
-                throw new Error(error.message);
-            }
-        });
-    }
-    static getSedimentByNameService(name, idCompany, idDepartment) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const sediment = yield sediment_1.default.findOne({
-                    name,
-                    idCompany,
-                    idDepartment,
-                    deleted: false,
-                });
-                return sediment;
-            }
-            catch (error) {
                 throw new Error(error.message);
             }
         });

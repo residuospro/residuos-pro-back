@@ -36,20 +36,16 @@ class SedimentsService {
   static async getSedimentsByPageService(
     idCompany: string,
     idDepartment: string,
-    skip: number,
-    itemsPerPage: number,
-    throwException: boolean
+    itemsPerPage: number
   ) {
     try {
       const sediments = await Sediments.find({
         idCompany,
         idDepartment,
         deleted: false,
-      })
-        .skip(skip)
-        .limit(itemsPerPage);
+      });
 
-      if (sediments.length == 0 && throwException) {
+      if (sediments.length == 0) {
         throw new HandleError("Não há registros pra esse busca", 404);
       }
 
@@ -67,42 +63,6 @@ class SedimentsService {
         throw error;
       }
 
-      throw new Error(error.message);
-    }
-  }
-
-  static async getNameOfSedimentsService(
-    idCompany: string,
-    idDepartment: string
-  ) {
-    try {
-      const sediments = await Sediments.find({
-        idCompany,
-        idDepartment,
-        deleted: false,
-      });
-
-      return sediments;
-    } catch (error: any) {
-      throw new Error(error.message);
-    }
-  }
-
-  static async getSedimentByNameService(
-    name: string,
-    idCompany: string,
-    idDepartment: string
-  ) {
-    try {
-      const sediment = await Sediments.findOne({
-        name,
-        idCompany,
-        idDepartment,
-        deleted: false,
-      });
-
-      return sediment;
-    } catch (error) {
       throw new Error(error.message);
     }
   }

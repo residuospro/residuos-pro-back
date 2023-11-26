@@ -64,5 +64,8 @@ var Event;
     Event["DEPARTMENT_CREATED"] = "department_created";
     Event["UPDATED_DEPARTMENT"] = "updated_department";
     Event["DELETED_DEPARTMENT"] = "deleted_department";
+    Event["SEDIMENT_CREATED"] = "sediment_created";
+    Event["UPDATED_SEDIMENT"] = "updated_sediment";
+    Event["DELETED_SEDIMENT"] = "deleted_sediment";
 })(Event = exports.Event || (exports.Event = {}));
 //# sourceMappingURL=enum.js.map

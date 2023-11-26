@@ -74,33 +74,6 @@ class DepartmentService {
             }
         });
     }
-    static getDepartmentByIdService(id) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const department = yield department_1.default.findById(id);
-                return department;
-            }
-            catch (error) {
-                throw new Error("Não há departamento pra essa busca");
-            }
-        });
-    }
-    static getDepartmentByNameService(info) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const { name, idCompany } = info;
-                const department = yield department_1.default.findOne({
-                    name,
-                    idCompany,
-                    deleted: false,
-                });
-                return department;
-            }
-            catch (error) {
-                throw new Error("Não há departamento pra essa busca");
-            }
-        });
-    }
     static updateDepartmentService(updatedData, id) {
         return __awaiter(this, void 0, void 0, function* () {
             try {

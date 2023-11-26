@@ -113,43 +113,6 @@ class DepartmentController {
             }
         });
     }
-    getDepartmentById(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const { id } = req.params;
-                const department = yield department_service_1.default.getDepartmentByIdService(id);
-                return res.status(200).json(department);
-            }
-            catch (error) {
-                return res.status(500).json({
-                    message: {
-                        title: enum_1.Messages.TITLE_ERROR,
-                        subTitle: enum_1.Messages.SUBTITLE_ERROR,
-                    },
-                });
-            }
-        });
-    }
-    getDepartmentByName(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                let { idCompany, name } = req.body;
-                const department = yield department_service_1.default.getDepartmentByNameService({
-                    name,
-                    idCompany,
-                });
-                return res.status(200).json(department);
-            }
-            catch (error) {
-                return res.status(500).json({
-                    message: {
-                        title: enum_1.Messages.TITLE_ERROR,
-                        subTitle: enum_1.Messages.SUBTITLE_ERROR,
-                    },
-                });
-            }
-        });
-    }
     updateDepartment(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {

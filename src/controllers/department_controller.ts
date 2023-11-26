@@ -117,43 +117,6 @@ class DepartmentController {
     }
   }
 
-  async getDepartmentById(req: Request, res: Response) {
-    try {
-      const { id } = req.params;
-
-      const department = await DepartmentService.getDepartmentByIdService(id);
-
-      return res.status(200).json(department);
-    } catch (error: any) {
-      return res.status(500).json({
-        message: {
-          title: Messages.TITLE_ERROR,
-          subTitle: Messages.SUBTITLE_ERROR,
-        },
-      });
-    }
-  }
-
-  async getDepartmentByName(req: Request, res: Response) {
-    try {
-      let { idCompany, name } = req.body;
-
-      const department = await DepartmentService.getDepartmentByNameService({
-        name,
-        idCompany,
-      });
-
-      return res.status(200).json(department);
-    } catch (error: any) {
-      return res.status(500).json({
-        message: {
-          title: Messages.TITLE_ERROR,
-          subTitle: Messages.SUBTITLE_ERROR,
-        },
-      });
-    }
-  }
-
   async updateDepartment(req: Request, res: Response) {
     try {
       let { name, responsible, email, ramal, idCompany } = req.body;

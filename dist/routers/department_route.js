@@ -21,14 +21,12 @@ const webSocketService_1 = __importDefault(require("../services/webSocketService
 const department_route = express_1.default.Router();
 const department_controller = new department_controller_1.default();
 department_route
-    .post(enum_1.Routes.GET_DEPARTMENT_BY_NAME, (0, middleware_1.verifyPermission)([enum_1.Permissions.SUPPORT, enum_1.Permissions.ADMIN]), department_controller.getDepartmentByName)
     .post(enum_1.Routes.GET_DEPARTMENT_BY_PAGE, (0, middleware_1.verifyPermission)([enum_1.Permissions.SUPPORT, enum_1.Permissions.ADMIN]), department_controller.getDepartmentsByPage)
     .post(enum_1.Routes.GET_ALL_DEPARTMENT, (0, middleware_1.verifyPermission)([
     enum_1.Permissions.SUPPORT,
     enum_1.Permissions.ADMIN,
     enum_1.Permissions.MANAGER,
 ]), department_controller.getAllDepartment)
-    .get(enum_1.Routes.GET_DEPARTMENT_BY_ID, (0, middleware_1.verifyPermission)([enum_1.Permissions.SUPPORT, enum_1.Permissions.ADMIN]), department_controller.getDepartmentById)
     .post(enum_1.Routes.SAVE_DEPARTMENT, departmentSchema_1.departmentCreateSchema, middleware_1.validRequest, (0, middleware_1.verifyPermission)([enum_1.Permissions.SUPPORT, enum_1.Permissions.ADMIN]), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const departmentResponse = yield department_controller.createDepartment(req, res);
     webSocketService_1.default.departmentEvent(req, departmentResponse, enum_1.Event.DEPARTMENT_CREATED);

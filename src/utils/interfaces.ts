@@ -31,6 +31,7 @@ export interface ISediments {
   deletedAt?: Date;
   updatedAt?: Date;
   deleted: boolean;
+  totalItems?: number;
 }
 
 export type ISedimentsService = Pick<
@@ -42,6 +43,7 @@ export type ISedimentsService = Pick<
   | "packaging"
   | "idDepartment"
   | "idCompany"
+  | "totalItems"
 >;
 
 export interface ICompany {

@@ -33,6 +33,26 @@ class WebSocketService {
       idCompany,
     });
   }
+
+  static async sedimentEvent(
+    req: Request,
+    sedimentResponse: any,
+    event: string
+  ) {
+    const pusher = req.pusher as any;
+
+    const { idCompany, idDepartment } = req.body;
+
+    const sediment = sedimentResponse.sediments;
+    const totalPages = sedimentResponse.totalPages;
+
+    pusher.trigger(Event.CHANNEL, event, {
+      sediment,
+      totalPages,
+      idCompany,
+      idDepartment,
+    });
+  }
 }
 
 export default WebSocketService;

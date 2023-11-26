@@ -16,11 +16,6 @@ interface IRes {
 
 department_route
   .post(
-    Routes.GET_DEPARTMENT_BY_NAME,
-    verifyPermission([Permissions.SUPPORT, Permissions.ADMIN]),
-    department_controller.getDepartmentByName
-  )
-  .post(
     Routes.GET_DEPARTMENT_BY_PAGE,
     verifyPermission([Permissions.SUPPORT, Permissions.ADMIN]),
     department_controller.getDepartmentsByPage
@@ -33,11 +28,6 @@ department_route
       Permissions.MANAGER,
     ]),
     department_controller.getAllDepartment
-  )
-  .get(
-    Routes.GET_DEPARTMENT_BY_ID,
-    verifyPermission([Permissions.SUPPORT, Permissions.ADMIN]),
-    department_controller.getDepartmentById
   )
   .post(
     Routes.SAVE_DEPARTMENT,
