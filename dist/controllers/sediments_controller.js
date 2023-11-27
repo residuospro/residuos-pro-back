@@ -23,7 +23,7 @@ class SedimentsController {
                 sediment.name =
                     sediment.name.charAt(0).toUpperCase() +
                         sediment.name.slice(1).toLowerCase();
-                const sediments = yield sediments_service_1.default.createSedimentsService(sediment);
+                const item = yield sediments_service_1.default.createSedimentsService(sediment);
                 const itemsPerPage = 10;
                 sediment.totalItems = Number(sediment.totalItems) + 1;
                 const totalPages = Math.ceil(sediment.totalItems / itemsPerPage);
@@ -32,12 +32,12 @@ class SedimentsController {
                     subTitle: enum_1.Messages.SUBTITLE_REGISTER,
                 };
                 const response = res.status(201).json({
-                    sediments,
+                    item,
                     totalPages,
                     message,
                 });
                 return {
-                    sediments,
+                    item,
                     totalPages,
                     response,
                 };
@@ -95,16 +95,16 @@ class SedimentsController {
                             sediment.name.slice(1).toLowerCase();
                 }
                 const { id } = req.params;
-                const sediments = yield sediments_service_1.default.updateSedimentService([sediment], id);
+                const item = yield sediments_service_1.default.updateSedimentService([sediment], id);
                 const message = {
                     title: enum_1.Messages.TITLE_UPDATE_REGISTER,
                     subTitle: enum_1.Messages.SUBTITLE_UPDATE_REGISTER,
                 };
                 const response = res.status(201).json({
-                    sediments,
+                    item,
                     message,
                 });
-                return { sediments, response };
+                return { item, response };
             }
             catch (error) {
                 if (error instanceof handleError_1.default) {
@@ -128,13 +128,13 @@ class SedimentsController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { id } = req.params;
-                const sediments = yield sediments_service_1.default.deleteSedimentService(id);
+                const item = yield sediments_service_1.default.deleteSedimentService(id);
                 const message = {
                     title: enum_1.Messages.TITLE_DELETE_REGISTER,
                     subTitle: enum_1.Messages.SUBTITLE_DELETE_REGISTER,
                 };
                 const response = res.status(201).json({ message });
-                return { sediments, response };
+                return { item, response };
             }
             catch (error) {
                 return res.status(500).json({

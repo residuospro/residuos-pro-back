@@ -15,7 +15,7 @@ class DepartmentController {
 
       name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
 
-      const department = await DepartmentService.createDepartmentService(
+      const item = await DepartmentService.createDepartmentService(
         {
           name,
           responsible,
@@ -34,7 +34,7 @@ class DepartmentController {
         ramal,
         idCompany,
         department: name,
-        idDepartment: department.id,
+        idDepartment: item.id,
       });
 
       totalItems += 1;
@@ -45,10 +45,10 @@ class DepartmentController {
       session.endSession();
 
       return {
-        department,
+        item,
         totalPages,
         res: res.status(201).json({
-          department,
+          item,
           totalPages,
           message: {
             title: Messages.TITLE_REGISTER,
@@ -127,7 +127,7 @@ class DepartmentController {
 
       const { id } = req.params;
 
-      const department = await DepartmentService.updateDepartmentService(
+      const item = await DepartmentService.updateDepartmentService(
         [{ name, responsible, email, ramal, idCompany }],
         id
       );
@@ -135,9 +135,9 @@ class DepartmentController {
       await ExternalApiService.updateUserAfterDepartment(name, ramal, id);
 
       return {
-        department,
+        item,
         res: res.status(201).json({
-          department,
+          item,
           message: {
             title: Messages.TITLE_UPDATE_REGISTER,
             subTitle: Messages.SUBTITLE_UPDATE_REGISTER,
@@ -167,14 +167,14 @@ class DepartmentController {
     try {
       const { id } = req.params;
 
-      const department = await DepartmentService.deleteDepartmentService(id);
+      const item = await DepartmentService.deleteDepartmentService(id);
 
       await ExternalApiService.deleteUserAfterDepartment(id);
 
       return {
-        department,
+        item,
         res: res.status(201).json({
-          department,
+          item,
           message: {
             title: Messages.TITLE_DELETE_REGISTER,
             subTitle: Messages.SUBTITLE_DELETE_REGISTER,

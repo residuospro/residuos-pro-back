@@ -17,7 +17,7 @@ sediments_route
         res
       );
 
-      WebSocketService.sedimentEvent(
+      WebSocketService.createEvent(
         req,
         sedimentResponse,
         Event.SEDIMENT_CREATED
@@ -39,7 +39,7 @@ sediments_route
         res
       );
 
-      WebSocketService.sedimentEvent(
+      WebSocketService.createEvent(
         req,
         sedimentResponse,
         Event.UPDATED_SEDIMENT
@@ -55,7 +55,7 @@ sediments_route
         res
       );
 
-      WebSocketService.sedimentEvent(
+      WebSocketService.createEvent(
         req,
         sedimentResponse,
         Event.DELETED_SEDIMENT

@@ -38,7 +38,7 @@ department_route
       const departmentResponse: any =
         await department_controller.createDepartment(req, res);
 
-      WebSocketService.departmentEvent(
+      WebSocketService.createEvent(
         req,
         departmentResponse,
         Event.DEPARTMENT_CREATED
@@ -52,7 +52,7 @@ department_route
       const departmentResponse: any =
         await department_controller.updateDepartment(req, res);
 
-      WebSocketService.departmentEvent(
+      WebSocketService.createEvent(
         req,
         departmentResponse,
         Event.UPDATED_DEPARTMENT
@@ -66,7 +66,7 @@ department_route
       const departmentResponse: any =
         await department_controller.deleteDepartment(req, res);
 
-      WebSocketService.departmentEvent(
+      WebSocketService.createEvent(
         req,
         departmentResponse,
         Event.DELETED_DEPARTMENT

@@ -25,7 +25,7 @@ class DepartmentController {
                 session.startTransaction();
                 let { name, responsible, email, ramal, idCompany, totalItems } = req.body;
                 name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
-                const department = yield department_service_1.default.createDepartmentService({
+                const item = yield department_service_1.default.createDepartmentService({
                     name,
                     responsible,
                     email,
@@ -39,17 +39,17 @@ class DepartmentController {
                     ramal,
                     idCompany,
                     department: name,
-                    idDepartment: department.id,
+                    idDepartment: item.id,
                 });
                 totalItems += 1;
                 const totalPages = Math.ceil(totalItems / itemsPerPage);
                 yield session.commitTransaction();
                 session.endSession();
                 return {
-                    department,
+                    item,
                     totalPages,
                     res: res.status(201).json({
-                        department,
+                        item,
                         totalPages,
                         message: {
                             title: enum_1.Messages.TITLE_REGISTER,
@@ -121,12 +121,12 @@ class DepartmentController {
                     name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
                 }
                 const { id } = req.params;
-                const department = yield department_service_1.default.updateDepartmentService([{ name, responsible, email, ramal, idCompany }], id);
+                const item = yield department_service_1.default.updateDepartmentService([{ name, responsible, email, ramal, idCompany }], id);
                 yield externalApi_service_1.default.updateUserAfterDepartment(name, ramal, id);
                 return {
-                    department,
+                    item,
                     res: res.status(201).json({
-                        department,
+                        item,
                         message: {
                             title: enum_1.Messages.TITLE_UPDATE_REGISTER,
                             subTitle: enum_1.Messages.SUBTITLE_UPDATE_REGISTER,
@@ -156,12 +156,12 @@ class DepartmentController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { id } = req.params;
-                const department = yield department_service_1.default.deleteDepartmentService(id);
+                const item = yield department_service_1.default.deleteDepartmentService(id);
                 yield externalApi_service_1.default.deleteUserAfterDepartment(id);
                 return {
-                    department,
+                    item,
                     res: res.status(201).json({
-                        department,
+                        item,
                         message: {
                             title: enum_1.Messages.TITLE_DELETE_REGISTER,
                             subTitle: enum_1.Messages.SUBTITLE_DELETE_REGISTER,

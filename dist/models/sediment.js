@@ -21,10 +21,6 @@ const sedimentsSchema = new mongoose_1.default.Schema({
         type: String,
         required: true,
     },
-    packaging: {
-        type: String,
-        required: true,
-    },
     idDepartment: {
         type: String,
         required: false,

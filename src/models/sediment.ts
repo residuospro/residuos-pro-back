@@ -18,10 +18,6 @@ const sedimentsSchema: Schema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  packaging: {
-    type: String,
-    required: true,
-  },
   idDepartment: {
     type: String,
     required: false,

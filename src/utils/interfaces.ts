@@ -24,7 +24,6 @@ export interface ISediments {
   classification: string;
   risk: string;
   state: string;
-  packaging: string;
   idDepartment: string;
   idCompany: string;
   createdAt: Date;
@@ -40,7 +39,6 @@ export type ISedimentsService = Pick<
   | "name"
   | "risk"
   | "state"
-  | "packaging"
   | "idDepartment"
   | "idCompany"
   | "totalItems"

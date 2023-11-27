@@ -1,53 +1,38 @@
-import { Event } from "../utils/enum";
 import { Request } from "express";
-import Pusher from "pusher";
+import { Server as httpServer } from "http";
+import { Server } from "socket.io";
 
 class WebSocketService {
-  static configurePusherChannel() {
-    const pusher = new Pusher({
-      appId: process.env.PUSHER_APP_ID,
-      key: process.env.PUSHER_KEY,
-      secret: process.env.PUSHER_SECRET,
-      cluster: process.env.PUSHER_CLUSTER,
-      useTLS: Boolean(process.env.PUSHER_USE_TLS),
+  static configureWebSocket(server: httpServer): any {
+    const io = new Server(server, {
+      cors: {
+        origin: "http://localhost:8080",
+        credentials: true,
+        methods: ["GET", "POST", "PUT", "DELETE"],
+      },
     });
 
-    return pusher;
-  }
+    let token: string;
 
-  static async departmentEvent(
-    req: Request,
-    departmentResponse: any,
-    event: string
-  ) {
-    const pusher = req.pusher as any;
+    io.on("connection", (socket) => {
+      token = socket.handshake.headers.authorization;
 
-    const { idCompany } = req.body;
-
-    const department = departmentResponse.department;
-    const totalPages = departmentResponse.totalPages;
-
-    pusher.trigger(Event.CHANNEL, event, {
-      department,
-      totalPages,
-      idCompany,
+      console.log("a user connected");
     });
+
+    return { io, token };
   }
 
-  static async sedimentEvent(
-    req: Request,
-    sedimentResponse: any,
-    event: string
-  ) {
-    const pusher = req.pusher as any;
+  static async createEvent(req: Request, response: any, event: string) {
+    const socket = req.io;
 
     const { idCompany, idDepartment } = req.body;
 
-    const sediment = sedimentResponse.sediments;
-    const totalPages = sedimentResponse.totalPages;
+    const item = response.item;
+    const totalPages = response.totalPages;
 
-    pusher.trigger(Event.CHANNEL, event, {
-      sediment,
+    socket.emit(event, {
+      item,
       totalPages,
       idCompany,
       idDepartment,

@@ -22,16 +22,16 @@ const sedments_controller = new sediments_controller_1.default();
 sediments_route
     .post(enum_1.Routes.SAVE_SEDIMENTS, (0, middleware_1.verifyPermission)([enum_1.Permissions.MANAGER]), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const sedimentResponse = yield sedments_controller.createSediments(req, res);
-    webSocketService_1.default.sedimentEvent(req, sedimentResponse, enum_1.Event.SEDIMENT_CREATED);
+    webSocketService_1.default.createEvent(req, sedimentResponse, enum_1.Event.SEDIMENT_CREATED);
 }))
     .post(enum_1.Routes.GET_SEDIMENTS_BY_PAGE, (0, middleware_1.verifyPermission)([enum_1.Permissions.MANAGER]), sedments_controller.getSedimentsByPage)
     .put(enum_1.Routes.UPDATE_SEDIMENTS, (0, middleware_1.verifyPermission)([enum_1.Permissions.MANAGER]), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const sedimentResponse = yield sedments_controller.updateSediments(req, res);
-    webSocketService_1.default.sedimentEvent(req, sedimentResponse, enum_1.Event.UPDATED_SEDIMENT);
+    webSocketService_1.default.createEvent(req, sedimentResponse, enum_1.Event.UPDATED_SEDIMENT);
 }))
     .post(enum_1.Routes.DELETE_SEDIMENT, (0, middleware_1.verifyPermission)([enum_1.Permissions.MANAGER]), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const sedimentResponse = yield sedments_controller.deleteSediments(req, res);
-    webSocketService_1.default.sedimentEvent(req, sedimentResponse, enum_1.Event.DELETED_SEDIMENT);
+    webSocketService_1.default.createEvent(req, sedimentResponse, enum_1.Event.DELETED_SEDIMENT);
 }));
 exports.default = sediments_route;
 //# sourceMappingURL=sediments_route.js.map

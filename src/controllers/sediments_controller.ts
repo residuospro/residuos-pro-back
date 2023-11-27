@@ -13,7 +13,7 @@ class SedimentsController {
         sediment.name.charAt(0).toUpperCase() +
         sediment.name.slice(1).toLowerCase();
 
-      const sediments = await SedimentsService.createSedimentsService(sediment);
+      const item = await SedimentsService.createSedimentsService(sediment);
 
       const itemsPerPage = 10;
 
@@ -27,13 +27,13 @@ class SedimentsController {
       };
 
       const response = res.status(201).json({
-        sediments,
+        item,
         totalPages,
         message,
       });
 
       return {
-        sediments,
+        item,
         totalPages,
         response,
       };
@@ -98,7 +98,7 @@ class SedimentsController {
 
       const { id } = req.params;
 
-      const sediments = await SedimentsService.updateSedimentService(
+      const item = await SedimentsService.updateSedimentService(
         [sediment],
         id
       );
@@ -109,11 +109,11 @@ class SedimentsController {
       };
 
       const response = res.status(201).json({
-        sediments,
+        item,
         message,
       });
 
-      return { sediments, response };
+      return { item, response };
     } catch (error: any) {
       if (error instanceof HandleError) {
         return res.status(error.statusCode).json({
@@ -137,7 +137,7 @@ class SedimentsController {
     try {
       const { id } = req.params;
 
-      const sediments = await SedimentsService.deleteSedimentService(id);
+      const item = await SedimentsService.deleteSedimentService(id);
 
       const message = {
         title: Messages.TITLE_DELETE_REGISTER,
@@ -146,7 +146,7 @@ class SedimentsController {
 
       const response = res.status(201).json({ message });
 
-      return { sediments, response };
+      return { item, response };
     } catch (error: any) {
       return res.status(500).json({
         message: {
