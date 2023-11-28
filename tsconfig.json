@@ -1,25 +1,17 @@
 {
   "compilerOptions": {
-    "target": "esnext",
     "module": "commonjs",
-    "lib": ["es6"],
-    "allowJs": true,
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "removeComments": true,
-    "typeRoots": ["./node_modules/@types", "./src/@types"],
     "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "es6",
+    "noImplicitAny": true,
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "outDir": "dist",
     "baseUrl": ".",
     "paths": {
-      "@controllers/*": ["./src/controllers/*"],
-      "@models/*": ["./src/models/*"],
-      "@config/*": ["./src/config/*"]
+      "*": ["node_modules/*", "src/types/*"]
     }
   },
-  "include": ["src/**/*"]
+  "include": ["./src/**/*"]
 }

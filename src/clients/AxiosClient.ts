@@ -1,6 +1,6 @@
 import axios, { AxiosInstance } from "axios";
 
-let restClient;
+let restClient: AxiosInstance;
 
 export const setupClient = (baseUrl: string | undefined) => {
   restClient = axios.create({
