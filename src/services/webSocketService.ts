@@ -6,7 +6,7 @@ class WebSocketService {
   static configureWebSocket(server: httpServer): any {
     const io = new Server(server, {
       cors: {
-        origin: "http://localhost:8080",
+        origin: process.env.FRONT_REDISUOS_PRO,
         credentials: true,
         methods: ["GET", "POST", "PUT", "DELETE"],
       },
