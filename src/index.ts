@@ -2,7 +2,6 @@ import express from "express";
 import dotenv from "dotenv";
 import router from "./routers";
 import http from "http";
-import { Server } from "socket.io";
 import dbConnection from "./config/dbConfig";
 import { setupClient } from "./clients/AxiosClient";
 import WebSocketService from "./services/webSocketService";

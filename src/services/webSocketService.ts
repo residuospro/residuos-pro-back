@@ -4,13 +4,7 @@ import { Server } from "socket.io";
 
 class WebSocketService {
   static configureWebSocket(server: httpServer): any {
-    const io = new Server(server, {
-      cors: {
-        origin: process.env.FRONT_REDISUOS_PRO,
-        credentials: true,
-        methods: ["GET", "POST", "PUT", "DELETE"],
-      },
-    });
+    const io = new Server(server);
 
     let token: string;
 
