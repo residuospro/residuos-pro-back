@@ -8,6 +8,7 @@ export interface IUser {
   ramal?: string;
   department?: string;
   idDepartment?: string;
+  idCompany?: string;
   id?: string;
   service?: string;
   permission?: Array<string>;

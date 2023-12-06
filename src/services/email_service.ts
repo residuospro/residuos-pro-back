@@ -6,7 +6,8 @@ class EmailService {
     recipient: string,
     service: string,
     userId: string,
-    typeAction: string
+    typeAction: string,
+    idCompany: string
   ): Promise<void> {
     const transportConfig = nodemailer.createTransport({
       host: "smtp.gmail.com",
@@ -23,7 +24,7 @@ class EmailService {
         from: `Aunteticador ${service} <${process.env.USER_EMAIL}>`,
         to: recipient,
         subject: "Cadastro de senha",
-        html: message(userId, service, typeAction),
+        html: message(userId, idCompany, service, typeAction),
       })
       .then((res) => {
         return res;

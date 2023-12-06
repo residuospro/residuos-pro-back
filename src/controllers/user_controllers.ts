@@ -72,7 +72,6 @@ class UserController {
 
       const users = await UserService.getUsers(
         role,
-
         itemsPerPage,
         idCompany,
         idDepartment,
@@ -172,15 +171,17 @@ class UserController {
 
       const { id } = req.params;
 
-      await UserService.finalizeRegistrationService(
+      const item = await UserService.finalizeRegistrationService(
         [{ username, password }],
         id
       );
 
       if (service == Service.RESIDUOSPRO) {
-        let url = process.env.RESIDUOS_SERVICE;
+        let url = process.env.FRONT_REDISUOS_PRO;
 
-        return res.status(200).send(url);
+        const response = res.status(200).send(url);
+
+        return { item, response };
       }
 
       return res.status(204).send("Senha redefinida com sucesso");
@@ -203,12 +204,26 @@ class UserController {
         email,
         department,
         idDepartment,
+        idCompany,
+        service,
       }: IUser = req.body;
 
       const { id } = req.params;
 
       const item = await UserService.updateUser(
-        [{ name, username, password, ramal, email, department, idDepartment }],
+        [
+          {
+            name,
+            username,
+            password,
+            ramal,
+            email,
+            department,
+            idDepartment,
+            idCompany,
+            service,
+          },
+        ],
         id
       );
 

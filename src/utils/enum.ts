@@ -98,6 +98,7 @@ export enum Event {
   USER_CREATED = "user_created",
   UPDATED_USER = "updated_user",
   DELETED_USER = "deleted_user",
+  UPDATED_USER_AFTER_DEPARTMENT = "updated_user_after_department",
 }
 
 export enum Service {

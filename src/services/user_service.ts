@@ -29,7 +29,13 @@ class UserService {
       const item = await newUser.save({ session });
 
       if (item) {
-        await EmailService.sendEmail(email, service, item.id, Actions.CREATE);
+        await EmailService.sendEmail(
+          email,
+          service,
+          item.id,
+          Actions.CREATE,
+          idCompany
+        );
       }
 
       const itemsPerPage = 10;
@@ -210,6 +216,9 @@ class UserService {
 
   static async finalizeRegistrationService(updatedData: IUser[], id: string) {
     try {
+      const session = await mongoose.startSession();
+      session.startTransaction();
+
       let user: any;
 
       if (id) {
@@ -237,7 +246,10 @@ class UserService {
 
       await user!.save();
 
-      return true;
+      await session.commitTransaction();
+      session.endSession();
+
+      return user;
     } catch (error: any) {
       if (error instanceof HandleError) {
         throw error;
@@ -249,11 +261,16 @@ class UserService {
 
   static async updateUser(updatedData: IUser[], id: string) {
     try {
+      const session = await mongoose.startSession();
+      session.startTransaction();
+
+      const { email, service, idCompany, username } = updatedData[0];
+
       let existingUser: any;
 
-      if (updatedData[0].username) {
+      if (username) {
         existingUser = await User.findOne({
-          username: updatedData[0].username,
+          username,
           deleted: false,
         });
       }
@@ -274,6 +291,19 @@ class UserService {
 
       const updatedUser = await user!.save();
 
+      if (!user.username && email) {
+        await EmailService.sendEmail(
+          email,
+          service,
+          id,
+          Actions.CREATE,
+          idCompany
+        );
+      }
+
+      await session.commitTransaction();
+      session.endSession();
+
       return updatedUser;
     } catch (error: any) {
       if (error instanceof HandleError) {
@@ -290,6 +320,8 @@ class UserService {
     id: string
   ) {
     try {
+      let user: any;
+
       if (name) {
         await User.updateMany(
           { idDepartment: id },
@@ -297,6 +329,12 @@ class UserService {
             department: name,
           }
         );
+
+        user = await User.find({
+          idDepartment: id,
+          department: name,
+          deleted: false,
+        });
       }
 
       if (ramal) {
@@ -306,7 +344,15 @@ class UserService {
             ramal,
           }
         );
+
+        user = await User.find({
+          idDepartment: id,
+          ramal,
+          deleted: false,
+        });
       }
+
+      return user;
     } catch (error) {
       return error;
     }

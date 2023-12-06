@@ -41,7 +41,6 @@ user_route
 
   .post(
     Routes.UPDATE_USER_AFTER_DEPARTMENT,
-
     async (req: Request, res: Response) => {
       const userResponse =
         await user_controller.updateUserAfterUpdateDepartment(req, res);
@@ -58,7 +57,6 @@ user_route
 
   .put(
     Routes.DELETE_USER,
-
     async (req: Request, res: Response) => {
       const userResponse = await user_controller.deleteUsers(req, res);
 

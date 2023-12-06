@@ -1,5 +1,6 @@
 export const message = (
   userId: string,
+  idCompany: string,
   service: string,
   typeAction: string
 ) => {
@@ -58,7 +59,7 @@ export const message = (
                 </p>
 
                 <button>
-                    <a href="${process.env.AUTHENTICATOR_FRONT}/cadastro/${service}/${userId}">Cadastrar senha</a>
+                    <a href="${process.env.AUTHENTICATOR_FRONT}/cadastro/${service}/${userId}/${idCompany}">Cadastrar senha</a>
                 </button>
             </div>
         </body>

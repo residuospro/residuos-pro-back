@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
-import { Event, Permissions, Routes } from "../utils/enum";
-import { verifyPermission, validRequest } from "../middleware";
+import { Event, Routes } from "../utils/enum";
+import { validRequest } from "../middleware";
 import { departmentCreateSchema } from "../middleware/schemas/departmentSchema";
 import DepartmentController from "../controllers/department_controller";
 import WebSocketService from "../services/webSocketService";
@@ -19,10 +19,7 @@ department_route
     Routes.GET_DEPARTMENT_BY_PAGE,
     department_controller.getDepartmentsByPage
   )
-  .post(
-    Routes.GET_ALL_DEPARTMENT,
-    department_controller.getAllDepartment
-  )
+  .post(Routes.GET_ALL_DEPARTMENT, department_controller.getAllDepartment)
   .post(
     Routes.SAVE_DEPARTMENT,
     departmentCreateSchema,
@@ -39,13 +36,23 @@ department_route
     }
   )
   .put(Routes.UPDATE_DEPARTMENT, async (req: Request, res: Response) => {
-    const departmentResponse: any =
-      await department_controller.updateDepartment(req, res);
+    let departmentResponse: any = await department_controller.updateDepartment(
+      req,
+      res
+    );
 
     WebSocketService.createEvent(
       req,
       departmentResponse,
       Event.UPDATED_DEPARTMENT
+    );
+
+    departmentResponse.item = departmentResponse.user;
+
+    WebSocketService.createEvent(
+      req,
+      departmentResponse,
+      Event.UPDATED_USER_AFTER_DEPARTMENT
     );
   })
   .post(Routes.DELETE_DEPARTMENT, async (req: Request, res: Response) => {

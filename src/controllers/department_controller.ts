@@ -42,19 +42,17 @@ class DepartmentController {
 
       const password = generator.generateRandomPassword();
 
-      await UserService.createUser(
-        {
-          name: responsible,
-          email,
-          ramal,
-          password,
-          role,
-          service,
-          idCompany,
-          department: name,
-          idDepartment: item.id,
-        },
-      );
+      await UserService.createUser({
+        name: responsible,
+        email,
+        ramal,
+        password,
+        role,
+        service,
+        idCompany,
+        department: name,
+        idDepartment: item.id,
+      });
 
       totalItems += 1;
 
@@ -151,17 +149,26 @@ class DepartmentController {
         id
       );
 
-      await UserService.updateUserAfterUpdateDepartmentService(name, ramal, id);
+      const user = await UserService.updateUserAfterUpdateDepartmentService(
+        name,
+        ramal,
+        id
+      );
+
+      const message = {
+        title: Messages.TITLE_UPDATE_REGISTER,
+        subTitle: Messages.SUBTITLE_UPDATE_REGISTER,
+      };
+
+      const response = res.status(201).json({
+        item,
+        message,
+      });
 
       return {
         item,
-        res: res.status(201).json({
-          item,
-          message: {
-            title: Messages.TITLE_UPDATE_REGISTER,
-            subTitle: Messages.SUBTITLE_UPDATE_REGISTER,
-          },
-        }),
+        user,
+        response,
       };
     } catch (error: any) {
       if (error instanceof HandleError) {
