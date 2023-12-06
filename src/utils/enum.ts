@@ -15,21 +15,36 @@ export enum Routes {
   UPDATE_DEPARTMENT = "/department/update/:id",
   DELETE_DEPARTMENT = "/department/:id",
 
-  VERIFYTOKEN = "/api/verifyToken",
-  UPDATE_USER_AFTER_DEPARTMENT = "/api/update/user_by_department",
-  DELETE_USER_AFTER_DEPARTMENT = "/api/delete/user_by_department/",
-
-  SAVE_USER = "/api/user/save",
-
   SAVE_SEDIMENTS = "/api/sediments/save",
   GET_SEDIMENTS_BY_PAGE = "/api/sediments/pagineted",
   GET_NAME_OF_SEDIMENTS = "/api/sediments/by-name",
   GET_SEDIMENTS_BY_NAME = "/api/sediments/get-name",
   UPDATE_SEDIMENTS = "/sediments/update/:id",
   DELETE_SEDIMENT = "/sediment/:id",
+
+  SAVE_USER = "/api/user/save",
+  SAVE_SUPPORT = "/api/support/save",
+  UPDATE_USER = "/user/update/:id",
+  REDEFINE_PASSWORD = "/api/redefine_password",
+  CHANGE_PASSWORD = "/api/change_password/:id",
+  CREATE_PASSWORD = "/api/create_password/:id",
+  DELETE_USER = "/user/:id",
+  UPDATE_USER_AFTER_DEPARTMENT = "/api/update/user_by_department",
+  DELETE_USER_AFTER_DEPARTMENT = "/api/delete/user_by_department/:id",
+
+  GET_USERS = "/users",
+  GET_USER_BY_USERNAME = "/user/by-username",
+  GET_ALL_USERNAMES = "/user/all",
+
+  LOGIN = "/api/login",
+  PAYLOAD = "/api/payload",
+  REFRESH_TOKEN = "/api/refresh_token",
+  VERIFYTOKEN = "/api/verifyToken",
+  USER_EXISTS = "/api/user_exists/:id",
 }
 
 export enum Permissions {
+  MASTER = "MASTER",
   SUPPORT = "SUPPORT",
   ADMIN = "ADMIN",
   MANAGER = "MANAGER",
@@ -65,6 +80,9 @@ export enum Messages {
 
   TITLE_THERE_ARE_NO_RECORDS = "Não há registros",
   SUBTITLE_THERE_ARE_NO_RECORDS = "Não foram encontrados registros para essa busca",
+
+  TITLE_EXISTING_USER = "Username inválido",
+  SUBTITLE_EXISTING_USER = "O nome de usuário fornecido já existe em nosso banco",
 }
 
 export enum Event {
@@ -76,4 +94,18 @@ export enum Event {
   SEDIMENT_CREATED = "sediment_created",
   UPDATED_SEDIMENT = "updated_sediment",
   DELETED_SEDIMENT = "deleted_sediment",
+
+  USER_CREATED = "user_created",
+  UPDATED_USER = "updated_user",
+  DELETED_USER = "deleted_user",
+}
+
+export enum Service {
+  SAVEMONEY = "SaveMoney",
+  RESIDUOSPRO = "Residuos-Pro",
+}
+
+export enum Actions {
+  CREATE = "create",
+  UPDATE = "update",
 }

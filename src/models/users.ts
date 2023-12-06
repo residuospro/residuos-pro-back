@@ -22,7 +22,7 @@ const userSchema: Schema = new mongoose.Schema({
   role: [
     {
       type: String,
-      required: true,
+      required: false,
     },
   ],
   email: {
@@ -43,7 +43,7 @@ const userSchema: Schema = new mongoose.Schema({
   },
   username: {
     type: String,
-    required: true,
+    required: false,
     trim: true,
   },
   password: {

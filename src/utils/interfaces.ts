@@ -1,13 +1,36 @@
 import { Document } from "mongoose";
 
 export interface IUser {
+  name?: string;
+  username?: string;
+  password?: string;
+  email?: string;
+  ramal?: string;
+  department?: string;
+  idDepartment?: string;
+  id?: string;
+  service?: string;
+  permission?: Array<string>;
+  userId?: string;
+}
+
+export interface ITokenResponse {
+  token: string;
+  refreshToken: string;
+}
+
+import { JwtPayload } from "jsonwebtoken";
+
+export interface UserPayload extends JwtPayload {
   name: string;
-  username: string;
-  password: string;
+  permission: string[];
+  userId: string;
   email: string;
-  ramal: string;
-  department: string;
+  username: string;
+  idCompany: string;
   idDepartment: string;
+  department: string;
+  ramal: number;
 }
 
 export interface ICreateUsers {
@@ -125,9 +148,10 @@ export interface UserDataService {
   idCompany: string;
   role: string[];
   ramal: number;
-  username: string;
+  username?: string;
   password: string;
   email: string;
+  service: string;
 }
 
 export interface IUpdateDepartment {

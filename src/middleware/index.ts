@@ -2,6 +2,7 @@ import { validationResult } from "express-validator";
 import { NextFunction, Request, Response, RequestHandler } from "express";
 import { UserPayload } from "../utils/jwtUtils";
 import ExternalApiService from "../services/externalApi_service";
+import TokenService from "../services/token_service";
 
 export const validRequest = (
   req: Request,
@@ -49,11 +50,11 @@ export const verifyToken = async (
     return;
   }
 
-  const validToken = await ExternalApiService.validateToken(token);
+  const validToken = TokenService.verifyToken(token);
 
-  if (validToken.status == 200) {
+  if (!validToken.message) {
     req.token = token as string;
-    req.user = validToken.data as UserPayload;
+    req.user = validToken as UserPayload;
 
     next();
   } else {

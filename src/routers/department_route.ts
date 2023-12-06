@@ -17,23 +17,16 @@ interface IRes {
 department_route
   .post(
     Routes.GET_DEPARTMENT_BY_PAGE,
-    verifyPermission([Permissions.SUPPORT, Permissions.ADMIN]),
     department_controller.getDepartmentsByPage
   )
   .post(
     Routes.GET_ALL_DEPARTMENT,
-    verifyPermission([
-      Permissions.SUPPORT,
-      Permissions.ADMIN,
-      Permissions.MANAGER,
-    ]),
     department_controller.getAllDepartment
   )
   .post(
     Routes.SAVE_DEPARTMENT,
     departmentCreateSchema,
     validRequest,
-    verifyPermission([Permissions.SUPPORT, Permissions.ADMIN]),
     async (req: Request, res: Response) => {
       const departmentResponse: any =
         await department_controller.createDepartment(req, res);
@@ -45,33 +38,25 @@ department_route
       );
     }
   )
-  .put(
-    Routes.UPDATE_DEPARTMENT,
-    verifyPermission([Permissions.SUPPORT, Permissions.ADMIN]),
-    async (req: Request, res: Response) => {
-      const departmentResponse: any =
-        await department_controller.updateDepartment(req, res);
+  .put(Routes.UPDATE_DEPARTMENT, async (req: Request, res: Response) => {
+    const departmentResponse: any =
+      await department_controller.updateDepartment(req, res);
 
-      WebSocketService.createEvent(
-        req,
-        departmentResponse,
-        Event.UPDATED_DEPARTMENT
-      );
-    }
-  )
-  .post(
-    Routes.DELETE_DEPARTMENT,
-    verifyPermission([Permissions.SUPPORT, Permissions.ADMIN]),
-    async (req: Request, res: Response) => {
-      const departmentResponse: any =
-        await department_controller.deleteDepartment(req, res);
+    WebSocketService.createEvent(
+      req,
+      departmentResponse,
+      Event.UPDATED_DEPARTMENT
+    );
+  })
+  .post(Routes.DELETE_DEPARTMENT, async (req: Request, res: Response) => {
+    const departmentResponse: any =
+      await department_controller.deleteDepartment(req, res);
 
-      WebSocketService.createEvent(
-        req,
-        departmentResponse,
-        Event.DELETED_DEPARTMENT
-      );
-    }
-  );
+    WebSocketService.createEvent(
+      req,
+      departmentResponse,
+      Event.DELETED_DEPARTMENT
+    );
+  });
 
 export default department_route;

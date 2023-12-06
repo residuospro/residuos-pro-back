@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
 import DepartmentService from "../services/department_service";
 import HandleError from "../utils/errors/handleError";
-import ExternalApiService from "../services/externalApi_service";
 import mongoose from "mongoose";
 import { Messages } from "../utils/enum";
+import UserService from "../services/user_service";
+import PasswordGenerator from "../utils/passwordGenerator";
 
 class DepartmentController {
   async createDepartment(req: Request, res: Response) {
@@ -11,7 +12,16 @@ class DepartmentController {
       const session = await mongoose.startSession();
       session.startTransaction();
 
-      let { name, responsible, email, ramal, idCompany, totalItems } = req.body;
+      let {
+        name,
+        responsible,
+        email,
+        ramal,
+        idCompany,
+        totalItems,
+        role,
+        service,
+      } = req.body;
 
       name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
 
@@ -28,14 +38,23 @@ class DepartmentController {
 
       const itemsPerPage = 10;
 
-      await ExternalApiService.createUserAfterDepartment({
-        responsible,
-        email,
-        ramal,
-        idCompany,
-        department: name,
-        idDepartment: item.id,
-      });
+      const generator = new PasswordGenerator();
+
+      const password = generator.generateRandomPassword();
+
+      await UserService.createUser(
+        {
+          name: responsible,
+          email,
+          ramal,
+          password,
+          role,
+          service,
+          idCompany,
+          department: name,
+          idDepartment: item.id,
+        },
+      );
 
       totalItems += 1;
 
@@ -132,7 +151,7 @@ class DepartmentController {
         id
       );
 
-      await ExternalApiService.updateUserAfterDepartment(name, ramal, id);
+      await UserService.updateUserAfterUpdateDepartmentService(name, ramal, id);
 
       return {
         item,
@@ -169,7 +188,7 @@ class DepartmentController {
 
       const item = await DepartmentService.deleteDepartmentService(id);
 
-      await ExternalApiService.deleteUserAfterDepartment(id);
+      await UserService.deleteUserAfterDepartmentService(id);
 
       return {
         item,
