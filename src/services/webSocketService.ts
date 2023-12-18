@@ -1,6 +1,14 @@
 import { Request } from "express";
 import { Server as httpServer } from "http";
 import { Server } from "socket.io";
+import { IDepartment, ISediments, IUserSchema } from "../utils/interfaces";
+
+interface IResponse {
+  department?: IDepartment;
+  user?: IUserSchema;
+  sediment?: ISediments;
+  totalPages?: number;
+}
 
 class WebSocketService {
   static configureWebSocket(server: httpServer): any {
@@ -23,20 +31,20 @@ class WebSocketService {
     return { io, token };
   }
 
-  static async createEvent(req: Request, response: any, event: string) {
+  static async createEvent(req: Request, response: IResponse, event: string) {
     const socket = req.io;
 
     const { idCompany, idDepartment } = req.body;
 
-    const item = response.item;
-    const totalPages = response.totalPages;
+    const data: any = { idCompany, idDepartment };
 
-    socket.emit(event, {
-      item,
-      totalPages,
-      idCompany,
-      idDepartment,
-    });
+    for (const key in response) {
+      if (response[key as keyof IResponse]) {
+        data[key as keyof IResponse] = response[key as keyof IResponse];
+      }
+    }
+
+    socket.emit(event, { data });
   }
 }
 

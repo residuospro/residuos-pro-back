@@ -26,13 +26,13 @@ class UserService {
         ...userData,
       });
 
-      const item = await newUser.save({ session });
+      const user = await newUser.save({ session });
 
-      if (item) {
+      if (user) {
         await EmailService.sendEmail(
           email,
           service,
-          item.id,
+          user.id,
           Actions.CREATE,
           idCompany
         );
@@ -51,7 +51,7 @@ class UserService {
       await session.commitTransaction();
       session.endSession();
 
-      return { item, totalPages };
+      return { user, totalPages };
     } catch (error: any) {
       if (error instanceof HandleError) {
         throw error;
@@ -264,20 +264,7 @@ class UserService {
       const session = await mongoose.startSession();
       session.startTransaction();
 
-      const { email, service, idCompany, username } = updatedData[0];
-
-      let existingUser: any;
-
-      if (username) {
-        existingUser = await User.findOne({
-          username,
-          deleted: false,
-        });
-      }
-
-      if (existingUser != null) {
-        throw new HandleError("Nome de usuário já existe", 409);
-      }
+      const { email, service, idCompany } = updatedData[0];
 
       let user = (await User.findById(id)) as any;
 
@@ -377,17 +364,25 @@ class UserService {
     }
   }
 
-  static async deleteUserAfterDepartmentService(id: string) {
+  static async deleteUserAfterDepartmentService(idDepartment: string) {
     try {
-      const user = await User.updateMany(
-        { idDepartment: id },
+      await User.updateMany(
+        { idDepartment },
         { deleted: true, deletedAt: new Date() }
       );
 
-      console.log(user);
+      const user = await User.find({ idDepartment });
+
+      return user;
     } catch (error) {
       return error;
     }
+  }
+
+  static async checkIfUserExists(idCompany: string, email: string) {
+    const user = await User.findOne({ idCompany, email, deleted: false });
+
+    return user ? true : false;
   }
 }
 

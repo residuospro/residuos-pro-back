@@ -2,24 +2,27 @@ import { Request, Response } from "express";
 import { ISedimentsService } from "../utils/interfaces";
 import SedimentsService from "../services/sediments_service";
 import HandleError from "../utils/errors/handleError";
-import { Messages } from "../utils/enum";
+import { Messages, Event } from "../utils/enum";
+import WebSocketService from "../services/webSocketService";
 
 class SedimentsController {
   async createSediments(req: Request, res: Response) {
     try {
-      const sediment: ISedimentsService = req.body;
+      const sedimentInfo: ISedimentsService = req.body;
 
-      sediment.name =
-        sediment.name.charAt(0).toUpperCase() +
-        sediment.name.slice(1).toLowerCase();
+      sedimentInfo.name =
+        sedimentInfo.name.charAt(0).toUpperCase() +
+        sedimentInfo.name.slice(1).toLowerCase();
 
-      const item = await SedimentsService.createSedimentsService(sediment);
+      const sediment = await SedimentsService.createSedimentsService(
+        sedimentInfo
+      );
 
       const itemsPerPage = 10;
 
-      sediment.totalItems = Number(sediment.totalItems) + 1;
+      sedimentInfo.totalItems = Number(sedimentInfo.totalItems) + 1;
 
-      const totalPages = Math.ceil(sediment.totalItems / itemsPerPage);
+      const totalPages = Math.ceil(sedimentInfo.totalItems / itemsPerPage);
 
       const message = {
         title: Messages.TITLE_REGISTER,
@@ -27,16 +30,18 @@ class SedimentsController {
       };
 
       const response = res.status(201).json({
-        item,
+        sediment,
         totalPages,
         message,
       });
 
-      return {
-        item,
-        totalPages,
-        response,
-      };
+      WebSocketService.createEvent(
+        req,
+        { sediment, totalPages },
+        Event.SEDIMENT_CREATED
+      );
+
+      return response;
     } catch (error) {
       if (error instanceof HandleError) {
         return res.status(error.statusCode).json({
@@ -88,18 +93,18 @@ class SedimentsController {
 
   async updateSediments(req: Request, res: Response) {
     try {
-      const sediment: ISedimentsService = req.body;
+      const sedimentInfo: ISedimentsService = req.body;
 
-      if (sediment.name) {
-        sediment.name =
-          sediment.name.charAt(0).toUpperCase() +
-          sediment.name.slice(1).toLowerCase();
+      if (sedimentInfo.name) {
+        sedimentInfo.name =
+          sedimentInfo.name.charAt(0).toUpperCase() +
+          sedimentInfo.name.slice(1).toLowerCase();
       }
 
       const { id } = req.params;
 
-      const item = await SedimentsService.updateSedimentService(
-        [sediment],
+      const sediment = await SedimentsService.updateSedimentService(
+        [sedimentInfo],
         id
       );
 
@@ -109,11 +114,13 @@ class SedimentsController {
       };
 
       const response = res.status(201).json({
-        item,
+        sediment,
         message,
       });
 
-      return { item, response };
+      WebSocketService.createEvent(req, { sediment }, Event.UPDATED_SEDIMENT);
+
+      return response;
     } catch (error: any) {
       if (error instanceof HandleError) {
         return res.status(error.statusCode).json({
@@ -137,7 +144,7 @@ class SedimentsController {
     try {
       const { id } = req.params;
 
-      const item = await SedimentsService.deleteSedimentService(id);
+      const sediment = await SedimentsService.deleteSedimentService(id);
 
       const message = {
         title: Messages.TITLE_DELETE_REGISTER,
@@ -146,7 +153,9 @@ class SedimentsController {
 
       const response = res.status(201).json({ message });
 
-      return { item, response };
+      WebSocketService.createEvent(req, { sediment }, Event.DELETED_SEDIMENT);
+
+      return response;
     } catch (error: any) {
       return res.status(500).json({
         message: {

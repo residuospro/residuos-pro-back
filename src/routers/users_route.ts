@@ -32,37 +32,17 @@ user_route
     Routes.SAVE_USER,
     userCreateSchema,
     validRequest,
-    async (req: Request, res: Response) => {
-      const userResponse = await user_controller.createUser(req, res);
-
-      WebSocketService.createEvent(req, userResponse, Event.USER_CREATED);
-    }
+    user_controller.createUser
   )
 
   .post(
     Routes.UPDATE_USER_AFTER_DEPARTMENT,
-    async (req: Request, res: Response) => {
-      const userResponse =
-        await user_controller.updateUserAfterUpdateDepartment(req, res);
-
-      WebSocketService.createEvent(req, userResponse, Event.UPDATED_USER);
-    }
+    user_controller.updateUserAfterUpdateDepartment
   )
 
-  .put(Routes.UPDATE_USER, async (req: Request, res: Response) => {
-    const userResponse = await user_controller.updateUsers(req, res);
+  .put(Routes.UPDATE_USER, user_controller.updateUsers)
 
-    WebSocketService.createEvent(req, userResponse, Event.UPDATED_USER);
-  })
-
-  .put(
-    Routes.DELETE_USER,
-    async (req: Request, res: Response) => {
-      const userResponse = await user_controller.deleteUsers(req, res);
-
-      WebSocketService.createEvent(req, userResponse, Event.DELETED_USER);
-    }
-  )
+  .put(Routes.DELETE_USER, user_controller.deleteUsers)
 
   .delete(
     Routes.DELETE_USER_AFTER_DEPARTMENT,

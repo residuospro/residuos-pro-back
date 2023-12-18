@@ -11,22 +11,6 @@ const departmentSchema: Schema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  responsible: {
-    type: String,
-    require: true,
-  },
-  email: {
-    type: String,
-    trim: true,
-    require: false,
-    lowercase: true,
-    validate: {
-      validator(value: string) {
-        return value.includes("@");
-      },
-      message: "Email inválido",
-    },
-  },
   ramal: {
     type: String,
     required: true,

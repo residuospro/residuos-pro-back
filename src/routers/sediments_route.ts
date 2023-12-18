@@ -11,18 +11,7 @@ sediments_route
   .post(
     Routes.SAVE_SEDIMENTS,
     verifyPermission([Permissions.MANAGER]),
-    async (req: Request, res: Response) => {
-      const sedimentResponse: any = await sedments_controller.createSediments(
-        req,
-        res
-      );
-
-      WebSocketService.createEvent(
-        req,
-        sedimentResponse,
-        Event.SEDIMENT_CREATED
-      );
-    }
+    sedments_controller.createSediments
   )
   .post(
     Routes.GET_SEDIMENTS_BY_PAGE,
@@ -32,19 +21,7 @@ sediments_route
   .put(
     Routes.UPDATE_SEDIMENTS,
     verifyPermission([Permissions.MANAGER]),
-
-    async (req: Request, res: Response) => {
-      const sedimentResponse: any = await sedments_controller.updateSediments(
-        req,
-        res
-      );
-
-      WebSocketService.createEvent(
-        req,
-        sedimentResponse,
-        Event.UPDATED_SEDIMENT
-      );
-    }
+    sedments_controller.updateSediments
   )
   .post(
     Routes.DELETE_SEDIMENT,
@@ -53,12 +30,6 @@ sediments_route
       const sedimentResponse: any = await sedments_controller.deleteSediments(
         req,
         res
-      );
-
-      WebSocketService.createEvent(
-        req,
-        sedimentResponse,
-        Event.DELETED_SEDIMENT
       );
     }
   );

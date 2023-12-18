@@ -2,9 +2,10 @@ import { Request, Response } from "express";
 import DepartmentService from "../services/department_service";
 import HandleError from "../utils/errors/handleError";
 import mongoose from "mongoose";
-import { Messages } from "../utils/enum";
+import { Messages, Event } from "../utils/enum";
 import UserService from "../services/user_service";
 import PasswordGenerator from "../utils/passwordGenerator";
+import WebSocketService from "../services/webSocketService";
 
 class DepartmentController {
   async createDepartment(req: Request, res: Response) {
@@ -14,22 +15,16 @@ class DepartmentController {
 
       let {
         name,
-        responsible,
-        email,
         ramal,
         idCompany,
         totalItems,
-        role,
-        service,
       } = req.body;
 
       name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
 
-      const item = await DepartmentService.createDepartmentService(
+      const department = await DepartmentService.createDepartmentService(
         {
           name,
-          responsible,
-          email,
           ramal,
           idCompany,
         },
@@ -38,41 +33,37 @@ class DepartmentController {
 
       const itemsPerPage = 10;
 
-      const generator = new PasswordGenerator();
-
-      const password = generator.generateRandomPassword();
-
-      await UserService.createUser({
-        name: responsible,
-        email,
-        ramal,
-        password,
-        role,
-        service,
-        idCompany,
-        department: name,
-        idDepartment: item.id,
-      });
 
       totalItems += 1;
 
       const totalPages = Math.ceil(totalItems / itemsPerPage);
 
+      const departmentResponse = {
+        department,
+        totalPages,
+      };
+
+      WebSocketService.createEvent(
+        req,
+        departmentResponse,
+        Event.DEPARTMENT_CREATED
+      );
+
       await session.commitTransaction();
       session.endSession();
 
-      return {
-        item,
-        totalPages,
-        res: res.status(201).json({
-          item,
-          totalPages,
-          message: {
-            title: Messages.TITLE_REGISTER,
-            subTitle: Messages.SUBTITLE_REGISTER,
-          },
-        }),
+      const message = {
+        title: Messages.TITLE_REGISTER,
+        subTitle: Messages.SUBTITLE_REGISTER,
       };
+
+      const response = res.status(201).json({
+        department,
+        totalPages,
+        message,
+      });
+
+      return response;
     } catch (error: any) {
       if (error instanceof HandleError) {
         return res.status(error.statusCode).json({
@@ -144,9 +135,15 @@ class DepartmentController {
 
       const { id } = req.params;
 
-      const item = await DepartmentService.updateDepartmentService(
+      const department = await DepartmentService.updateDepartmentService(
         [{ name, responsible, email, ramal, idCompany }],
         id
+      );
+
+      WebSocketService.createEvent(
+        req,
+        { department },
+        Event.UPDATED_DEPARTMENT
       );
 
       const user = await UserService.updateUserAfterUpdateDepartmentService(
@@ -155,21 +152,23 @@ class DepartmentController {
         id
       );
 
+      WebSocketService.createEvent(
+        req,
+        { user },
+        Event.UPDATED_USER_AFTER_DEPARTMENT
+      );
+
       const message = {
         title: Messages.TITLE_UPDATE_REGISTER,
         subTitle: Messages.SUBTITLE_UPDATE_REGISTER,
       };
 
       const response = res.status(201).json({
-        item,
+        department,
         message,
       });
 
-      return {
-        item,
-        user,
-        response,
-      };
+      return response;
     } catch (error: any) {
       if (error instanceof HandleError) {
         return res.status(error.statusCode).json({
@@ -193,20 +192,35 @@ class DepartmentController {
     try {
       const { id } = req.params;
 
-      const item = await DepartmentService.deleteDepartmentService(id);
+      const department = (await DepartmentService.deleteDepartmentService(
+        id
+      )) as any;
 
-      await UserService.deleteUserAfterDepartmentService(id);
+      WebSocketService.createEvent(
+        req,
+        { department },
+        Event.DELETED_DEPARTMENT
+      );
 
-      return {
-        item,
-        res: res.status(201).json({
-          item,
-          message: {
-            title: Messages.TITLE_DELETE_REGISTER,
-            subTitle: Messages.SUBTITLE_DELETE_REGISTER,
-          },
-        }),
+      const user = await UserService.deleteUserAfterDepartmentService(id);
+
+      WebSocketService.createEvent(
+        req,
+        { user },
+        Event.DELETED_USER_AFTER_DEPARTMENT
+      );
+
+      const message = {
+        title: Messages.TITLE_DELETE_REGISTER,
+        subTitle: Messages.SUBTITLE_DELETE_REGISTER,
       };
+
+      const response = res.status(201).json({
+        department,
+        message,
+      });
+
+      return response;
     } catch (error: any) {
       return res.status(500).json({
         message: {

@@ -104,8 +104,6 @@ export interface IDepartment extends Document {
   name: string;
   idCompany: string;
   ramal: number;
-  email: string;
-  responsible: string;
   createdAt: Date;
   deletedAt?: Date;
   updatedAt?: Date;
@@ -136,8 +134,6 @@ export interface IRefreshToken extends Document {
 }
 export interface IDepartmentService {
   name: string;
-  responsible: string;
-  email: string;
   ramal: number;
   idCompany: string;
 }

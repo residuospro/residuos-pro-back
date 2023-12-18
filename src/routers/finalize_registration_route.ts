@@ -8,13 +8,7 @@ const finalize_registration_controller = new UserController();
 
 finalize_registration_route.put(
   Routes.CREATE_PASSWORD,
-
-  async (req: Request, res: Response) => {
-    const userResponse =
-      await finalize_registration_controller.finalizeRegistration(req, res);
-
-    WebSocketService.createEvent(req, userResponse, Event.UPDATED_USER);
-  }
+  finalize_registration_controller.finalizeRegistration
 );
 
 export default finalize_registration_route;

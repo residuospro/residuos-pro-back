@@ -95,19 +95,19 @@ class DepartmentService {
         }
       }
 
-      let department = (await Department.findById(id)) as any;
+      let findDepartment = (await Department.findById(id)) as any;
 
       for (const key in updatedData[0]) {
         const value = updatedData[0][key as keyof IUpdateDepartment];
 
         if (value) {
-          department[key] = value;
+          findDepartment[key] = value;
         }
       }
 
-      const updateCompany = await department!.save();
+      const department = await findDepartment!.save();
 
-      return updateCompany;
+      return department;
     } catch (error: any) {
       if (error instanceof HandleError) {
         throw error;

@@ -19,16 +19,4 @@ export const departmentCreateSchema = checkSchema({
     notEmpty: true,
     errorMessage: "Ramal do departamento não fornecido",
   },
-  email: {
-    in: ["body"],
-    isString: true,
-    notEmpty: true,
-    errorMessage: "Email do departamento não fornecido",
-  },
-  responsible: {
-    in: ["body"],
-    isString: true,
-    notEmpty: true,
-    errorMessage: "Responsáveç do departamento não fornecido",
-  },
 });

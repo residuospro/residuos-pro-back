@@ -3,12 +3,13 @@ import UserService from "../services/user_service";
 import { IUser } from "../utils/interfaces";
 import HandleError from "../utils/errors/handleError";
 import PasswordGenerator from "../utils/passwordGenerator";
-import { Messages, Permissions, Service } from "../utils/enum";
+import { Messages, Event, Service } from "../utils/enum";
+import WebSocketService from "../services/webSocketService";
 
 class UserController {
   async createUser(req: Request, res: Response) {
     try {
-      const {
+      let {
         name,
         idDepartment,
         department,
@@ -23,7 +24,7 @@ class UserController {
 
       const password = generator.generateRandomPassword();
 
-      const { item, totalPages } = await UserService.createUser({
+      const { user, totalPages } = await UserService.createUser({
         name,
         idDepartment,
         department,
@@ -35,18 +36,24 @@ class UserController {
         service,
       });
 
+      WebSocketService.createEvent(
+        req,
+        { user, totalPages },
+        Event.USER_CREATED
+      );
+
       const message = {
         title: Messages.TITLE_REGISTER,
         subTitle: Messages.SUBTITLE_REGISTER,
       };
 
       const response = res.status(201).json({
-        item,
+        user,
         totalPages,
         message,
       });
 
-      return { item, totalPages, response };
+      return response;
     } catch (error: any) {
       if (error instanceof HandleError) {
         return res.status(error.statusCode).send({
@@ -171,17 +178,19 @@ class UserController {
 
       const { id } = req.params;
 
-      const item = await UserService.finalizeRegistrationService(
+      const user = await UserService.finalizeRegistrationService(
         [{ username, password }],
         id
       );
+
+      WebSocketService.createEvent(req, user, Event.UPDATED_USER);
 
       if (service == Service.RESIDUOSPRO) {
         let url = process.env.FRONT_REDISUOS_PRO;
 
         const response = res.status(200).send(url);
 
-        return { item, response };
+        return response;
       }
 
       return res.status(204).send("Senha redefinida com sucesso");
@@ -199,7 +208,6 @@ class UserController {
       const {
         name,
         username,
-        password,
         ramal,
         email,
         department,
@@ -210,12 +218,10 @@ class UserController {
 
       const { id } = req.params;
 
-      const item = await UserService.updateUser(
+      const user = await UserService.updateUser(
         [
           {
             name,
-            username,
-            password,
             ramal,
             email,
             department,
@@ -227,17 +233,19 @@ class UserController {
         id
       );
 
+      WebSocketService.createEvent(req, { user }, Event.UPDATED_USER);
+
       const message = {
         title: Messages.TITLE_UPDATE_REGISTER,
         subTitle: Messages.SUBTITLE_UPDATE_REGISTER,
       };
 
       const response = res.status(200).json({
-        item,
+        user,
         message,
       });
 
-      return { item, response };
+      return response;
     } catch (error: any) {
       if (error instanceof HandleError) {
         return res.status(error.statusCode).send({
@@ -260,11 +268,13 @@ class UserController {
   async updateUserAfterUpdateDepartment(req: Request, res: Response) {
     const { name, ramal, idDepartment } = req.body;
 
-    const item = await UserService.updateUserAfterUpdateDepartmentService(
+    const user = await UserService.updateUserAfterUpdateDepartmentService(
       name,
       ramal,
       idDepartment
     );
+
+    WebSocketService.createEvent(req, user, Event.UPDATED_USER);
 
     const response = res
       .status(204)
@@ -277,18 +287,20 @@ class UserController {
     try {
       const { id } = req.params;
 
-      const item = await UserService.deleteUser(id);
+      const user = (await UserService.deleteUser(id)) as any;
 
       const message = {
         title: Messages.TITLE_DELETE_REGISTER,
         subTitle: Messages.SUBTITLE_DELETE_REGISTER,
       };
 
+      WebSocketService.createEvent(req, { user }, Event.DELETED_USER);
+
       const response = res.status(200).json({
         message,
       });
 
-      return { item, response };
+      return response;
     } catch (error: any) {
       return res.status(404).send({
         message: {

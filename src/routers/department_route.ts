@@ -20,50 +20,15 @@ department_route
     department_controller.getDepartmentsByPage
   )
   .post(Routes.GET_ALL_DEPARTMENT, department_controller.getAllDepartment)
+
   .post(
     Routes.SAVE_DEPARTMENT,
     departmentCreateSchema,
     validRequest,
-    async (req: Request, res: Response) => {
-      const departmentResponse: any =
-        await department_controller.createDepartment(req, res);
-
-      WebSocketService.createEvent(
-        req,
-        departmentResponse,
-        Event.DEPARTMENT_CREATED
-      );
-    }
+    department_controller.createDepartment
   )
-  .put(Routes.UPDATE_DEPARTMENT, async (req: Request, res: Response) => {
-    let departmentResponse: any = await department_controller.updateDepartment(
-      req,
-      res
-    );
+  .put(Routes.UPDATE_DEPARTMENT, department_controller.updateDepartment)
 
-    WebSocketService.createEvent(
-      req,
-      departmentResponse,
-      Event.UPDATED_DEPARTMENT
-    );
-
-    departmentResponse.item = departmentResponse.user;
-
-    WebSocketService.createEvent(
-      req,
-      departmentResponse,
-      Event.UPDATED_USER_AFTER_DEPARTMENT
-    );
-  })
-  .post(Routes.DELETE_DEPARTMENT, async (req: Request, res: Response) => {
-    const departmentResponse: any =
-      await department_controller.deleteDepartment(req, res);
-
-    WebSocketService.createEvent(
-      req,
-      departmentResponse,
-      Event.DELETED_DEPARTMENT
-    );
-  });
+  .post(Routes.DELETE_DEPARTMENT, department_controller.deleteDepartment);
 
 export default department_route;
