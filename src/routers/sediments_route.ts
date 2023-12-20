@@ -1,8 +1,7 @@
-import express, { Request, Response } from "express";
+import express from "express";
 import SedimentsController from "../controllers/sediments_controller";
-import { Event, Permissions, Routes } from "../utils/enum";
+import { Permissions, Routes } from "../utils/enum";
 import { verifyPermission } from "../middleware";
-import WebSocketService from "../services/webSocketService";
 
 const sediments_route = express.Router();
 const sedments_controller = new SedimentsController();
@@ -26,12 +25,7 @@ sediments_route
   .post(
     Routes.DELETE_SEDIMENT,
     verifyPermission([Permissions.MANAGER]),
-    async (req: Request, res: Response) => {
-      const sedimentResponse: any = await sedments_controller.deleteSediments(
-        req,
-        res
-      );
-    }
+    sedments_controller.deleteSediments
   );
 
 export default sediments_route;

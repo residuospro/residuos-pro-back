@@ -1,5 +1,5 @@
 import express from "express";
-import { Routes, Event } from "../utils/enum";
+import { Routes } from "../utils/enum";
 import UserController from "../controllers/user_controllers";
 import { validRequest } from "../middleware";
 import {
@@ -7,8 +7,6 @@ import {
   getUserByRoleSchema,
   getUsernameSchema,
 } from "../middleware/schemas/userSchema";
-import { Request, Response } from "express";
-import WebSocketService from "../services/webSocketService";
 
 const user_route = express.Router();
 const user_controller = new UserController();

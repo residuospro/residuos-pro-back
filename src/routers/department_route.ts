@@ -1,9 +1,8 @@
-import express, { Request, Response } from "express";
-import { Event, Routes } from "../utils/enum";
+import express from "express";
+import { Routes } from "../utils/enum";
 import { validRequest } from "../middleware";
 import { departmentCreateSchema } from "../middleware/schemas/departmentSchema";
 import DepartmentController from "../controllers/department_controller";
-import WebSocketService from "../services/webSocketService";
 
 const department_route = express.Router();
 const department_controller = new DepartmentController();
