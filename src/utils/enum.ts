@@ -41,6 +41,10 @@ export enum Routes {
   REFRESH_TOKEN = "/api/refresh_token",
   VERIFYTOKEN = "/api/verifyToken",
   USER_EXISTS = "/api/user_exists/:id",
+
+  SAVE_COLLECTION = "/api/collection/save",
+  GET_COLLECTION_BY_PAGE = "/api/collection/pagineted",
+  GET_COLLECTION_BY_ID = "/api/collection/:id",
 }
 
 export enum Permissions {
@@ -83,9 +87,12 @@ export enum Messages {
 
   TITLE_EXISTING_USER = "Username inválido",
   SUBTITLE_EXISTING_USER = "O nome de usuário fornecido já existe em nosso banco",
+
+  TITLE_COLLECTION_CREATED = "Sucesso",
+  SUBTITLE_COLLECTION_CREATED = "Pedido de coleta realizado",
 }
 
-export enum Event {
+export enum SocketEvent {
   CHANNEL = "residuos-pro",
   DEPARTMENT_CREATED = "department_created",
   UPDATED_DEPARTMENT = "updated_department",
@@ -100,6 +107,9 @@ export enum Event {
   DELETED_USER = "deleted_user",
   UPDATED_USER_AFTER_DEPARTMENT = "updated_user_after_department",
   DELETED_USER_AFTER_DEPARTMENT = "deleted_user_after_department",
+
+  COLLECTION_CREATED = "collection_created",
+  COLLECTION = "collection",
 }
 
 export enum Service {
@@ -110,4 +120,11 @@ export enum Service {
 export enum Actions {
   CREATE = "create",
   UPDATE = "update",
+}
+
+export enum Status {
+  WAITING_FOR_APPROVAL = "Aguardando aprovação",
+  WAITING_FOR_COLLECTION = "Aguardando coleta",
+  FINISHED = "Finalizado",
+  REFUSED = "Recusado",
 }

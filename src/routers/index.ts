@@ -16,6 +16,7 @@ import department_route from "./department_route";
 import user_route from "./users_route";
 import cors from "cors";
 import sediments_route from "./sediments_route";
+import collection_route from "./collection_route";
 
 declare module "express-serve-static-core" {
   interface Request {
@@ -44,13 +45,14 @@ const router = (app: Express) => {
     user_exists_route,
     finalize_registration_route,
     verifyToken,
+    sediments_route,
     verifyPermission(UserPermissions),
     user_route,
     companies_route,
     department_route,
-    sediments_route,
     verifyPermission(typePermissions),
-    payload_route
+    payload_route,
+    collection_route
   );
 };
 

@@ -7,12 +7,6 @@ import DepartmentController from "../controllers/department_controller";
 const department_route = express.Router();
 const department_controller = new DepartmentController();
 
-interface IRes {
-  departments: any[];
-  department: any[];
-  totalPages: number;
-}
-
 department_route
   .post(
     Routes.GET_DEPARTMENT_BY_PAGE,

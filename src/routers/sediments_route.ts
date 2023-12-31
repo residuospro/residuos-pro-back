@@ -14,7 +14,7 @@ sediments_route
   )
   .post(
     Routes.GET_SEDIMENTS_BY_PAGE,
-    verifyPermission([Permissions.MANAGER]),
+    verifyPermission([Permissions.MANAGER, Permissions.COLLABORATOR]),
     sedments_controller.getSedimentsByPage
   )
   .put(

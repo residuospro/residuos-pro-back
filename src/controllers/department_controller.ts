@@ -2,9 +2,8 @@ import { Request, Response } from "express";
 import DepartmentService from "../services/department_service";
 import HandleError from "../utils/errors/handleError";
 import mongoose from "mongoose";
-import { Messages, Event } from "../utils/enum";
+import { Messages, SocketEvent } from "../utils/enum";
 import UserService from "../services/user_service";
-import PasswordGenerator from "../utils/passwordGenerator";
 import WebSocketService from "../services/webSocketService";
 
 class DepartmentController {
@@ -46,7 +45,7 @@ class DepartmentController {
       WebSocketService.createEvent(
         req,
         departmentResponse,
-        Event.DEPARTMENT_CREATED
+        SocketEvent.DEPARTMENT_CREATED
       );
 
       await session.commitTransaction();
@@ -143,7 +142,7 @@ class DepartmentController {
       WebSocketService.createEvent(
         req,
         { department },
-        Event.UPDATED_DEPARTMENT
+        SocketEvent.UPDATED_DEPARTMENT
       );
 
       const user = await UserService.updateUserAfterUpdateDepartmentService(
@@ -155,7 +154,7 @@ class DepartmentController {
       WebSocketService.createEvent(
         req,
         { user },
-        Event.UPDATED_USER_AFTER_DEPARTMENT
+        SocketEvent.UPDATED_USER_AFTER_DEPARTMENT
       );
 
       const message = {
@@ -199,7 +198,7 @@ class DepartmentController {
       WebSocketService.createEvent(
         req,
         { department },
-        Event.DELETED_DEPARTMENT
+        SocketEvent.DELETED_DEPARTMENT
       );
 
       const user = await UserService.deleteUserAfterDepartmentService(id);
@@ -207,7 +206,7 @@ class DepartmentController {
       WebSocketService.createEvent(
         req,
         { user },
-        Event.DELETED_USER_AFTER_DEPARTMENT
+        SocketEvent.DELETED_USER_AFTER_DEPARTMENT
       );
 
       const message = {

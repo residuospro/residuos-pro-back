@@ -3,7 +3,7 @@ import UserService from "../services/user_service";
 import { IUser } from "../utils/interfaces";
 import HandleError from "../utils/errors/handleError";
 import PasswordGenerator from "../utils/passwordGenerator";
-import { Messages, Event, Service } from "../utils/enum";
+import { Messages, SocketEvent, Service } from "../utils/enum";
 import WebSocketService from "../services/webSocketService";
 
 class UserController {
@@ -39,7 +39,7 @@ class UserController {
       WebSocketService.createEvent(
         req,
         { user, totalPages },
-        Event.USER_CREATED
+        SocketEvent.USER_CREATED
       );
 
       const message = {
@@ -183,7 +183,7 @@ class UserController {
         id
       );
 
-      WebSocketService.createEvent(req, user, Event.UPDATED_USER);
+      WebSocketService.createEvent(req, user, SocketEvent.UPDATED_USER);
 
       if (service == Service.RESIDUOSPRO) {
         let url = process.env.FRONT_REDISUOS_PRO;
@@ -233,7 +233,7 @@ class UserController {
         id
       );
 
-      WebSocketService.createEvent(req, { user }, Event.UPDATED_USER);
+      WebSocketService.createEvent(req, { user }, SocketEvent.UPDATED_USER);
 
       const message = {
         title: Messages.TITLE_UPDATE_REGISTER,
@@ -274,7 +274,7 @@ class UserController {
       idDepartment
     );
 
-    WebSocketService.createEvent(req, user, Event.UPDATED_USER);
+    WebSocketService.createEvent(req, user, SocketEvent.UPDATED_USER);
 
     const response = res
       .status(204)
@@ -294,7 +294,7 @@ class UserController {
         subTitle: Messages.SUBTITLE_DELETE_REGISTER,
       };
 
-      WebSocketService.createEvent(req, { user }, Event.DELETED_USER);
+      WebSocketService.createEvent(req, { user }, SocketEvent.DELETED_USER);
 
       const response = res.status(200).json({
         message,

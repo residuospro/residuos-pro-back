@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { ISedimentsService } from "../utils/interfaces";
 import SedimentsService from "../services/sediments_service";
 import HandleError from "../utils/errors/handleError";
-import { Messages, Event } from "../utils/enum";
+import { Messages, SocketEvent } from "../utils/enum";
 import WebSocketService from "../services/webSocketService";
 
 class SedimentsController {
@@ -38,7 +38,7 @@ class SedimentsController {
       WebSocketService.createEvent(
         req,
         { sediment, totalPages },
-        Event.SEDIMENT_CREATED
+        SocketEvent.SEDIMENT_CREATED
       );
 
       return response;
@@ -118,7 +118,7 @@ class SedimentsController {
         message,
       });
 
-      WebSocketService.createEvent(req, { sediment }, Event.UPDATED_SEDIMENT);
+      WebSocketService.createEvent(req, { sediment }, SocketEvent.UPDATED_SEDIMENT);
 
       return response;
     } catch (error: any) {
@@ -153,7 +153,7 @@ class SedimentsController {
 
       const response = res.status(201).json({ message });
 
-      WebSocketService.createEvent(req, { sediment }, Event.DELETED_SEDIMENT);
+      WebSocketService.createEvent(req, { sediment }, SocketEvent.DELETED_SEDIMENT);
 
       return response;
     } catch (error: any) {

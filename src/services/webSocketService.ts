@@ -1,10 +1,16 @@
 import { Request } from "express";
 import { Server as httpServer } from "http";
 import { Server } from "socket.io";
-import { IDepartment, ISediments, IUserSchema } from "../utils/interfaces";
+import {
+  ICollectionSchema,
+  IDepartment,
+  ISediments,
+  IUserSchema,
+} from "../utils/interfaces";
 
 interface IResponse {
   department?: IDepartment;
+  collection?: ICollectionSchema;
   user?: IUserSchema;
   sediment?: ISediments;
   totalPages?: number;

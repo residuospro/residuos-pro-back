@@ -158,3 +158,27 @@ export interface IUpdateDepartment {
   ramal: number;
   idCompany: string;
 }
+
+export interface ICollectionSchema {
+  idCompany: string;
+  userId: string;
+  sedimentsId: string;
+  measure: string;
+  amount: number;
+  packaging: string;
+  observation: string;
+  status: string;
+  name: string;
+  department: string;
+  email: string;
+  ramal: string;
+  sedimentName: string;
+  classification: string;
+  risk: string;
+  state: string;
+  createdAt: Date;
+  deletedAt?: Date;
+  updatedAt?: Date;
+  deleted: boolean;
+  totalItems?: number;
+}
