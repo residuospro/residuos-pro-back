@@ -183,7 +183,7 @@ class UserController {
         id
       );
 
-      WebSocketService.createEvent(req, user, SocketEvent.UPDATED_USER);
+      WebSocketService.createEvent(req, { user }, SocketEvent.UPDATED_USER);
 
       if (service == Service.RESIDUOSPRO) {
         let url = process.env.FRONT_REDISUOS_PRO;

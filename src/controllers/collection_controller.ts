@@ -94,6 +94,71 @@ class CollectionController {
       return res.status(500).send({ message: error.message });
     }
   }
+
+  async updateCollectionStatus(req: Request, res: Response) {
+    try {
+      const { status, reason } = req.body;
+
+      const { id } = req.params;
+
+      const collection = await CollectionService.updateCollectionStatusService(
+        id,
+        status,
+        reason
+      );
+
+      WebSocketService.createEvent(
+        req,
+        {},
+        SocketEvent.UPDATE_COLLECTION_STATUS
+      );
+
+      WebSocketService.createEvent(
+        req,
+        { collection },
+        SocketEvent.UPDATE_COLLECTION_DETAILS
+      );
+
+      return res.status(200).json(collection);
+    } catch (error) {
+      return res.status(500).send({ message: error.message });
+    }
+  }
+
+  async deleteCollection(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+
+      const collection = (await CollectionService.deleteCollectionService(
+        id
+      )) as any;
+
+      WebSocketService.createEvent(
+        req,
+        { collection },
+        SocketEvent.DELETED_DEPARTMENT
+      );
+
+      const message = {
+        title: Messages.TITLE_DELETE_REGISTER,
+        subTitle: Messages.SUBTITLE_DELETE_REGISTER,
+      };
+
+      const response = res.status(201).json({
+        collection,
+        message,
+      });
+
+      return response;
+    } catch (error: any) {
+      return res.status(500).json({
+        message: {
+          title: Messages.TITLE_ERROR,
+          subTitle: Messages.SUBTITLE_ERROR,
+        },
+      });
+    }
+  }
 }
 
 export default CollectionController;

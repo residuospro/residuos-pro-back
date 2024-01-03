@@ -2,9 +2,6 @@ import { ICollectionSchema } from "../utils/interfaces";
 import Collection from "../models/collection";
 import { Status } from "../utils/enum";
 import HandleError from "../utils/errors/handleError";
-import User from "../models/users";
-import Sediments from "../models/sediment";
-import { log } from "console";
 
 class CollectionService {
   static async createCollectionService(
@@ -83,6 +80,45 @@ class CollectionService {
       return collection;
     } catch (error) {
       throw new Error(error.message);
+    }
+  }
+
+  static async updateCollectionStatusService(
+    id: string,
+    status: string,
+    reason?: string
+  ) {
+    try {
+      let collection = await Collection.findById(id);
+
+      collection.status = status;
+
+      if (reason) collection.reasonRefusal = reason;
+
+      const updateCollection = await collection.save();
+
+      return updateCollection;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+
+  static async deleteCollectionService(id: string) {
+    try {
+      const currentDate = new Date();
+
+      const collection = await Collection.findByIdAndUpdate(
+        id,
+        {
+          deleted: true,
+          deletedAt: currentDate,
+        },
+        { new: true }
+      );
+
+      return collection;
+    } catch (error: any) {
+      throw new Error("Coleta não encontrada");
     }
   }
 }

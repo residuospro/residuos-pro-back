@@ -167,6 +167,7 @@ export interface ICollectionSchema {
   amount: number;
   packaging: string;
   observation: string;
+  reasonRefusal: string;
   status: string;
   name: string;
   department: string;

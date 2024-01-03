@@ -11,6 +11,10 @@ collection_route
     Routes.GET_COLLECTION_BY_PAGE,
     collection_controller.getCollectionByPage
   )
-  .post(Routes.GET_COLLECTION_BY_ID, collection_controller.getCollectionById);
+  .post(Routes.GET_COLLECTION_BY_ID, collection_controller.getCollectionById)
+  .post(
+    Routes.UPDATE_COLLECTION_STATUS,
+    collection_controller.updateCollectionStatus
+  );
 
 export default collection_route;

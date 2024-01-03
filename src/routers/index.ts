@@ -46,11 +46,10 @@ const router = (app: Express) => {
     finalize_registration_route,
     verifyToken,
     sediments_route,
-    verifyPermission(UserPermissions),
+    verifyPermission(typePermissions),
     user_route,
     companies_route,
     department_route,
-    verifyPermission(typePermissions),
     payload_route,
     collection_route
   );

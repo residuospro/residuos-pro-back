@@ -73,8 +73,9 @@ const collectionSchema: Schema = new mongoose.Schema({
   },
   observation: {
     type: String,
-    require: true,
+    require: false,
   },
+  reasonRefusal: { type: String, require: false },
   status: {
     type: String,
     require: true,
