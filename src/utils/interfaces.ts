@@ -175,6 +175,7 @@ export interface ICollectionSchema {
   ramal: string;
   sedimentName: string;
   classification: string;
+  orderNumber: string;
   risk: string;
   state: string;
   createdAt: Date;
@@ -182,4 +183,14 @@ export interface ICollectionSchema {
   updatedAt?: Date;
   deleted: boolean;
   totalItems?: number;
+}
+
+export interface ICollectionFilter {
+  idCompany: string;
+  orderNumber: string;
+  sedimentName: null | string;
+  department: null | string;
+  status: null | string;
+  date: string;
+  createdAt?: any;
 }

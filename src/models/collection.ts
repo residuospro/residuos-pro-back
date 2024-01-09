@@ -10,6 +10,10 @@ const collectionSchema: Schema = new mongoose.Schema({
     type: String,
     require: true,
   },
+  orderNumber: {
+    type: String,
+    require: false,
+  },
   userId: {
     type: String,
     require: true,

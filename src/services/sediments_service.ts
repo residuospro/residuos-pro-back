@@ -39,11 +39,13 @@ class SedimentsService {
     itemsPerPage: number
   ) {
     try {
-      const sediments = await Sediments.find({
-        idCompany,
-        idDepartment,
-        deleted: false,
-      });
+      let query: any = { idCompany, deleted: false };
+
+      if (idDepartment) {
+        query = { ...query, idDepartment };
+      }
+
+      const sediments = await Sediments.find(query);
 
       if (sediments.length == 0) {
         throw new HandleError("Não há registros pra esse busca", 404);

@@ -1,10 +1,15 @@
-import { ICollectionSchema } from "../utils/interfaces";
+import { ICollectionFilter, ICollectionSchema } from "../utils/interfaces";
 import CollectionService from "../services/collection_service";
 import { Request, Response } from "express";
 import WebSocketService from "../services/webSocketService";
 import { SocketEvent, Messages } from "../utils/enum";
 import mongoose from "mongoose";
 import HandleError from "../utils/errors/handleError";
+
+interface ICollection {
+  collection: Partial<ICollectionSchema>;
+  idCompany: string;
+}
 
 class CollectionController {
   async createCollection(req: Request, res: Response) {
@@ -45,7 +50,12 @@ class CollectionController {
 
       return response;
     } catch (error: any) {
-      return res.status(500).send({ message: error.message });
+      return res.status(500).json({
+        message: {
+          title: Messages.TITLE_ERROR,
+          subTitle: Messages.SUBTITLE_ERROR,
+        },
+      });
     }
   }
 
@@ -73,7 +83,12 @@ class CollectionController {
         });
       }
 
-      return res.status(500).send({ message: error.message });
+      return res.status(500).json({
+        message: {
+          title: Messages.TITLE_ERROR,
+          subTitle: Messages.SUBTITLE_ERROR,
+        },
+      });
     }
   }
 
@@ -91,7 +106,62 @@ class CollectionController {
 
       return res.status(200).json(collection);
     } catch (error) {
-      return res.status(500).send({ message: error.message });
+      return res.status(500).json({
+        message: {
+          title: Messages.TITLE_ERROR,
+          subTitle: Messages.SUBTITLE_ERROR,
+        },
+      });
+    }
+  }
+
+  async getCollectionByFilter(req: Request, res: Response) {
+    try {
+      const {
+        sedimentName,
+        orderNumber,
+        status,
+        date,
+        department,
+        idCompany,
+        page,
+        itemsPerPage,
+      } = req.body;
+
+      const collectionFilter = {
+        sedimentName,
+        orderNumber,
+        status,
+        date,
+        department,
+        idCompany,
+      };
+
+      const skip = (parseInt(page) - 1) * parseInt(itemsPerPage);
+
+      const collections = await CollectionService.getCollectionByFilterService(
+        collectionFilter,
+        Number(itemsPerPage),
+        skip
+      );
+
+      return res.status(200).json(collections);
+    } catch (error) {
+      if (error instanceof HandleError) {
+        return res.status(error.statusCode).json({
+          message: {
+            title: Messages.TITLE_THERE_ARE_NO_RECORDS,
+            subTitle: Messages.SUBTITLE_THERE_ARE_NO_RECORDS,
+          },
+        });
+      }
+
+      return res.status(500).json({
+        message: {
+          title: Messages.TITLE_ERROR,
+          subTitle: Messages.SUBTITLE_ERROR,
+        },
+      });
     }
   }
 
@@ -116,12 +186,52 @@ class CollectionController {
       WebSocketService.createEvent(
         req,
         { collection },
-        SocketEvent.UPDATE_COLLECTION_DETAILS
+        SocketEvent.UPDATE_STATUS_IN_THE_DETAILS_SCREEN
       );
 
       return res.status(200).json(collection);
     } catch (error) {
-      return res.status(500).send({ message: error.message });
+      return res.status(500).json({
+        message: {
+          title: Messages.TITLE_ERROR,
+          subTitle: Messages.SUBTITLE_ERROR,
+        },
+      });
+    }
+  }
+
+  async updateCollection(req: Request, res: Response) {
+    try {
+      const currentCollection: ICollection = req.body;
+
+      const { id } = req.params;
+
+      const collection = await CollectionService.updateCollectionService(
+        id,
+        currentCollection.collection
+      );
+
+      WebSocketService.createEvent(
+        req,
+        { collection },
+        SocketEvent.UPDATE_COLLECTION
+      );
+
+      const message = {
+        title: Messages.TITLE_UPDATE_COLLECTION,
+        subTitle: Messages.SUBTITLE_UPDATE_COLLECTION,
+      };
+
+      const response = res.status(200).json({ collection, message });
+
+      return response;
+    } catch (error) {
+      return res.status(500).json({
+        message: {
+          title: Messages.TITLE_ERROR,
+          subTitle: Messages.SUBTITLE_ERROR,
+        },
+      });
     }
   }
 
@@ -129,25 +239,22 @@ class CollectionController {
     try {
       const { id } = req.params;
 
-      const collection = (await CollectionService.deleteCollectionService(
-        id
-      )) as any;
+      const collection = await CollectionService.deleteCollectionService(id);
+
+      WebSocketService.createEvent(req, {}, SocketEvent.DELETE_COLLECTION);
 
       WebSocketService.createEvent(
         req,
         { collection },
-        SocketEvent.DELETED_DEPARTMENT
+        SocketEvent.NOTIFY_CANCELLATION_ON_DETAILS_SCREEN
       );
 
       const message = {
-        title: Messages.TITLE_DELETE_REGISTER,
-        subTitle: Messages.SUBTITLE_DELETE_REGISTER,
+        title: Messages.TITLE_ORDER_CANCELED,
+        subTitle: Messages.SUBTITLE_ORDER_CANCELED,
       };
 
-      const response = res.status(201).json({
-        collection,
-        message,
-      });
+      const response = res.status(201).json({ message });
 
       return response;
     } catch (error: any) {

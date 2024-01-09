@@ -13,8 +13,14 @@ collection_route
   )
   .post(Routes.GET_COLLECTION_BY_ID, collection_controller.getCollectionById)
   .post(
+    Routes.GET_COLLECTION_BY_FILTER,
+    collection_controller.getCollectionByFilter
+  )
+  .post(
     Routes.UPDATE_COLLECTION_STATUS,
     collection_controller.updateCollectionStatus
-  );
+  )
+  .post(Routes.DELETE_COLLECTION, collection_controller.deleteCollection)
+  .post(Routes.UPDATE_COLLECTION, collection_controller.updateCollection);
 
 export default collection_route;
