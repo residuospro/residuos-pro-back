@@ -13,7 +13,7 @@ department_route
     department_controller.getDepartmentsByPage
   )
   .post(Routes.GET_ALL_DEPARTMENT, department_controller.getAllDepartment)
-
+  .post(Routes.GET_DEPARTMENT_NAMES, department_controller.getDepartmentNames)
   .post(
     Routes.SAVE_DEPARTMENT,
     departmentCreateSchema,

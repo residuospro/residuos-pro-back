@@ -12,12 +12,7 @@ class DepartmentController {
       const session = await mongoose.startSession();
       session.startTransaction();
 
-      let {
-        name,
-        ramal,
-        idCompany,
-        totalItems,
-      } = req.body;
+      let { name, ramal, idCompany, totalItems } = req.body;
 
       name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
 
@@ -31,7 +26,6 @@ class DepartmentController {
       );
 
       const itemsPerPage = 10;
-
 
       totalItems += 1;
 
@@ -108,6 +102,22 @@ class DepartmentController {
           subTitle: Messages.SUBTITLE_ERROR,
         },
       });
+    }
+  }
+
+  async getDepartmentNames(req: Request, res: Response) {
+    try {
+      const { idCompany } = req.body;
+
+      const departments = await DepartmentService.getAllDepartmentsService(
+        idCompany
+      );
+
+      const departmentNames = departments.map((d) => d.name);
+
+      return res.status(200).json(departmentNames);
+    } catch (error) {
+      return res.status(500).json({ message: error.message });
     }
   }
 

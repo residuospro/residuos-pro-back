@@ -11,6 +11,7 @@ export enum Routes {
   GET_DEPARTMENT_BY_PAGE = "/department/pagineted",
   GET_DEPARTMENT_BY_ID = "/department/:id",
   GET_DEPARTMENT_BY_NAME = "/department/by-name",
+  GET_DEPARTMENT_NAMES = "/api/department/names",
   SAVE_DEPARTMENT = "/department/save",
   UPDATE_DEPARTMENT = "/department/update/:id",
   DELETE_DEPARTMENT = "/department/:id",
@@ -139,7 +140,8 @@ export enum Actions {
 
 export enum Status {
   WAITING_FOR_APPROVAL = "Aguardando aprovação",
-  IN_COLLECTION = "Em coleta",
+  AWAITING_COLLECTION = "Aguardando coleta",
+  WENT_OUT_FOR_COLLECTION = "Saiu para coleta",
   FINISHED = "Finalizado",
   REFUSED = "Recusado",
 }
