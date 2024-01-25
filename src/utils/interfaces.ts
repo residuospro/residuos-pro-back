@@ -183,6 +183,7 @@ export interface ICollectionSchema {
   updatedAt?: Date;
   deleted: boolean;
   totalItems?: number;
+  date?: string;
 }
 
 export interface ICollectionFilter {

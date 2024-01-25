@@ -126,6 +126,7 @@ class CollectionController {
         idCompany,
         page,
         itemsPerPage,
+        idDepartment,
       } = req.body;
 
       const collectionFilter = {
@@ -135,6 +136,7 @@ class CollectionController {
         date,
         department,
         idCompany,
+        idDepartment,
       };
 
       const skip = (parseInt(page) - 1) * parseInt(itemsPerPage);

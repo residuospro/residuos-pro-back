@@ -117,6 +117,7 @@ class CollectionService {
           }
         }
       }
+      console.log("q", query);
 
       const collections = await Collection.find({ ...query, deleted: false })
         .sort({ createdAt: -1 })
