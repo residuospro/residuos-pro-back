@@ -50,6 +50,7 @@ export enum Routes {
   DELETE_COLLECTION = "/api/delete_collection/:id",
   UPDATE_COLLECTION = "/api/update_collection/:id",
   GET_COLLECTION_BY_FILTER = "/api/collection_filter",
+  GET_ALL_COLLECTIONS = "/api/all_collections",
 }
 
 export enum Permissions {

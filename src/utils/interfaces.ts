@@ -195,3 +195,8 @@ export interface ICollectionFilter {
   date: string;
   createdAt?: any;
 }
+
+export interface DateRange {
+  startDate: Date;
+  endDate: Date;
+}

@@ -1,7 +1,14 @@
-import { ICollectionFilter, ICollectionSchema } from "../utils/interfaces";
+import {
+  DateRange,
+  ICollectionFilter,
+  ICollectionSchema,
+} from "../utils/interfaces";
 import Collection from "../models/collection";
 import { Status } from "../utils/enum";
 import HandleError from "../utils/errors/handleError";
+import { getMonth } from "date-fns";
+import { DateRangeFactory } from "../utils/dateUtils";
+import { query } from "express";
 
 class CollectionService {
   static async createCollectionService(
@@ -117,7 +124,6 @@ class CollectionService {
           }
         }
       }
-      console.log("q", query);
 
       const collections = await Collection.find({ ...query, deleted: false })
         .sort({ createdAt: -1 })
@@ -133,6 +139,68 @@ class CollectionService {
       const totalPages = Math.ceil(totalCollection / itemsPerPage);
 
       return { collections, totalPages };
+    } catch (error) {
+      if (error instanceof HandleError) {
+        throw error;
+      }
+
+      throw new Error(error.message);
+    }
+  }
+
+  static async getAllCollectionsService(
+    idCompany: string,
+    idDepartment: string
+  ) {
+    try {
+      let query: any = {
+        idCompany,
+        deleted: false,
+        status: Status.FINISHED,
+      };
+
+      if (idDepartment) query = { ...query, idDepartment };
+
+      const collections = await Collection.find(query);
+
+      if (collections.length === 0) {
+        throw new HandleError("Não há registros para essa busca", 404);
+      }
+
+      const today = new Date();
+      const currentMonth = today.getMonth();
+      const currentYear = today.getFullYear();
+      const currentDay = today.getDate();
+
+      const collectionsThisMonth = collections.filter((collection) => {
+        const collectionMonth = collection.createdAt.getMonth();
+        const collectionYear = collection.createdAt.getFullYear();
+        return (
+          collectionMonth === currentMonth && collectionYear === currentYear
+        );
+      });
+
+      const collectionsThisYear = collections.filter((collection) => {
+        const collectionYear = collection.createdAt.getFullYear();
+        return collectionYear === currentYear;
+      });
+
+      const collectionsToday = collections.filter((collection) => {
+        const collectionDate = collection.createdAt.getDate();
+        const collectionMonth = collection.createdAt.getMonth();
+        const collectionYear = collection.createdAt.getFullYear();
+        return (
+          collectionDate === currentDay &&
+          collectionMonth === currentMonth &&
+          collectionYear === currentYear
+        );
+      });
+
+      return {
+        collectionsThisMonth,
+        collectionsThisYear,
+        collectionsToday,
+      };
     } catch (error) {
       if (error instanceof HandleError) {
         throw error;

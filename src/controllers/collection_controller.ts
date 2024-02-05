@@ -167,6 +167,35 @@ class CollectionController {
     }
   }
 
+  async getAllCollections(req: Request, res: Response) {
+    try {
+      const { idCompany, idDepartment } = req.body;
+
+      const collections = await CollectionService.getAllCollectionsService(
+        idCompany,
+        idDepartment
+      );
+
+      return res.status(200).json(collections);
+    } catch (error) {
+      if (error instanceof HandleError) {
+        return res.status(error.statusCode).json({
+          message: {
+            title: Messages.TITLE_THERE_ARE_NO_RECORDS,
+            subTitle: Messages.SUBTITLE_THERE_ARE_NO_RECORDS,
+          },
+        });
+      }
+
+      return res.status(500).json({
+        message: {
+          title: Messages.TITLE_ERROR,
+          subTitle: Messages.SUBTITLE_ERROR,
+        },
+      });
+    }
+  }
+
   async updateCollectionStatus(req: Request, res: Response) {
     try {
       const { status, reason } = req.body;

@@ -21,6 +21,7 @@ collection_route
     collection_controller.updateCollectionStatus
   )
   .post(Routes.DELETE_COLLECTION, collection_controller.deleteCollection)
-  .post(Routes.UPDATE_COLLECTION, collection_controller.updateCollection);
+  .post(Routes.UPDATE_COLLECTION, collection_controller.updateCollection)
+  .post(Routes.GET_ALL_COLLECTIONS, collection_controller.getAllCollections);
 
 export default collection_route;
