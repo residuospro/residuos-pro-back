@@ -36,6 +36,7 @@ export enum Routes {
   GET_USERS = "/users",
   GET_USER_BY_USERNAME = "/user/by-username",
   GET_ALL_USERNAMES = "/user/all",
+  RESET_PASSWORD = "/api/user/reset_password",
 
   LOGIN = "/api/login",
   PAYLOAD = "/api/payload",
@@ -102,6 +103,9 @@ export enum Messages {
 
   TITLE_UPDATE_COLLECTION = "Atualizado",
   SUBTITLE_UPDATE_COLLECTION = "Coleta atualizada com sucesso",
+
+  TITLE_USER_NOT_FOUND = "Usuário não encontrado",
+  SUBTITLE_USER_NOT_FOUND = "Esse usuário não existe em nosso sistema",
 }
 
 export enum SocketEvent {

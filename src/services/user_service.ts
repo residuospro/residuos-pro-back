@@ -29,7 +29,7 @@ class UserService {
       const user = await newUser.save({ session });
 
       if (user) {
-        await EmailService.sendEmail(
+        await EmailService.sendEmailToRegisterOrChangePassword(
           email,
           service,
           user.id,
@@ -279,7 +279,7 @@ class UserService {
       const updatedUser = await user!.save();
 
       if (!user.username && email) {
-        await EmailService.sendEmail(
+        await EmailService.sendEmailToRegisterOrChangePassword(
           email,
           service,
           id,
@@ -383,6 +383,36 @@ class UserService {
     const user = await User.findOne({ idCompany, email, deleted: false });
 
     return user ? true : false;
+  }
+
+  static async createNewPasswordService(userInfo: string) {
+    try {
+      let query: any = {
+        deleted: false,
+      };
+
+      const regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(userInfo);
+
+      if (regex) {
+        query = { ...query, email: userInfo };
+      } else {
+        query = { ...query, username: userInfo };
+      }
+
+      const user = await User.findOne(query);
+
+      if (!user) {
+        throw new HandleError("Usuário não encontrado", 404);
+      }
+
+      return { id: user.id, email: user.email };
+    } catch (error) {
+      if (error instanceof HandleError) {
+        throw error;
+      }
+
+      throw new Error(error.message);
+    }
   }
 }
 

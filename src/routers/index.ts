@@ -17,6 +17,7 @@ import user_route from "./users_route";
 import cors from "cors";
 import sediments_route from "./sediments_route";
 import collection_route from "./collection_route";
+import newPassword_route from "./createNewPassword_route";
 
 declare module "express-serve-static-core" {
   interface Request {
@@ -44,6 +45,7 @@ const router = (app: Express) => {
     support_route,
     user_exists_route,
     finalize_registration_route,
+    newPassword_route,
     verifyToken,
     sediments_route,
     verifyPermission(typePermissions),

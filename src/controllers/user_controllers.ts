@@ -5,6 +5,7 @@ import HandleError from "../utils/errors/handleError";
 import PasswordGenerator from "../utils/passwordGenerator";
 import { Messages, SocketEvent, Service } from "../utils/enum";
 import WebSocketService from "../services/webSocketService";
+import EmailService from "../services/email_service";
 
 class UserController {
   async createUser(req: Request, res: Response) {
@@ -228,6 +229,7 @@ class UserController {
             idDepartment,
             idCompany,
             service,
+            username,
           },
         ],
         id
@@ -317,6 +319,35 @@ class UserController {
     await UserService.deleteUserAfterDepartmentService(id);
 
     return res.status(204).json("Todos os usuário foram deletados");
+  }
+
+  async createNewPassword(req: Request, res: Response) {
+    try {
+      const { userInfo } = req.body;
+
+      const user = await UserService.createNewPasswordService(userInfo);
+
+      const { id, email } = user;
+
+      await EmailService.sendEmailToResetPassword(
+        email,
+        Service.RESIDUOSPRO,
+        id
+      );
+
+      return res.status(200).json("Email enviado com sucesso");
+    } catch (error) {
+      if (error instanceof HandleError) {
+        return res.status(error.statusCode).send({
+          message: {
+            title: Messages.TITLE_USER_NOT_FOUND,
+            subTitle: Messages.SUBTITLE_USER_NOT_FOUND,
+          },
+        });
+      }
+
+      return res.status(500).send({ message: error.message });
+    }
   }
 }
 
