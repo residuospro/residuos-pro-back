@@ -37,6 +37,7 @@ export const registerOrChangeMessage = (
                 a {
                     text-decoration: none;
                 }
+
                 #container {
                     background: #fff;
                     border-radius: 0.5rem;
@@ -86,6 +87,10 @@ export const resetPasswordMessage = (userId: string, service: string) => {
   
                   h1 {
                       color: #1e92c8;
+                  }
+
+                  a {
+                    text-decoration: none;
                   }
   
                   #container {

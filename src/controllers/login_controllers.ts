@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import AuthService from "../services/auth_service";
 import HandleError from "../utils/errors/handleError";
-import { log } from "console";
 
 class LoginController {
   async login(req: Request, res: Response) {

@@ -9,7 +9,7 @@ import { typePermissions, UserPermissions } from "../utils/permissions";
 import login_route from "./login_route";
 import companies_route from "./companies_route";
 import payload_route from "./payload_route";
-import finalize_registration_route from "./finalize_registration_route";
+import finalize_registration_route from "./createOrUpdateRegister";
 import support_route from "./supporte_route";
 import user_exists_route from "./user_exists_route";
 import department_route from "./department_route";

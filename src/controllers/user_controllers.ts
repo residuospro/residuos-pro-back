@@ -267,6 +267,21 @@ class UserController {
     }
   }
 
+  async updatePassword(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const { password } = req.body;
+
+      await UserService.updatePasswordService(id, password);
+
+      let url = process.env.FRONT_REDISUOS_PRO;
+
+      return res.status(200).json(url);
+    } catch (error) {
+      return res.status(500).send({ message: error.message });
+    }
+  }
+
   async updateUserAfterUpdateDepartment(req: Request, res: Response) {
     const { name, ramal, idDepartment } = req.body;
 

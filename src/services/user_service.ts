@@ -1,4 +1,3 @@
-import bcrypt from "bcrypt";
 import User from "../models/users";
 import { IUser, UserDataService } from "../utils/interfaces";
 import { Actions } from "../utils/enum";
@@ -6,6 +5,7 @@ import HandleError from "../utils/errors/handleError";
 import PermissionMapper from "../utils/mapPermission";
 import EmailService from "./email_service";
 import mongoose from "mongoose";
+import HashedPassword from "../utils/hashedPassword";
 
 class UserService {
   static async createUser(userData: UserDataService) {
@@ -13,12 +13,11 @@ class UserService {
       const session = await mongoose.startSession();
       session.startTransaction();
 
+      const bcrypt = new HashedPassword();
+
       const { service, email, idCompany } = userData;
 
-      const saltRounds = 8;
-      const hashedPassword = await bcrypt.hash(userData.password, saltRounds);
-
-      userData.password = hashedPassword;
+      userData.password = await bcrypt.hashedPassword(userData.password);
 
       userData.role = PermissionMapper.getCreatablePermission(userData.role[0]);
 
@@ -221,6 +220,8 @@ class UserService {
 
       let user: any;
 
+      const bcrypt = new HashedPassword();
+
       if (id) {
         user = await User.findById(id, { deleted: false });
       } else {
@@ -234,14 +235,8 @@ class UserService {
         throw new HandleError("Username não encontrado", 404);
       }
 
-      const saltRounds = 8;
+      user.password = await bcrypt.hashedPassword(updatedData[0].password);
 
-      const hashedPassword = await bcrypt.hash(
-        updatedData[0].password,
-        saltRounds
-      );
-
-      user.password = hashedPassword;
       user.username = updatedData[0].username;
 
       await user!.save();
@@ -256,6 +251,24 @@ class UserService {
       }
 
       throw new Error("Usuário não encontrado");
+    }
+  }
+
+  static async updatePasswordService(id: string, password: string) {
+    try {
+      const bcrypt = new HashedPassword();
+
+      const hashedPassword = await bcrypt.hashedPassword(password);
+
+      const user = await User.findById(id);
+
+      user.password = hashedPassword;
+
+      const updatedUser = await user.save();
+
+      return updatedUser;
+    } catch (error) {
+      throw new Error(error.message);
     }
   }
 
